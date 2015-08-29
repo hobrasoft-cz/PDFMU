@@ -7,3 +7,8 @@
 3. Run NetBeans
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Run Project (pdfmu)
+
+## Generate documentation using Doxygen
+
+1. Install [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
+2. `doxygen Doxyfile` in repository root

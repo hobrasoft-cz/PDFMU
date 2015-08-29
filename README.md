@@ -12,3 +12,4 @@
 
 1. Install [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
 2. Run `doxygen Doxyfile` in repository root
+3. Open `doxygen/html/index.html`

@@ -25,7 +25,7 @@ public interface Operation {
      * 
      * This subparser should handle the arguments specific to this operation.
      * 
-     * @param subparsers subparsers object to add the parser to
+     * @param subparsers subparsers object to add the subparser to
      * @return the created subparser
      */
     public Subparser addParser(Subparsers subparsers);

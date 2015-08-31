@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
 import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
@@ -20,7 +21,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public class OperationVersion implements Operation {
 
     @Override
-    public void execute(String[] args) {
+    public void execute(Namespace namespace) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -26,11 +26,11 @@ public class CommandVersion implements Command {
 
     @Override
     public Subparser addParser(Subparsers subparsers) {
-        Subparser parserVersion = subparsers.addParser("version")
+        Subparser subparser = subparsers.addParser("version")
                 .help("set or get version of a PDF file")
                 .defaultHelp(true)
                 .setDefault("command", CommandVersion.class);
-        parserVersion.addArgument("-i", "--in")
+        subparser.addArgument("-i", "--in")
                 .type(String.class)
                 // TODO: Consider using `FileInputStream.class` as type
                 // http://argparse4j.sourceforge.net/usage.html#argument-nargs
@@ -39,25 +39,25 @@ public class CommandVersion implements Command {
                 .help("input PDF file")
                 .required(true)
                 .nargs("?");
-        parserVersion.addArgument("-o", "--out")
+        subparser.addArgument("-o", "--out")
                 .type(String.class)
                 .help("output PDF file")
                 .nargs("?");
-        parserVersion.addArgument("-s", "--set")
+        subparser.addArgument("-s", "--set")
                 .type(String.class)
                 .help("PDF version to set")
                 .nargs("?")
                 .setDefault("1.6");
-        parserVersion.addArgument("-g", "--get")
+        subparser.addArgument("-g", "--get")
                 .type(boolean.class)
                 .help("display version of IN without setting the version")
                 .action(Arguments.storeTrue());
-        parserVersion.addArgument("--force")
+        subparser.addArgument("--force")
                 .help("overwrite OUT if already present")
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
         
-        return parserVersion;
+        return subparser;
     }
     
 }

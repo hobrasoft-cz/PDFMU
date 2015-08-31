@@ -26,20 +26,20 @@ public class CommandAttach implements Command {
 
     @Override
     public Subparser addParser(Subparsers subparsers) {
-        Subparser parserAttach = subparsers.addParser("attach")
+        Subparser subparser = subparsers.addParser("attach")
                 .help("attach files to a PDF file")
                 .defaultHelp(true)
                 .setDefault("command", CommandAttach.class);
-        parserAttach.addArgument("-t", "--to")
+        subparser.addArgument("-t", "--to")
                 .help("PDF file to attach files to")
                 .type(String.class)
                 .required(true);
-        parserAttach.addArgument("-a", "--attachment")
+        subparser.addArgument("-a", "--attachment")
                 .help("file to attach to TO")
                 .type(String.class)
                 .action(Arguments.append());
         
-        return parserAttach;
+        return subparser;
     }
     
 }

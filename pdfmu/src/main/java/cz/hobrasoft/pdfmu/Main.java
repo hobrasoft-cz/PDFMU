@@ -2,14 +2,14 @@ package cz.hobrasoft.pdfmu;
 
 /**
  * The main class of PDFMU
- * 
+ *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class Main {
-    
+
     /**
      * The entry point of PDFMU
-     * 
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {

@@ -42,7 +42,10 @@ public class Main {
                 .metavar("OPERATION")
                 .dest("operation");
 
-        Operation[] operations = {new OperationVersion(), new OperationSign(), new OperationAttach()};
+        Operation operationVersion = new OperationVersion();
+        Operation operationSign = new OperationSign();
+        Operation operationAttach = new OperationAttach();
+        Operation[] operations = {operationVersion, operationSign, operationAttach};
 
         for (Operation operation : operations) {
             operation.addParser(subparsers);
@@ -55,8 +58,21 @@ public class Main {
             parser.handleError(e);
         }
         if (res != null) {
-            // TODO: Execute the selected operation
-            System.out.print(res);
+            switch (res.getString("operation")) {
+                case "version":
+                    operationVersion.execute(res);
+                    break;
+                case "sign":
+                    operationSign.execute(res);
+                    break;
+                case "attach":
+                    operationAttach.execute(res);
+                    break;
+                default:
+                    // Invalid or none operation was specified,
+                    // so `parser.parseArgs` should have thrown an exception.
+                    assert false;
+            }
         }
     }
 }

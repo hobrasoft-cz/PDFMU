@@ -8,6 +8,13 @@
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Run Project (pdfmu)
 
+## Run from command line
+
+1. Open the "pdfmu" project in NetBeans (see above)
+2. Run > Build Project (pdfmu)
+3. Go to "pdfmu/target" in command line
+4. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
+
 ## Generate documentation using Doxygen
 
 1. Install [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10

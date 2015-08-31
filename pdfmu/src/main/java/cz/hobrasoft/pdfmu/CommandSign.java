@@ -17,8 +17,10 @@ public class CommandSign implements Command {
 
     @Override
     public Subparser addParser(Subparsers subparsers) {
+        String help = "Digitally sign a PDF document";
+        
         Subparser subparser = subparsers.addParser("sign")
-                .help("add a digital signature to a PDF file")
+                .help(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandSign.class);
         

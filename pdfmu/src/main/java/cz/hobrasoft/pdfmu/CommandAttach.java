@@ -26,8 +26,10 @@ public class CommandAttach implements Command {
 
     @Override
     public Subparser addParser(Subparsers subparsers) {
+        String help = "Attach files to a PDF document";
+        
         Subparser subparser = subparsers.addParser("attach")
-                .help("attach files to a PDF file")
+                .help(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandAttach.class);
         subparser.addArgument("-t", "--to")

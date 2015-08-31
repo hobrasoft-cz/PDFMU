@@ -26,8 +26,10 @@ public class CommandVersion implements Command {
 
     @Override
     public Subparser addParser(Subparsers subparsers) {
+        String help = "Set or display version of a PDF document";
+        
         Subparser subparser = subparsers.addParser("version")
-                .help("set or get version of a PDF file")
+                .help(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandVersion.class);
         subparser.addArgument("-i", "--in")

@@ -27,6 +27,9 @@ public class CommandVersion implements Command {
     @Override
     public Subparser addParser(Subparsers subparsers) {
         String help = "Set or display version of a PDF document";
+        String metavarIn = "IN.pdf";
+        String metavarOut = "OUT.pdf";
+        String metavarSet = "VERSION";
         
         Subparser subparser = subparsers.addParser("version")
                 .help(help)
@@ -41,22 +44,25 @@ public class CommandVersion implements Command {
                 // http://argparse4j.sourceforge.net/usage.html#filetype
                 .help("input PDF document")
                 .required(true)
-                .nargs("?");
+                .nargs("?")
+                .metavar(metavarIn);
         subparser.addArgument("-o", "--out")
                 .type(String.class)
                 .help("output PDF document")
-                .nargs("?");
+                .nargs("?")
+                .metavar(metavarOut);
         subparser.addArgument("-s", "--set")
                 .type(String.class)
-                .help("PDF version to set")
+                .help(String.format("set PDF version to %s", metavarSet))
                 .nargs("?")
-                .setDefault("1.6");
+                .setDefault("1.6")
+                .metavar(metavarSet);
         subparser.addArgument("-g", "--get")
                 .type(boolean.class)
-                .help("display version of IN without setting the version")
+                .help(String.format("display version of %s without setting the version", metavarIn))
                 .action(Arguments.storeTrue());
         subparser.addArgument("--force")
-                .help("overwrite OUT if already present")
+                .help(String.format("overwrite %s if already present", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
         

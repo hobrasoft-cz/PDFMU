@@ -39,12 +39,12 @@ public class CommandVersion implements Command {
                 // http://argparse4j.sourceforge.net/usage.html#argument-nargs
                 // Also see:
                 // http://argparse4j.sourceforge.net/usage.html#filetype
-                .help("input PDF file")
+                .help("input PDF document")
                 .required(true)
                 .nargs("?");
         subparser.addArgument("-o", "--out")
                 .type(String.class)
-                .help("output PDF file")
+                .help("output PDF document")
                 .nargs("?");
         subparser.addArgument("-s", "--set")
                 .type(String.class)

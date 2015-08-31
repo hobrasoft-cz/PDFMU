@@ -51,22 +51,22 @@ public class Main {
             operation.addParser(subparsers);
         }
 
-        Namespace res = null;
+        Namespace namespace = null;
         try {
-            res = parser.parseArgs(args);
+            namespace = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
             parser.handleError(e);
         }
-        if (res != null) {
-            switch (res.getString("operation")) {
+        if (namespace != null) {
+            switch (namespace.getString("operation")) {
                 case "version":
-                    operationVersion.execute(res);
+                    operationVersion.execute(namespace);
                     break;
                 case "sign":
-                    operationSign.execute(res);
+                    operationSign.execute(namespace);
                     break;
                 case "attach":
-                    operationAttach.execute(res);
+                    operationAttach.execute(namespace);
                     break;
                 default:
                     // Invalid or none operation was specified,

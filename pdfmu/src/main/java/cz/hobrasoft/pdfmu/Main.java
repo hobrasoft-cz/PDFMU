@@ -42,10 +42,10 @@ public class Main {
                 .metavar("OPERATION")
                 .dest("operation");
 
-        Command[] commands = {new CommandVersion(), new CommandSign(), new CommandAttach()};
+        Operation[] operations = {new OperationVersion(), new OperationSign(), new OperationAttach()};
 
-        for (Command command : commands) {
-            command.addParser(subparsers);
+        for (Operation operation : operations) {
+            operation.addParser(subparsers);
         }
 
         Namespace res = null;

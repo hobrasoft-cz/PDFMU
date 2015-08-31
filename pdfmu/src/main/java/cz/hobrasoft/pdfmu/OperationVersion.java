@@ -17,7 +17,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * 
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class CommandVersion implements Command {
+public class OperationVersion implements Operation {
 
     @Override
     public void execute(String[] args) {
@@ -35,7 +35,7 @@ public class CommandVersion implements Command {
                 .help(help)
                 .description(help)
                 .defaultHelp(true)
-                .setDefault("command", CommandVersion.class);
+                .setDefault("command", OperationVersion.class);
         subparser.addArgument("-i", "--in")
                 .type(String.class)
                 // TODO: Consider using `FileInputStream.class` as type

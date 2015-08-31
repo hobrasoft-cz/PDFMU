@@ -17,7 +17,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * 
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class CommandAttach implements Command {
+public class OperationAttach implements Operation {
 
     @Override
     public void execute(String[] args) {
@@ -32,7 +32,7 @@ public class CommandAttach implements Command {
                 .help(help)
                 .description(help)
                 .defaultHelp(true)
-                .setDefault("command", CommandAttach.class);
+                .setDefault("command", OperationAttach.class);
         subparser.addArgument("-t", "--to")
                 .help("PDF file to attach files to")
                 .type(String.class)

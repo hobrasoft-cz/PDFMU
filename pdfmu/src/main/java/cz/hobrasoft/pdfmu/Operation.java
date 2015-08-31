@@ -10,7 +10,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * 
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public interface Command {
+public interface Operation {
 
     /**
      * Execute the command

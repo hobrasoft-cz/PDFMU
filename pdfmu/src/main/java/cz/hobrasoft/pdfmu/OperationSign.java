@@ -9,7 +9,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * 
  * @author Filip
  */
-public class CommandSign implements Command {
+public class OperationSign implements Operation {
 
     @Override
     public void execute(String[] args) {
@@ -27,7 +27,7 @@ public class CommandSign implements Command {
                 .help(help)
                 .description(help)
                 .defaultHelp(true)
-                .setDefault("command", CommandSign.class);
+                .setDefault("command", OperationSign.class);
         subparser.addArgument("-i", "--in")
                 .help("input PDF file")
                 .type(String.class)

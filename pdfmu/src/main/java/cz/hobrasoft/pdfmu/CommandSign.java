@@ -21,6 +21,7 @@ public class CommandSign implements Command {
         
         Subparser subparser = subparsers.addParser("sign")
                 .help(help)
+                .description(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandSign.class);
         

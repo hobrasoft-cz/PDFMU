@@ -30,6 +30,7 @@ public class CommandAttach implements Command {
         
         Subparser subparser = subparsers.addParser("attach")
                 .help(help)
+                .description(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandAttach.class);
         subparser.addArgument("-t", "--to")

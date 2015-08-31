@@ -30,6 +30,7 @@ public class CommandVersion implements Command {
         
         Subparser subparser = subparsers.addParser("version")
                 .help(help)
+                .description(help)
                 .defaultHelp(true)
                 .setDefault("command", CommandVersion.class);
         subparser.addArgument("-i", "--in")

@@ -20,7 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
-                .description("Manipulate a PDF file.")
+                .description("Manipulate a PDF file")
                 .defaultHelp(true);
         parser.addArgument("-of", "--output-format")
                 .choices("text", "json")

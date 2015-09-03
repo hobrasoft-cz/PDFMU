@@ -16,6 +16,8 @@
 
 ## Actions
 
+All the paths below are relative to the repository root.
+
 ### Run from command line
 
 1. Open the "pdfmu" project in NetBeans (see above)

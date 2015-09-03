@@ -26,6 +26,13 @@ All the paths below are relative to the repository root.
 
 The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
 
+### Build using Maven
+
+1. Go to "pdfmu" in command line
+2. `mvn install`
+
+The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+
 ### Run from command line
 
 1. Build (see above)

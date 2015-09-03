@@ -41,6 +41,5 @@ The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 ### Generate documentation using Doxygen
 
-1. Install [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
-2. Run `doxygen Doxyfile` in repository root
-3. Open `doxygen/html/index.html`
+1. Run `doxygen Doxyfile` in repository root
+2. Open `doxygen/html/index.html`

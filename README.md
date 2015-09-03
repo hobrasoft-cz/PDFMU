@@ -45,4 +45,4 @@ The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar
 1. Go to "." in command line
 2. `doxygen Doxyfile`
 
-To inspect the documentation open "doxygen/html/index.html".
+To inspect the resulting documentation open "doxygen/html/index.html".

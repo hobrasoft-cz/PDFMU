@@ -1,5 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
+import com.itextpdf.text.pdf.PdfReader;
+import java.io.IOException;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -22,7 +24,18 @@ public class OperationVersion implements Operation {
 
     @Override
     public void execute(Namespace namespace) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println(String.format("Input PDF document path: %s", namespace.getString("in")));
+        PdfReader pdfReader = null;
+        try {
+            pdfReader = new PdfReader(namespace.getString("in"));
+        } catch (IOException e) {
+            System.err.println("Could not open the input PDF document: " + e.getMessage());
+        }
+        
+        if (pdfReader != null) {
+            System.out.println(String.format("Input PDF document version: 1.%c", pdfReader.getPdfVersion()));
+            pdfReader.close();
+        }
     }
 
     @Override

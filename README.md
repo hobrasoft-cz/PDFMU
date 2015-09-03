@@ -12,6 +12,7 @@
 
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 8u60
 * [NetBeans](https://netbeans.org/downloads/) 8.0.2
+* [Maven](http://maven.apache.org/download.cgi) 3.3.3
 * [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
 
 ## Actions

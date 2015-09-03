@@ -8,6 +8,12 @@
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Run Project (pdfmu)
 
+## Software dependencies
+
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 8u60
+* [NetBeans](https://netbeans.org/downloads/) 8.0.2
+* [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
+
 ## Actions
 
 ### Run from command line

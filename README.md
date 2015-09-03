@@ -18,12 +18,19 @@
 
 All the paths below are relative to the repository root.
 
+### Build using NetBeans
+
+1. Run NetBeans
+2. File > Open Project > "pdfmu"
+3. Run > Build Project (pdfmu)
+
+The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+
 ### Run from command line
 
-1. Open the "pdfmu" project in NetBeans (see above)
-2. Run > Build Project (pdfmu)
-3. Go to "pdfmu/target" in command line
-4. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
+1. Build (see above)
+2. Go to "pdfmu/target" in command line
+3. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
 ### Generate documentation using Doxygen
 

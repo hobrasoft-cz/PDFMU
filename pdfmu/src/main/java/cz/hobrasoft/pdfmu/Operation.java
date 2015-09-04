@@ -16,7 +16,7 @@ public interface Operation {
     /**
      * Execute the operation
      * 
-     * @param args Command line arguments
+     * @param namespace Parsed command line arguments
      */
     public void execute(Namespace namespace);
     

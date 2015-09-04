@@ -13,7 +13,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Gets or sets the version of a PDF file
- * 
+ *
  * <p>
  * Usage:
  * <ul>
@@ -21,7 +21,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * <li>{@code pdfmu version --in in.pdf --get}</li>
  * <li>{@code pdfmu version inout.pdf --force}</li>
  * </ul>
- * 
+ *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationVersion implements Operation {
@@ -32,14 +32,14 @@ public class OperationVersion implements Operation {
         assert inFilename != null; // Argument "in" is required
         // TODO: Lift the requirement here
         System.out.println(String.format("Input PDF document path: %s", inFilename));
-        
+
         PdfReader pdfReader = null;
         try {
             pdfReader = new PdfReader(inFilename);
         } catch (IOException e) {
             System.err.println("Could not open the input PDF document: " + e.getMessage());
         }
-        
+
         if (pdfReader != null) {
             System.out.println(String.format("Input PDF document version: 1.%c", pdfReader.getPdfVersion()));
 
@@ -56,13 +56,12 @@ public class OperationVersion implements Operation {
                 } catch (FileNotFoundException ex) {
                     System.err.println("Could not open the output PDF document: " + ex.getMessage());
                 }
-                
+
                 if (os != null) {
                     char version = '6';
                     // TODO: Use "--set" argument
 
                     // TODO: Avoid lowering the version.
-                    
                     System.out.println(String.format("Setting PDF version to: %c", version));
 
                     // Open PDF stamper
@@ -72,7 +71,7 @@ public class OperationVersion implements Operation {
                     } catch (DocumentException | IOException ex) {
                         System.err.println("Could not open PDF stamper: " + ex.getMessage());
                     }
-                    
+
                     if (pdfStamper != null) {
                         // Close PDF stamper
                         try {
@@ -96,7 +95,7 @@ public class OperationVersion implements Operation {
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
         String metavarSet = "VERSION";
-        
+
         Subparser subparser = subparsers.addParser("version")
                 .help(help)
                 .description(help)
@@ -131,8 +130,8 @@ public class OperationVersion implements Operation {
                 .help(String.format("overwrite %s if already present", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
-        
+
         return subparser;
     }
-    
+
 }

@@ -7,7 +7,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Adds a digital signature to a PDF document
- * 
+ *
  * @author Filip
  */
 public class OperationSign implements Operation {
@@ -23,7 +23,7 @@ public class OperationSign implements Operation {
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
         String metavarCertificate = "CERTIFICATE";
-        
+
         Subparser subparser = subparsers.addParser("sign")
                 .help(help)
                 .description(help)
@@ -50,8 +50,8 @@ public class OperationSign implements Operation {
                 .help(String.format("overwrite %s if already present", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
-        
+
         return subparser;
     }
-    
+
 }

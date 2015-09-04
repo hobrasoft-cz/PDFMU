@@ -25,6 +25,8 @@ public class OperationVersion implements Operation {
     @Override
     public void execute(Namespace namespace) {
         String inFilename = namespace.getString("in");
+        assert inFilename != null; // Argument "in" is required
+        // TODO: Lift the requirement here
         System.out.println(String.format("Input PDF document path: %s", inFilename));
         
         PdfReader pdfReader = null;

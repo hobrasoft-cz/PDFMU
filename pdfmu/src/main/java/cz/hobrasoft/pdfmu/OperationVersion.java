@@ -24,10 +24,12 @@ public class OperationVersion implements Operation {
 
     @Override
     public void execute(Namespace namespace) {
-        System.out.println(String.format("Input PDF document path: %s", namespace.getString("in")));
+        String inFilename = namespace.getString("in");
+        System.out.println(String.format("Input PDF document path: %s", inFilename));
+        
         PdfReader pdfReader = null;
         try {
-            pdfReader = new PdfReader(namespace.getString("in"));
+            pdfReader = new PdfReader(inFilename);
         } catch (IOException e) {
             System.err.println("Could not open the input PDF document: " + e.getMessage());
         }

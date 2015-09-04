@@ -1,6 +1,10 @@
 package cz.hobrasoft.pdfmu;
 
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -38,6 +42,50 @@ public class OperationVersion implements Operation {
         
         if (pdfReader != null) {
             System.out.println(String.format("Input PDF document version: 1.%c", pdfReader.getPdfVersion()));
+
+            if (!namespace.getBoolean("get")) {
+                String outFilename = namespace.getString("out");
+                assert outFilename != null; // TODO: Handle `outFilename == null`
+
+                System.out.println(String.format("Output PDF document path: %s", outFilename));
+
+                // Open file output stream
+                FileOutputStream os = null;
+                try {
+                    os = new FileOutputStream(outFilename);
+                } catch (FileNotFoundException ex) {
+                    System.err.println("Could not open the output PDF document: " + ex.getMessage());
+                }
+                
+                if (os != null) {
+                    char version = '6';
+                    // TODO: Use "--set" argument
+
+                    // TODO: Avoid lowering the version.
+                    
+                    System.out.println(String.format("Setting PDF version to: %c", version));
+
+                    // Open PDF stamper
+                    PdfStamper pdfStamper = null;
+                    try {
+                        pdfStamper = new PdfStamper(pdfReader, os, version);
+                    } catch (DocumentException | IOException ex) {
+                        System.err.println("Could not open PDF stamper: " + ex.getMessage());
+                    }
+                    
+                    if (pdfStamper != null) {
+                        // Close PDF stamper
+                        try {
+                            pdfStamper.close();
+                        } catch (DocumentException | IOException ex) {
+                            System.err.println("Could not close PDF stamper: " + ex.getMessage());
+                        }
+                    }
+                }
+            } else {
+                System.out.println("--get argument present; no modifications will be made.");
+            }
+
             pdfReader.close();
         }
     }

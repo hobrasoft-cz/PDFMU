@@ -48,6 +48,8 @@ public class OperationVersion implements Operation {
             System.out.println(String.format("Input PDF document version: %s", inVersion));
 
             if (!namespace.getBoolean("get")) {
+                // TODO: Handle overwriting using "force" argument
+
                 String outFilename = namespace.getString("out");
                 assert outFilename != null; // TODO: Handle `outFilename == null` gracefully
 

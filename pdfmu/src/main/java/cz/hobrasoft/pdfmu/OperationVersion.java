@@ -148,7 +148,7 @@ public class OperationVersion implements Operation {
      * supported by iText, as seen in {@link com.itextpdf.text.pdf.PdfWriter}
      * static fields {@link com.itextpdf.text.pdf.PdfWriter#VERSION_1_2} etc.
      */
-    static public class PdfVersion {
+    static public class PdfVersion implements Comparable<PdfVersion> {
 
         static private Pattern p = Pattern.compile("1\\.(?<charValue>[2-7])");
 
@@ -218,6 +218,11 @@ public class OperationVersion implements Operation {
          */
         public char toChar() {
             return charValue;
+        }
+
+        @Override
+        public int compareTo(PdfVersion o) {
+            return charValue - o.charValue;
         }
     }
 

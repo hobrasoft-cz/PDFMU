@@ -14,7 +14,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public class Main {
 
     /**
-     * The entry point of PDFMU
+     * The main entry point of PDFMU
      *
      * @param args the command line arguments
      */

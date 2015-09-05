@@ -5,28 +5,27 @@ import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
- * PDFMU operation
- *
- * A PDFMU operation typically manipulates a PDF file.
+ * Manipulates a PDF file
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public interface Operation {
 
     /**
-     * Execute the operation
+     * Executes the operation
      *
-     * @param namespace Parsed command line arguments
+     * @param namespace parsed command line arguments
      */
     public void execute(Namespace namespace);
 
     /**
-     * Add this operation's specific subparser to a given subparsers object
+     * Adds this operation's subparser to a given Subparsers object
      *
-     * This subparser should handle the arguments specific to this operation.
+     * <p>
+     * The subparser handles the arguments accepted by this operation.
      *
-     * @param subparsers subparsers object to add the subparser to
-     * @return the created subparser
+     * @param subparsers Subparsers object to add the subparser to
+     * @return the subparser added to {@code subparsers}
      */
     public Subparser addParser(Subparsers subparsers);
 }

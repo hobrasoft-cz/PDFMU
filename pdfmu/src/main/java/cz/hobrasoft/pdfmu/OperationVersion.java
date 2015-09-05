@@ -62,16 +62,15 @@ public class OperationVersion implements Operation {
                 }
 
                 if (os != null) {
-                    char version = '6';
-                    // TODO: Use "--set" argument
+                    PdfVersion pdfVersion = namespace.get("set");
 
                     // TODO: Avoid lowering the version.
-                    System.out.println(String.format("Setting PDF version to: %c", version));
+                    System.out.println(String.format("Setting PDF version to: %s", pdfVersion));
 
                     // Open PDF stamper
                     PdfStamper pdfStamper = null;
                     try {
-                        pdfStamper = new PdfStamper(pdfReader, os, version);
+                        pdfStamper = new PdfStamper(pdfReader, os, pdfVersion.toChar());
                     } catch (DocumentException | IOException ex) {
                         System.err.println("Could not open PDF stamper: " + ex.getMessage());
                     }

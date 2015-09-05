@@ -170,7 +170,7 @@ public class OperationVersion implements Operation {
         public PdfVersion(String stringValue) throws IllegalArgumentException {
             Matcher m = p.matcher(stringValue);
             if (!m.matches()) {
-                throw new IllegalArgumentException("Invalid or unsupported PDF version; use 1.0 to 1.9");
+                throw new IllegalArgumentException("Invalid or unsupported PDF version; use 1.2 to 1.7");
             }
             String charValueString = m.group("charValue");
             assert charValueString.length() == 1;

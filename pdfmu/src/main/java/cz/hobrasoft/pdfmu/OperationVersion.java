@@ -140,12 +140,33 @@ public class OperationVersion implements Operation {
         return subparser;
     }
 
+    /**
+     * Represents a PDF version
+     *
+     * <p>
+     * Versions 1.0 to 1.9 are supported.
+     */
     static public class PdfVersion {
 
         static private Pattern p = Pattern.compile("1\\.(?<charValue>\\d)");
 
         private char charValue;
 
+        /**
+         * Creates a PDF version from its String representation
+         *
+         * <p>
+         * Versions 1.0 through 1.9 are supported. Valid string representations
+         * include:
+         * <ul>
+         * <li>1.3</li>
+         * <li>1.6</li>
+         * </ul>
+         *
+         * @param stringValue string representation of the version
+         * @throws IllegalArgumentException if stringValue does not represent a
+         * valid version
+         */
         public PdfVersion(String stringValue) throws IllegalArgumentException {
             Matcher m = p.matcher(stringValue);
             if (!m.matches()) {
@@ -156,6 +177,15 @@ public class OperationVersion implements Operation {
             charValue = charValueString.charAt(0);
         }
 
+        /**
+         * Creates PDF version from its last character
+         *
+         * <p>
+         * Since versions 1.0 through 1.9 are supported, a valid PDF version is
+         * uniquely specified by its last character (the digit 0 to 9).
+         *
+         * @param charValue last character of the PDF version
+         */
         public PdfVersion(char charValue) {
             this.charValue = charValue;
         }
@@ -165,6 +195,15 @@ public class OperationVersion implements Operation {
             return String.format("1.%c", charValue);
         }
 
+        /**
+         * Returns the last character of the PDF version
+         *
+         * <p>
+         * This format of PDF version is accepted by
+         * {@link com.itextpdf.text.pdf.PdfStamper#PdfStamper(com.itextpdf.text.pdf.PdfReader, OutputStream, char)}
+         *
+         * @return last character of the PDF version
+         */
         public char toChar() {
             return charValue;
         }

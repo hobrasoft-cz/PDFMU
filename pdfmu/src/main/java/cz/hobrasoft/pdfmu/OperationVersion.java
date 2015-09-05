@@ -50,40 +50,46 @@ public class OperationVersion implements Operation {
             if (!namespace.getBoolean("get")) {
                 // TODO: Handle overwriting using "force" argument
 
-                String outFilename = namespace.getString("out");
-                assert outFilename != null; // TODO: Handle `outFilename == null` gracefully
-
-                System.out.println(String.format("Output PDF document path: %s", outFilename));
-
-                // Open file output stream
-                FileOutputStream os = null;
-                try {
-                    os = new FileOutputStream(outFilename);
-                } catch (FileNotFoundException ex) {
-                    System.err.println("Could not open the output PDF document: " + ex.getMessage());
-                }
-
-                if (os != null) {
-                    PdfVersion pdfVersion = namespace.get("set");
-
-                    // TODO: Avoid lowering the version.
-                    System.out.println(String.format("Setting PDF version to: %s", pdfVersion));
-
-                    // Open PDF stamper
-                    PdfStamper pdfStamper = null;
-                    try {
-                        // Set version immediately when opening the stamper
-                        pdfStamper = new PdfStamper(pdfReader, os, pdfVersion.toChar());
-                    } catch (DocumentException | IOException ex) {
-                        System.err.println("Could not open PDF stamper: " + ex.getMessage());
+                PdfVersion outVersion = namespace.get("set");
+                System.out.println(String.format("Desired output PDF version: %s", outVersion));
+                if (outVersion.compareTo(inVersion) < 0) {
+                    System.err.println(String.format("Cannot decrease the PDF version"));
+                } else {
+                    String outFilename = namespace.getString("out");
+                    if (outFilename == null) {
+                        System.out.println("--set parametr not specified; setting output to match input");
+                        outFilename = inFilename;
                     }
 
-                    if (pdfStamper != null) {
-                        // Close PDF stamper
+                    System.out.println(String.format("Output PDF document path: %s", outFilename));
+
+                    // Open file output stream
+                    FileOutputStream os = null;
+                    try {
+                        os = new FileOutputStream(outFilename);
+                    } catch (FileNotFoundException ex) {
+                        System.err.println("Could not open the output PDF document: " + ex.getMessage());
+                    }
+
+                    if (os != null) {
+                        // Open PDF stamper
+                        PdfStamper pdfStamper = null;
                         try {
-                            pdfStamper.close();
+                            // Set version immediately when opening the stamper
+                            pdfStamper = new PdfStamper(pdfReader, os, outVersion.toChar());
                         } catch (DocumentException | IOException ex) {
-                            System.err.println("Could not close PDF stamper: " + ex.getMessage());
+                            System.err.println("Could not open PDF stamper: " + ex.getMessage());
+                        }
+
+                        System.out.println("The PDF version has been successfully set.");
+
+                        if (pdfStamper != null) {
+                            // Close PDF stamper
+                            try {
+                                pdfStamper.close();
+                            } catch (DocumentException | IOException ex) {
+                                System.err.println("Could not close PDF stamper: " + ex.getMessage());
+                            }
                         }
                     }
                 }

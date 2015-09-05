@@ -49,7 +49,7 @@ public class OperationVersion implements Operation {
 
             if (!namespace.getBoolean("get")) {
                 String outFilename = namespace.getString("out");
-                assert outFilename != null; // TODO: Handle `outFilename == null`
+                assert outFilename != null; // TODO: Handle `outFilename == null` gracefully
 
                 System.out.println(String.format("Output PDF document path: %s", outFilename));
 

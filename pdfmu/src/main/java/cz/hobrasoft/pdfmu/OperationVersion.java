@@ -6,6 +6,8 @@ import com.itextpdf.text.pdf.PdfStamper;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -41,7 +43,9 @@ public class OperationVersion implements Operation {
         }
 
         if (pdfReader != null) {
-            System.out.println(String.format("Input PDF document version: 1.%c", pdfReader.getPdfVersion()));
+            PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
+
+            System.out.println(String.format("Input PDF document version: %s", inVersion));
 
             if (!namespace.getBoolean("get")) {
                 String outFilename = namespace.getString("out");
@@ -117,10 +121,10 @@ public class OperationVersion implements Operation {
                 .nargs("?")
                 .metavar(metavarOut);
         subparser.addArgument("-s", "--set")
-                .type(String.class)
+                .type(PdfVersion.class)
                 .help(String.format("set PDF version to %s", metavarSet))
                 .nargs("?")
-                .setDefault("1.6")
+                .setDefault(new PdfVersion("1.6"))
                 .metavar(metavarSet);
         subparser.addArgument("-g", "--get")
                 .type(boolean.class)
@@ -132,6 +136,36 @@ public class OperationVersion implements Operation {
                 .action(Arguments.storeTrue());
 
         return subparser;
+    }
+
+    static public class PdfVersion {
+
+        static private Pattern p = Pattern.compile("1\\.(?<charValue>\\d)");
+
+        private char charValue;
+
+        public PdfVersion(String stringValue) throws IllegalArgumentException {
+            Matcher m = p.matcher(stringValue);
+            if (!m.matches()) {
+                throw new IllegalArgumentException("Invalid or unsupported PDF version; use 1.0 to 1.9");
+            }
+            String charValueString = m.group("charValue");
+            assert charValueString.length() == 1;
+            charValue = charValueString.charAt(0);
+        }
+
+        public PdfVersion(char charValue) {
+            this.charValue = charValue;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("1.%c", charValue);
+        }
+
+        public char toChar() {
+            return charValue;
+        }
     }
 
 }

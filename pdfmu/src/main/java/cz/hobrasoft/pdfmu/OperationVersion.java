@@ -185,8 +185,13 @@ public class OperationVersion implements Operation {
          * uniquely specified by its last character (the digit 0 to 9).
          *
          * @param charValue last character of the PDF version
+         * @throws IllegalArgumentException if charValue does not represent a
+         * valid version
          */
-        public PdfVersion(char charValue) {
+        public PdfVersion(char charValue) throws IllegalArgumentException {
+            if (charValue < '2' || charValue > '7') {
+                throw new IllegalArgumentException("Invalid or unsupported PDF version; use 2 to 7");
+            }
             this.charValue = charValue;
         }
 

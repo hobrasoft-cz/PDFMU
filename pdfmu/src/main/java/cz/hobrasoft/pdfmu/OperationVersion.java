@@ -144,7 +144,9 @@ public class OperationVersion implements Operation {
      * Represents a PDF version
      *
      * <p>
-     * Versions 1.0 to 1.9 are supported.
+     * Versions 1.2 to 1.7 are supported. This range corresponds to the versions
+     * supported by iText, as seen in {@link com.itextpdf.text.pdf.PdfWriter}
+     * static fields {@link com.itextpdf.text.pdf.PdfWriter#VERSION_1_2} etc.
      */
     static public class PdfVersion {
 
@@ -153,14 +155,14 @@ public class OperationVersion implements Operation {
         private char charValue;
 
         /**
-         * Creates a PDF version from its String representation
+         * Creates a PDF version from its string representation
          *
          * <p>
-         * Versions 1.0 through 1.9 are supported. Valid string representations
+         * Versions 1.2 to 1.7 are supported. Valid string representations
          * include:
          * <ul>
-         * <li>1.3</li>
-         * <li>1.6</li>
+         * <li>{@code 1.3}</li>
+         * <li>{@code 1.6}</li>
          * </ul>
          *
          * @param stringValue string representation of the version
@@ -178,11 +180,16 @@ public class OperationVersion implements Operation {
         }
 
         /**
-         * Creates PDF version from its last character
+         * Creates a PDF version from the last character of its string
+         * representation
          *
          * <p>
-         * Since versions 1.0 through 1.9 are supported, a valid PDF version is
-         * uniquely specified by its last character (the digit 0 to 9).
+         * Since versions 1.2 to 1.7 are supported, a valid PDF version is
+         * uniquely specified by its last character (the digit 2 to 7).
+         *
+         * <p>
+         * Version in this format is returned by
+         * {@link com.itextpdf.text.pdf.PdfReader#getPdfVersion()}.
          *
          * @param charValue last character of the PDF version
          * @throws IllegalArgumentException if charValue does not represent a
@@ -204,7 +211,7 @@ public class OperationVersion implements Operation {
          * Returns the last character of the PDF version
          *
          * <p>
-         * This format of PDF version is accepted by
+         * This format of PDF version is accepted for example by
          * {@link com.itextpdf.text.pdf.PdfStamper#PdfStamper(com.itextpdf.text.pdf.PdfReader, OutputStream, char)}
          *
          * @return last character of the PDF version

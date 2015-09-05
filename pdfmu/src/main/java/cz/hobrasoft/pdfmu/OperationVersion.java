@@ -148,7 +148,7 @@ public class OperationVersion implements Operation {
      */
     static public class PdfVersion {
 
-        static private Pattern p = Pattern.compile("1\\.(?<charValue>\\d)");
+        static private Pattern p = Pattern.compile("1\\.(?<charValue>[2-7])");
 
         private char charValue;
 

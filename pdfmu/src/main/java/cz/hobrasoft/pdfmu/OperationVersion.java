@@ -70,6 +70,7 @@ public class OperationVersion implements Operation {
                     // Open PDF stamper
                     PdfStamper pdfStamper = null;
                     try {
+                        // Set version immediately when opening the stamper
                         pdfStamper = new PdfStamper(pdfReader, os, pdfVersion.toChar());
                     } catch (DocumentException | IOException ex) {
                         System.err.println("Could not open PDF stamper: " + ex.getMessage());

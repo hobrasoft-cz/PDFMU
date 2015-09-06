@@ -65,9 +65,13 @@ public class OperationVersion implements Operation {
     @Override
     public void execute(Namespace namespace) {
         File inFile = namespace.get("in");
-        assert inFile != null; // TODO: Lift the requirement here
+
+        // "in" argument is required.
+        // TODO: Lift the requirement here
+        assert inFile != null;
 
         System.out.println(String.format("Input PDF document: %s", inFile));
+
         FileInputStream inStream = null;
         try {
             inStream = new FileInputStream(inFile);

@@ -153,6 +153,7 @@ public class OperationVersion implements Operation {
     @Override
     public Subparser addParser(Subparsers subparsers) {
         String help = "Set or display version of a PDF document";
+
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
         String metavarSet = "VERSION";

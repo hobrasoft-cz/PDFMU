@@ -77,6 +77,7 @@ public class OperationVersion implements Operation {
 
         System.out.println(String.format("Input PDF document: %s", inFile));
 
+        // Open the input stream
         FileInputStream inStream = null;
         try {
             inStream = new FileInputStream(inFile);
@@ -101,6 +102,7 @@ public class OperationVersion implements Operation {
         if (!namespace.getBoolean("get")) {
             // Commence to set the PDF version of the output PDF document
 
+            // Determine the desired PDF version
             PdfVersion outVersion = namespace.get("set");
             assert outVersion != null; // The argument "set" has a default value
             System.out.println(String.format("Desired output PDF version: %s", outVersion));
@@ -133,8 +135,10 @@ public class OperationVersion implements Operation {
             System.out.println("--get flag is set; no modifications will be made.");
         }
 
+        // Close the PDF reader
         pdfReader.close();
 
+        // Close the input stream
         try {
             inStream.close();
         } catch (IOException ex) {

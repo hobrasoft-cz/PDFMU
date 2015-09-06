@@ -3,6 +3,8 @@ package cz.hobrasoft.pdfmu;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,74 +32,93 @@ public class OperationVersion implements Operation {
 
     @Override
     public void execute(Namespace namespace) {
-        String inFilename = namespace.getString("in");
-        assert inFilename != null; // Argument "in" is required
-        // TODO: Lift the requirement here
-        System.out.println(String.format("Input PDF document path: %s", inFilename));
+        File inFile = namespace.get("in");
+        assert inFile != null; // TODO: Lift the requirement here
 
-        PdfReader pdfReader = null;
+        System.out.println(String.format("Input PDF document: %s", inFile));
+        FileInputStream inStream = null;
         try {
-            pdfReader = new PdfReader(inFilename);
-        } catch (IOException e) {
-            System.err.println("Could not open the input PDF document: " + e.getMessage());
+            inStream = new FileInputStream(inFile);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Input file not found: " + ex.getMessage());
         }
 
-        if (pdfReader != null) {
-            PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-
-            System.out.println(String.format("Input PDF document version: %s", inVersion));
-
-            if (!namespace.getBoolean("get")) {
-                // TODO: Handle overwriting using "force" argument
-
-                PdfVersion outVersion = namespace.get("set");
-                System.out.println(String.format("Desired output PDF version: %s", outVersion));
-                if (outVersion.compareTo(inVersion) < 0) {
-                    System.err.println(String.format("Cannot decrease the PDF version"));
-                } else {
-                    String outFilename = namespace.getString("out");
-                    if (outFilename == null) {
-                        System.out.println("--set parametr not specified; setting output to match input");
-                        outFilename = inFilename;
-                    }
-
-                    System.out.println(String.format("Output PDF document path: %s", outFilename));
-
-                    // Open file output stream
-                    FileOutputStream os = null;
-                    try {
-                        os = new FileOutputStream(outFilename);
-                    } catch (FileNotFoundException ex) {
-                        System.err.println("Could not open the output PDF document: " + ex.getMessage());
-                    }
-
-                    if (os != null) {
-                        // Open PDF stamper
-                        PdfStamper pdfStamper = null;
-                        try {
-                            // Set version immediately when opening the stamper
-                            pdfStamper = new PdfStamper(pdfReader, os, outVersion.toChar());
-                        } catch (DocumentException | IOException ex) {
-                            System.err.println("Could not open PDF stamper: " + ex.getMessage());
-                        }
-
-                        System.out.println("The PDF version has been successfully set.");
-
-                        if (pdfStamper != null) {
-                            // Close PDF stamper
-                            try {
-                                pdfStamper.close();
-                            } catch (DocumentException | IOException ex) {
-                                System.err.println("Could not close PDF stamper: " + ex.getMessage());
-                            }
-                        }
-                    }
-                }
-            } else {
-                System.out.println("--get argument present; no modifications will be made.");
+        if (inStream != null) {
+            PdfReader pdfReader = null;
+            try {
+                pdfReader = new PdfReader(inStream);
+            } catch (IOException e) {
+                System.err.println("Could not open the input PDF document: " + e.getMessage());
             }
 
-            pdfReader.close();
+            if (pdfReader != null) {
+                PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
+
+                System.out.println(String.format("Input PDF document version: %s", inVersion));
+
+                if (!namespace.getBoolean("get")) {
+                    PdfVersion outVersion = namespace.get("set");
+                    System.out.println(String.format("Desired output PDF version: %s", outVersion));
+                    if (outVersion.compareTo(inVersion) < 0) {
+                        System.err.println(String.format("Cannot decrease the PDF version"));
+                    } else {
+                        File outFile = namespace.get("out");
+                        if (outFile == null) {
+                            System.out.println("--out parametr not specified; setting output to match input");
+                            outFile = inFile;
+                        }
+
+                        System.out.println(String.format("Output PDF document: %s", outFile));
+
+                        if (outFile.exists()) {
+                            System.out.println("Output PDF document already exists.");
+                        }
+
+                        if (!outFile.exists() || namespace.getBoolean("force")) {
+                            // Open file output stream
+                            FileOutputStream os = null;
+                            try {
+                                os = new FileOutputStream(outFile);
+                            } catch (FileNotFoundException ex) {
+                                System.err.println("Could not open the output PDF document: " + ex.getMessage());
+                            }
+
+                            if (os != null) {
+                                // Open PDF stamper
+                                PdfStamper pdfStamper = null;
+                                try {
+                                    // Set version immediately when opening the stamper
+                                    pdfStamper = new PdfStamper(pdfReader, os, outVersion.toChar());
+                                } catch (DocumentException | IOException ex) {
+                                    System.err.println("Could not open PDF stamper: " + ex.getMessage());
+                                }
+
+                                System.out.println("The PDF version has been successfully set.");
+
+                                if (pdfStamper != null) {
+                                    // Close PDF stamper
+                                    try {
+                                        pdfStamper.close();
+                                    } catch (DocumentException | IOException ex) {
+                                        System.err.println("Could not close PDF stamper: " + ex.getMessage());
+                                    }
+                                }
+                            }
+                        } else {
+                            System.err.println("Output file already exists. Enable --force flag to overwrite.");
+                        }
+                    }
+                } else {
+                    System.out.println("--get argument present; no modifications will be made.");
+                }
+
+                pdfReader.close();
+            }
+            try {
+                inStream.close();
+            } catch (IOException ex) {
+                System.err.println("Could not close the input file: " + ex.getMessage());
+            }
         }
     }
 
@@ -114,17 +135,12 @@ public class OperationVersion implements Operation {
                 .defaultHelp(true)
                 .setDefault("command", OperationVersion.class);
         subparser.addArgument("-i", "--in")
-                .type(String.class)
-                // TODO: Consider using `FileInputStream.class` as type
-                // http://argparse4j.sourceforge.net/usage.html#argument-nargs
-                // Also see:
-                // http://argparse4j.sourceforge.net/usage.html#filetype
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
                 .help("input PDF document")
                 .required(true)
-                .nargs("?")
                 .metavar(metavarIn);
         subparser.addArgument("-o", "--out")
-                .type(String.class)
+                .type(Arguments.fileType().verifyCanCreate())
                 .help("output PDF document")
                 .nargs("?")
                 .metavar(metavarOut);

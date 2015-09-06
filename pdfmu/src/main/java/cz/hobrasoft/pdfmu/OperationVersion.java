@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentType;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
@@ -164,15 +165,21 @@ public class OperationVersion implements Operation {
                 .setDefault("command", OperationVersion.class);
 
         // Add arguments to the subparser
-        subparser.addArgument("-i", "--in")
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
-                .help("input PDF document")
-                .metavar(metavarIn);
-        subparser.addArgument("in") // positional alternative to "--in"
-                .help("input PDF document")
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
-                .nargs("?")
-                .metavar(metavarIn);
+        { // Input PDF document
+            String inHelp = "input PDF document";
+            ArgumentType inType = Arguments.fileType().
+                    acceptSystemIn().
+                    verifyCanRead();
+            subparser.addArgument("-i", "--in")
+                    .help(inHelp)
+                    .metavar(metavarIn)
+                    .type(inType);
+            subparser.addArgument("in") // Positional alternative to "--in"
+                    .help(inHelp)
+                    .metavar(metavarIn)
+                    .type(inType)
+                    .nargs("?"); // Positional arguments are required by default
+        }
         subparser.addArgument("-o", "--out")
                 .type(Arguments.fileType().verifyCanCreate())
                 .help("output PDF document")

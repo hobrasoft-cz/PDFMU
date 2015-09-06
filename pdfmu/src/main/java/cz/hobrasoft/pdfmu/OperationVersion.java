@@ -73,7 +73,9 @@ public class OperationVersion implements Operation {
     @Override
     public void execute(Namespace namespace) throws OperationException {
         File inFile = namespace.get("in");
-        assert inFile != null; // The argument "in" is required.
+        if (inFile == null) {
+            throw new OperationException("Input PDF document has not been specified. Use the --in option to set the input PDF document.");
+        }
 
         System.out.println(String.format("Input PDF document: %s", inFile));
 
@@ -165,7 +167,11 @@ public class OperationVersion implements Operation {
         subparser.addArgument("-i", "--in")
                 .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
                 .help("input PDF document")
-                .required(true)
+                .metavar(metavarIn);
+        subparser.addArgument("in") // positional alternative to "--in"
+                .help("input PDF document")
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
+                .nargs("?")
                 .metavar(metavarIn);
         subparser.addArgument("-o", "--out")
                 .type(Arguments.fileType().verifyCanCreate())

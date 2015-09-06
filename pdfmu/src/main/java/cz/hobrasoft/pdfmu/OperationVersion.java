@@ -36,7 +36,7 @@ public class OperationVersion implements Operation {
         try {
             os = new FileOutputStream(outFile);
         } catch (FileNotFoundException ex) {
-            System.err.println("Could not open the output PDF document: " + ex.getMessage());
+            System.err.println("Could not open the output file: " + ex.getMessage());
         }
 
         if (os != null) {
@@ -92,28 +92,28 @@ public class OperationVersion implements Operation {
                     PdfVersion outVersion = namespace.get("set");
                     System.out.println(String.format("Desired output PDF version: %s", outVersion));
                     if (outVersion.compareTo(inVersion) < 0) {
-                        System.err.println(String.format("Cannot decrease the PDF version"));
+                        System.err.println(String.format("Cannot decrease the PDF version."));
                     } else {
                         File outFile = namespace.get("out");
                         if (outFile == null) {
-                            System.out.println("--out parametr not specified; setting output to match input");
+                            System.out.println("--out option not specified; assuming in-place version change");
                             outFile = inFile;
                         }
 
                         System.out.println(String.format("Output PDF document: %s", outFile));
 
                         if (outFile.exists()) {
-                            System.out.println("Output PDF document already exists.");
+                            System.out.println("Output file already exists.");
                         }
 
                         if (!outFile.exists() || namespace.getBoolean("force")) {
                             setPdfVersion(outFile, pdfReader, outVersion.toChar());
                         } else {
-                            System.err.println("Output file already exists. Enable --force flag to overwrite.");
+                            System.err.println("Set --force flag to overwrite.");
                         }
                     }
                 } else {
-                    System.out.println("--get argument present; no modifications will be made.");
+                    System.out.println("--get flag is set; no modifications will be made.");
                 }
 
                 pdfReader.close();

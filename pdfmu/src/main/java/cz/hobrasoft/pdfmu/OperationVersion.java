@@ -262,7 +262,7 @@ public class OperationVersion implements Operation {
          *
          * <p>
          * This format of PDF version is accepted for example by
-         * {@link com.itextpdf.text.pdf.PdfStamper#PdfStamper(com.itextpdf.text.pdf.PdfReader, OutputStream, char)}
+         * {@link PdfStamper#PdfStamper(PdfReader, OutputStream, char)}
          *
          * @return last character of the PDF version
          */

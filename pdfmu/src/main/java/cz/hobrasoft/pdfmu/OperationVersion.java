@@ -30,6 +30,9 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  */
 public class OperationVersion implements Operation {
 
+    /**
+     * Copies a PDF document, changing its version
+     */
     private void setPdfVersion(File outFile, PdfReader inPdfReader, char outPdfVersion) {
         // Open file output stream
         FileOutputStream os = null;

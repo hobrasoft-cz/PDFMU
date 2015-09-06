@@ -86,7 +86,8 @@ public class OperationVersion implements Operation {
         }
         assert inStream != null;
 
-        // PdfReader parses a PDF document
+        // Open the PDF reader
+        // PdfReader parses a PDF document.
         PdfReader pdfReader = null;
         try {
             pdfReader = new PdfReader(inStream);

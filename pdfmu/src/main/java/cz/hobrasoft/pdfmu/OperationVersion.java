@@ -61,6 +61,13 @@ public class OperationVersion implements Operation {
         } catch (DocumentException | IOException ex) {
             throw new OperationException("Could not close PDF stamper.", ex);
         }
+
+        // Close output stream
+        try {
+            os.close();
+        } catch (IOException ex) {
+            throw new OperationException("Could not close the output file.", ex);
+        }
     }
 
     @Override

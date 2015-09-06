@@ -30,6 +30,38 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  */
 public class OperationVersion implements Operation {
 
+    private void setPdfVersion(File outFile, PdfReader inPdfReader, char outPdfVersion) {
+        // Open file output stream
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream(outFile);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Could not open the output PDF document: " + ex.getMessage());
+        }
+
+        if (os != null) {
+            // Open PDF stamper
+            PdfStamper pdfStamper = null;
+            try {
+                // Set version immediately when opening the stamper
+                pdfStamper = new PdfStamper(inPdfReader, os, outPdfVersion);
+            } catch (DocumentException | IOException ex) {
+                System.err.println("Could not open PDF stamper: " + ex.getMessage());
+            }
+
+            System.out.println("The PDF version has been successfully set.");
+
+            if (pdfStamper != null) {
+                // Close PDF stamper
+                try {
+                    pdfStamper.close();
+                } catch (DocumentException | IOException ex) {
+                    System.err.println("Could not close PDF stamper: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
     @Override
     public void execute(Namespace namespace) {
         File inFile = namespace.get("in");
@@ -75,35 +107,7 @@ public class OperationVersion implements Operation {
                         }
 
                         if (!outFile.exists() || namespace.getBoolean("force")) {
-                            // Open file output stream
-                            FileOutputStream os = null;
-                            try {
-                                os = new FileOutputStream(outFile);
-                            } catch (FileNotFoundException ex) {
-                                System.err.println("Could not open the output PDF document: " + ex.getMessage());
-                            }
-
-                            if (os != null) {
-                                // Open PDF stamper
-                                PdfStamper pdfStamper = null;
-                                try {
-                                    // Set version immediately when opening the stamper
-                                    pdfStamper = new PdfStamper(pdfReader, os, outVersion.toChar());
-                                } catch (DocumentException | IOException ex) {
-                                    System.err.println("Could not open PDF stamper: " + ex.getMessage());
-                                }
-
-                                System.out.println("The PDF version has been successfully set.");
-
-                                if (pdfStamper != null) {
-                                    // Close PDF stamper
-                                    try {
-                                        pdfStamper.close();
-                                    } catch (DocumentException | IOException ex) {
-                                        System.err.println("Could not close PDF stamper: " + ex.getMessage());
-                                    }
-                                }
-                            }
+                            setPdfVersion(outFile, pdfReader, outVersion.toChar());
                         } else {
                             System.err.println("Output file already exists. Enable --force flag to overwrite.");
                         }

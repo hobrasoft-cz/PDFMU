@@ -189,7 +189,7 @@ public class OperationVersion implements Operation {
                 .help(String.format("display version of %s without setting the version", metavarIn))
                 .action(Arguments.storeTrue());
         subparser.addArgument("--force")
-                .help(String.format("overwrite %s if already present", metavarOut))
+                .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
 

@@ -181,19 +181,19 @@ public class OperationVersion implements Operation {
                     .nargs("?"); // Positional arguments are required by default
         }
         subparser.addArgument("-o", "--out")
-                .type(Arguments.fileType().verifyCanCreate())
                 .help("output PDF document")
-                .nargs("?")
-                .metavar(metavarOut);
+                .metavar(metavarOut)
+                .type(Arguments.fileType().verifyCanCreate())
+                .nargs("?");
         subparser.addArgument("-s", "--set")
-                .type(PdfVersion.class)
                 .help(String.format("set PDF version to %s", metavarSet))
+                .metavar(metavarSet)
+                .type(PdfVersion.class)
                 .nargs("?")
-                .setDefault(new PdfVersion("1.6"))
-                .metavar(metavarSet);
+                .setDefault(new PdfVersion("1.6"));
         subparser.addArgument("-g", "--get")
-                .type(boolean.class)
                 .help(String.format("display version of %s without setting the version", metavarIn))
+                .type(boolean.class)
                 .action(Arguments.storeTrue());
         subparser.addArgument("--force")
                 .help(String.format("overwrite %s if it exists", metavarOut))

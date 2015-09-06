@@ -99,7 +99,7 @@ public class OperationVersion implements Operation {
                     PdfVersion outVersion = namespace.get("set");
                     System.out.println(String.format("Desired output PDF version: %s", outVersion));
                     if (outVersion.compareTo(inVersion) < 0) {
-                        System.err.println(String.format("Cannot decrease the PDF version."));
+                        System.err.println(String.format("Cannot lower the PDF version."));
                     } else {
                         File outFile = namespace.get("out");
                         if (outFile == null) {

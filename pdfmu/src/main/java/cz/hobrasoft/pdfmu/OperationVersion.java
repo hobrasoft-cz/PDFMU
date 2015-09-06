@@ -83,6 +83,7 @@ public class OperationVersion implements Operation {
         }
 
         if (inStream != null) {
+            // PdfReader parses a PDF document
             PdfReader pdfReader = null;
             try {
                 pdfReader = new PdfReader(inStream);
@@ -91,15 +92,18 @@ public class OperationVersion implements Operation {
             }
 
             if (pdfReader != null) {
+                // Fetch the PDF version of the input PDF document
                 PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-
                 System.out.println(String.format("Input PDF document version: %s", inVersion));
 
                 if (!namespace.getBoolean("get")) {
+                    // Commence to set the PDF version of the output PDF document
                     PdfVersion outVersion = namespace.get("set");
                     System.out.println(String.format("Desired output PDF version: %s", outVersion));
                     if (outVersion.compareTo(inVersion) < 0) {
+                        // The desired version is lower than the current version.
                         System.err.println(String.format("Cannot lower the PDF version."));
+                        // TODO: Add --force-lower-version flag that enables lowering the version
                     } else {
                         File outFile = namespace.get("out");
                         if (outFile == null) {
@@ -114,6 +118,7 @@ public class OperationVersion implements Operation {
                         }
 
                         if (!outFile.exists() || namespace.getBoolean("force")) {
+                            // Creating a new file or allowed to overwrite the old one
                             setPdfVersion(outFile, pdfReader, outVersion.toChar());
                         } else {
                             System.err.println("Set --force flag to overwrite.");
@@ -140,11 +145,14 @@ public class OperationVersion implements Operation {
         String metavarOut = "OUT.pdf";
         String metavarSet = "VERSION";
 
+        // Add the subparser
         Subparser subparser = subparsers.addParser("version")
                 .help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationVersion.class);
+
+        // Add arguments to the subparser
         subparser.addArgument("-i", "--in")
                 .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
                 .help("input PDF document")

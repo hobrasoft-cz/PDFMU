@@ -58,20 +58,27 @@ public class Main {
             parser.handleError(e);
         }
         if (namespace != null) {
+            Operation operation = null;
             switch (namespace.getString("operation")) {
                 case "version":
-                    operationVersion.execute(namespace);
+                    operation = operationVersion;
                     break;
                 case "sign":
-                    operationSign.execute(namespace);
+                    operation = operationSign;
                     break;
                 case "attach":
-                    operationAttach.execute(namespace);
+                    operation = operationAttach;
                     break;
                 default:
                     // Invalid or none operation was specified,
                     // so `parser.parseArgs` should have thrown an exception.
                     assert false;
+            }
+            assert operation != null;
+            try {
+                operation.execute(namespace);
+            } catch (OperationException ex) {
+                System.err.println(ex.getMessage());
             }
         }
     }

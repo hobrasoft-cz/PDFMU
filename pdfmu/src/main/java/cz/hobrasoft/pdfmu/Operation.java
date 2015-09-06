@@ -15,8 +15,10 @@ public interface Operation {
      * Executes the operation
      *
      * @param namespace parsed command line arguments
+     * @throws OperationException if some condition prevents the operation from
+     * finishing
      */
-    public void execute(Namespace namespace);
+    public void execute(Namespace namespace) throws OperationException;
 
     /**
      * Adds this operation's subparser to a given Subparsers object

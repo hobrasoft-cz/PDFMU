@@ -33,40 +33,38 @@ public class OperationVersion implements Operation {
     /**
      * Copies a PDF document, changing its version
      */
-    private void setPdfVersion(File outFile, PdfReader inPdfReader, char outPdfVersion) {
-        // Open file output stream
+    private void setPdfVersion(File outFile, PdfReader inPdfReader, char outPdfVersion) throws OperationException {
+        // Open output stream
         FileOutputStream os = null;
         try {
             os = new FileOutputStream(outFile);
         } catch (FileNotFoundException ex) {
-            System.err.println("Could not open the output file: " + ex.getMessage());
+            throw new OperationException("Could not open the output file.", ex);
         }
+        assert os != null;
 
-        if (os != null) {
-            // Open PDF stamper
-            PdfStamper pdfStamper = null;
-            try {
-                // Set version immediately when opening the stamper
-                pdfStamper = new PdfStamper(inPdfReader, os, outPdfVersion);
-            } catch (DocumentException | IOException ex) {
-                System.err.println("Could not open PDF stamper: " + ex.getMessage());
-            }
+        // Open PDF stamper
+        PdfStamper pdfStamper = null;
+        try {
+            // Set version immediately when opening the stamper
+            pdfStamper = new PdfStamper(inPdfReader, os, outPdfVersion);
+        } catch (DocumentException | IOException ex) {
+            throw new OperationException("Could not open PDF stamper.", ex);
+        }
+        assert pdfStamper != null;
 
-            System.out.println("The PDF version has been successfully set.");
+        System.out.println("The PDF version has been successfully set.");
 
-            if (pdfStamper != null) {
-                // Close PDF stamper
-                try {
-                    pdfStamper.close();
-                } catch (DocumentException | IOException ex) {
-                    System.err.println("Could not close PDF stamper: " + ex.getMessage());
-                }
-            }
+        // Close PDF stamper
+        try {
+            pdfStamper.close();
+        } catch (DocumentException | IOException ex) {
+            throw new OperationException("Could not close PDF stamper.", ex);
         }
     }
 
     @Override
-    public void execute(Namespace namespace) {
+    public void execute(Namespace namespace) throws OperationException {
         File inFile = namespace.get("in");
 
         // "in" argument is required.
@@ -79,62 +77,60 @@ public class OperationVersion implements Operation {
         try {
             inStream = new FileInputStream(inFile);
         } catch (FileNotFoundException ex) {
-            System.err.println("Input file not found: " + ex.getMessage());
+            throw new OperationException("Input file not found.", ex);
         }
+        assert inStream != null;
 
-        if (inStream != null) {
-            // PdfReader parses a PDF document
-            PdfReader pdfReader = null;
-            try {
-                pdfReader = new PdfReader(inStream);
-            } catch (IOException e) {
-                System.err.println("Could not open the input PDF document: " + e.getMessage());
-            }
+        // PdfReader parses a PDF document
+        PdfReader pdfReader = null;
+        try {
+            pdfReader = new PdfReader(inStream);
+        } catch (IOException ex) {
+            throw new OperationException("Could not open the input PDF document.", ex);
+        }
+        assert pdfReader != null;
 
-            if (pdfReader != null) {
-                // Fetch the PDF version of the input PDF document
-                PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-                System.out.println(String.format("Input PDF document version: %s", inVersion));
+        // Fetch the PDF version of the input PDF document
+        PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
+        System.out.println(String.format("Input PDF document version: %s", inVersion));
 
-                if (!namespace.getBoolean("get")) {
-                    // Commence to set the PDF version of the output PDF document
-                    PdfVersion outVersion = namespace.get("set");
-                    System.out.println(String.format("Desired output PDF version: %s", outVersion));
-                    if (outVersion.compareTo(inVersion) < 0) {
-                        // The desired version is lower than the current version.
-                        System.err.println(String.format("Cannot lower the PDF version."));
-                        // TODO: Add --force-lower-version flag that enables lowering the version
-                    } else {
-                        File outFile = namespace.get("out");
-                        if (outFile == null) {
-                            System.out.println("--out option not specified; assuming in-place version change");
-                            outFile = inFile;
-                        }
-
-                        System.out.println(String.format("Output PDF document: %s", outFile));
-
-                        if (outFile.exists()) {
-                            System.out.println("Output file already exists.");
-                        }
-
-                        if (!outFile.exists() || namespace.getBoolean("force")) {
-                            // Creating a new file or allowed to overwrite the old one
-                            setPdfVersion(outFile, pdfReader, outVersion.toChar());
-                        } else {
-                            System.err.println("Set --force flag to overwrite.");
-                        }
-                    }
-                } else {
-                    System.out.println("--get flag is set; no modifications will be made.");
+        if (!namespace.getBoolean("get")) {
+            // Commence to set the PDF version of the output PDF document
+            PdfVersion outVersion = namespace.get("set");
+            System.out.println(String.format("Desired output PDF version: %s", outVersion));
+            if (outVersion.compareTo(inVersion) < 0) {
+                // The desired version is lower than the current version.
+                throw new OperationException("Cannot lower the PDF version.");
+                // TODO: Add --force-lower-version flag that enables lowering the version
+            } else {
+                File outFile = namespace.get("out");
+                if (outFile == null) {
+                    System.out.println("--out option not specified; assuming in-place version change");
+                    outFile = inFile;
                 }
 
-                pdfReader.close();
+                System.out.println(String.format("Output PDF document: %s", outFile));
+
+                if (outFile.exists()) {
+                    System.out.println("Output file already exists.");
+                }
+
+                if (!outFile.exists() || namespace.getBoolean("force")) {
+                    // Creating a new file or allowed to overwrite the old one
+                    setPdfVersion(outFile, pdfReader, outVersion.toChar());
+                } else {
+                    throw new OperationException("Set --force flag to overwrite.");
+                }
             }
-            try {
-                inStream.close();
-            } catch (IOException ex) {
-                System.err.println("Could not close the input file: " + ex.getMessage());
-            }
+        } else {
+            System.out.println("--get flag is set; no modifications will be made.");
+        }
+
+        pdfReader.close();
+        try {
+            inStream.close();
+        } catch (IOException ex) {
+            throw new OperationException("Could not close the input file.", ex);
         }
     }
 

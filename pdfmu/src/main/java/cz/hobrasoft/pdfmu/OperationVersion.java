@@ -101,6 +101,7 @@ public class OperationVersion implements Operation {
         if (!namespace.getBoolean("get")) {
             // Commence to set the PDF version of the output PDF document
             PdfVersion outVersion = namespace.get("set");
+            assert outVersion != null; // The argument "set" has a default value
             System.out.println(String.format("Desired output PDF version: %s", outVersion));
             if (outVersion.compareTo(inVersion) < 0) {
                 // The desired version is lower than the current version.

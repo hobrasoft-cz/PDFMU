@@ -53,8 +53,14 @@ public class Main {
 
         Namespace namespace = null;
         try {
+            // If help is requested,
+            // `parseArgs` prints help message and throws `ArgumentParserException`
+            // (so `namespace` stays null).
+            // If insufficient or invalid `args` are given,
+            // `parseArgs` throws `ArgumentParserException`.
             namespace = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
+            // Prints information about the parsing error (missing argument etc.)
             parser.handleError(e);
         }
         if (namespace != null) {

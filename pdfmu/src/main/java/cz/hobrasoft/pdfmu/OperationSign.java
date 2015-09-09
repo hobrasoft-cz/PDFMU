@@ -42,7 +42,7 @@ public class OperationSign implements Operation {
                 .nargs("?")
                 .metavar(metavarCertificate);
         subparser.addArgument("-o", "--out")
-                .help("output PDF file")
+                .help("output PDF document")
                 .type(String.class)
                 .nargs("?")
                 .metavar(metavarOut);

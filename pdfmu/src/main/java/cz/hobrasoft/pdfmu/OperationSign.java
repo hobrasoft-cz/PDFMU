@@ -338,7 +338,8 @@ public class OperationSign implements Operation {
         subparser.addArgument("in")
                 .help("input PDF document")
                 .metavar(metavarIn)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
+                .required(true);
 
         // Keystore
         // CLI inspired by `keytool`

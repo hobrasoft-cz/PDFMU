@@ -47,7 +47,7 @@ public class OperationSign implements Operation {
                 .nargs("?")
                 .metavar(metavarOut);
         subparser.addArgument("--force")
-                .help(String.format("overwrite %s if already present", metavarOut))
+                .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
 

@@ -48,6 +48,23 @@ public class OperationSign implements Operation {
                     .type(inType)
                     .nargs("?"); // Positional arguments are required by default
         }
+
+        // Keystore
+        // CLI inspired by `keytool`
+        subparser.addArgument("-ks", "--keystore")
+                .help("keystore file")
+                .type(Arguments.fileType().verifyCanRead())
+                .required(true);
+        subparser.addArgument("-sp", "--storepass")
+                .help("keystore password (default: <empty>)")
+                .type(String.class);
+        subparser.addArgument("-a", "--alias")
+                .help("keystore entry alias (default: <first entry in the keystore>)")
+                .type(String.class);
+        subparser.addArgument("-kp", "--keypass")
+                .help("keystore entry password (default: <empty>)")
+                .type(String.class);
+
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)

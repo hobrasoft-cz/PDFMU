@@ -151,6 +151,24 @@ public class OperationSign implements Operation {
         }
         System.err.println(String.format("Keystore entry alias: %s", alias));
 
+        // Make sure the entry `alias` is present in the keystore
+        try {
+            if (!ks.containsAlias(alias)) {
+                throw new OperationException(String.format("Keystore does not contain the alias %s.", alias));
+            }
+        } catch (KeyStoreException ex) {
+            throw new OperationException(String.format("Could not determine whether the keystore contains the alias %s.", alias), ex);
+        }
+
+        // Make sure `alias` is a key entry
+        try {
+            if (!ks.isKeyEntry(alias)) {
+                throw new OperationException(String.format("The keystore entry associated with the alias %s is not a key entry.", alias));
+            }
+        } catch (KeyStoreException ex) {
+            throw new OperationException(String.format("Could not determine whether the keystore entry %s is a key.", alias), ex);
+        }
+
         // Set key password if not set from command line
         if (keyPassword == null) {
             System.err.println("Key password not set. Using empty password.");

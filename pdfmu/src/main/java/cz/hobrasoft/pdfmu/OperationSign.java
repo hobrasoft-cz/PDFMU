@@ -325,15 +325,11 @@ public class OperationSign implements Operation {
                     .acceptSystemIn()
                     .verifyCanRead();
 
-            subparser.addArgument("-i", "--in")
+            // Positional arguments are required by default
+            subparser.addArgument("in")
                     .help(inHelp)
                     .metavar(metavarIn)
                     .type(inType);
-            subparser.addArgument("in") // Positional alternative to "--in"
-                    .help(inHelp)
-                    .metavar(metavarIn)
-                    .type(inType)
-                    .nargs("?"); // Positional arguments are required by default
         }
 
         // Keystore

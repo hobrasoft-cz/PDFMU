@@ -350,10 +350,10 @@ public class OperationSign implements Operation {
                 .help("keystore password (default: <empty>)")
                 .type(String.class);
         subparser.addArgument("-a", "--alias")
-                .help("keystore entry alias (default: <first entry in the keystore>)")
+                .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
         subparser.addArgument("-kp", "--keypass")
-                .help("keystore entry password (default: <empty>)")
+                .help("key password (default: <empty>)")
                 .type(String.class);
 
         subparser.addArgument("-o", "--out")

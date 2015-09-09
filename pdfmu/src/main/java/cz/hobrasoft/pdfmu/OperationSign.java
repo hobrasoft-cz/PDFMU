@@ -140,7 +140,7 @@ public class OperationSign implements Operation {
         // Set alias if not set from command line
         if (alias == null) {
             // Get the first alias in the keystore
-            System.err.println("Keystore entry alias not set. Using the first entry.");
+            System.err.println("Keystore entry alias not set. Using the first entry in the keystore.");
             try {
                 alias = ks.aliases().nextElement();
             } catch (KeyStoreException ex) {

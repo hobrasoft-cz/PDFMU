@@ -198,8 +198,12 @@ public class OperationSign implements Operation {
         PrivateKey pk;
         try {
             pk = (PrivateKey) ks.getKey(alias, keyPassword);
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+        } catch (KeyStoreException ex) {
             throw new OperationException("Could not get key from keystore.", ex);
+        } catch (NoSuchAlgorithmException ex) {
+            throw new OperationException("Could not get key from keystore.", ex);
+        } catch (UnrecoverableKeyException ex) {
+            throw new OperationException("Could not get key from keystore. Incorrect key password? Incorrect keystore type?", ex);
         }
 
         // Get certificate chain from keystore

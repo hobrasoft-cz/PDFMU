@@ -44,7 +44,7 @@ public class OperationSign implements Operation {
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)
-                .type(String.class)
+                .type(Arguments.fileType().verifyCanCreate())
                 .nargs("?");
         subparser.addArgument("-f", "--force")
                 .help(String.format("overwrite %s if it exists", metavarOut))

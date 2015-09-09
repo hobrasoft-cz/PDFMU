@@ -20,14 +20,18 @@ public class OperationSign implements Operation {
     @Override
     public Subparser addParser(Subparsers subparsers) {
         String help = "Digitally sign a PDF document";
+
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
 
+        // Add the subparser
         Subparser subparser = subparsers.addParser("sign")
                 .help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationSign.class);
+
+        // Add arguments to the subparser
         { // Input PDF document
             String inHelp = "input PDF document";
             ArgumentType inType = Arguments.fileType()

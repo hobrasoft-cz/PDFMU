@@ -84,6 +84,7 @@ public class OperationSign implements Operation {
             String contact,
             Calendar signDate,
             File ksFile,
+            String ksType,
             char[] ksPassword,
             String alias,
             char[] keyPassword) throws OperationException {
@@ -106,13 +107,21 @@ public class OperationSign implements Operation {
         }
         sap.setCertificationLevel(PdfSignatureAppearance.NOT_CERTIFIED); // TODO?: Expose
 
+        // Set keystore type if not set from command line
+        if (ksType == null) {
+            // TODO: Guess type from `ksFile` file extension
+            System.err.println("Keystore type not specified. Using the default type.");
+            ksType = KeyStore.getDefaultType();
+        }
+        System.err.println(String.format("Keystore type: %s", ksType));
+
         // digitalsignatures20130304.pdf : Code sample 2.2
         // Initialize keystore
         KeyStore ks;
         try {
-            ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        } catch (KeyStoreException ex) {
-            throw new OperationException("Could not instantiate keystore.", ex);
+            ks = KeyStore.getInstance(ksType);
+        } catch (KeyStoreException ex1) {
+            throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", ksType), ex1);
         }
 
         // Load keystore
@@ -214,6 +223,7 @@ public class OperationSign implements Operation {
 
     private static void signDetached(PdfStamper stp,
             File ksFile,
+            String ksType,
             char[] ksPassword,
             String alias,
             char[] keyPassword) throws OperationException {
@@ -226,7 +236,7 @@ public class OperationSign implements Operation {
         String name = null;
         String contact = null;
         Calendar signDate = null;
-        signDetached(stp, crlList, ocspClient, tsaClient, estimatedSize, reason, location, name, contact, signDate, ksFile, ksPassword, alias, keyPassword);
+        signDetached(stp, crlList, ocspClient, tsaClient, estimatedSize, reason, location, name, contact, signDate, ksFile, ksType, ksPassword, alias, keyPassword);
     }
 
     @Override
@@ -313,7 +323,8 @@ public class OperationSign implements Operation {
                 }
             }
 
-            signDetached(stp, ksFile, ksPassword, alias, keyPassword);
+            String ksType = namespace.getString("type");
+            signDetached(stp, ksFile, ksType, ksPassword, alias, keyPassword);
             System.err.println("Successfully signed the document.");
 
             // Close the PDF stamper
@@ -372,6 +383,16 @@ public class OperationSign implements Operation {
                 .help("keystore file")
                 .type(Arguments.fileType().verifyCanRead())
                 .required(true);
+        // Valid types:
+        // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
+        // Type "pkcs12" file extensions: P12, PFX
+        // Source: https://en.wikipedia.org/wiki/PKCS_12
+        subparser.addArgument("-t", "--type")
+                .help("keystore type")
+                .type(String.class)
+                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12"});
+        // TODO?: Guess type from file extension by default
+        // TODO?: Hardcode to "pkcs12" since it seems to be required for our purpose
         subparser.addArgument("-sp", "--storepass")
                 .help("keystore password (default: <empty>)")
                 .type(String.class);

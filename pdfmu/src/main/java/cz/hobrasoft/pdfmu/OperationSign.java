@@ -115,7 +115,8 @@ public class OperationSign implements Operation {
             throw new OperationException("Could not instantiate keystore.", ex);
         }
 
-        { // Load keystore
+        // Load keystore
+        { // ksIs
             FileInputStream ksIs;
             try {
                 ksIs = new FileInputStream(ksFile);

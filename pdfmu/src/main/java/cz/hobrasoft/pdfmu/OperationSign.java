@@ -38,7 +38,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  * Adds a digital signature to a PDF document
  *
- * @author Filip
+ * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationSign implements Operation {
 

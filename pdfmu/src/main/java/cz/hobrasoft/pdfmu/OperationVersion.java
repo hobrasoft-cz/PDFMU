@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentType;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
@@ -74,9 +73,7 @@ public class OperationVersion implements Operation {
     @Override
     public void execute(Namespace namespace) throws OperationException {
         File inFile = namespace.get("in");
-        if (inFile == null) {
-            throw new OperationException("Input PDF document has not been specified. Use the --in option to set the input PDF document.");
-        }
+        assert inFile != null;
 
         System.out.println(String.format("Input PDF document: %s", inFile));
 
@@ -166,21 +163,10 @@ public class OperationVersion implements Operation {
                 .setDefault("command", OperationVersion.class);
 
         // Add arguments to the subparser
-        { // Input PDF document
-            String inHelp = "input PDF document";
-            ArgumentType inType = Arguments.fileType().
-                    acceptSystemIn().
-                    verifyCanRead();
-            subparser.addArgument("-i", "--in")
-                    .help(inHelp)
-                    .metavar(metavarIn)
-                    .type(inType);
-            subparser.addArgument("in") // Positional alternative to "--in"
-                    .help(inHelp)
-                    .metavar(metavarIn)
-                    .type(inType)
-                    .nargs("?"); // Positional arguments are required by default
-        }
+        subparser.addArgument("in") // Positional alternative to "--in"
+                .help("input PDF document")
+                .metavar(metavarIn)
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
         subparser.addArgument("-o", "--out")
                 .help("output PDF document")
                 .metavar(metavarOut)

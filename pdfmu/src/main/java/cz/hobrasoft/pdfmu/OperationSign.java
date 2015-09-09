@@ -177,6 +177,7 @@ public class OperationSign implements Operation {
         ExternalDigest externalDigest = new BouncyCastleDigest();
 
         // Initialize signature algorithm
+        System.err.println(String.format("Signature security provider: %s", provider.getName()));
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
 
         // digitalsignatures20130304.pdf : Section 2.2.1

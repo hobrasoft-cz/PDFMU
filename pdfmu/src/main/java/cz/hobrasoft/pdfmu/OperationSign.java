@@ -153,7 +153,6 @@ public class OperationSign implements Operation {
             }
             alias = aliases.nextElement();
             assert alias != null;
-            System.err.println(String.format("Extracted keystore entry alias: %s", alias));
         }
         System.err.println(String.format("Keystore entry alias: %s", alias));
 

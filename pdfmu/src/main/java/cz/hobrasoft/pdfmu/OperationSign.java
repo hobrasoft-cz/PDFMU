@@ -28,12 +28,22 @@ public class OperationSign implements Operation {
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationSign.class);
-        subparser.addArgument("-i", "--in")
-                .help("input PDF file")
-                .type(String.class)
-                .required(true)
-                .nargs("?")
-                .metavar(metavarIn);
+        { // Input PDF document
+            String inHelp = "input PDF document";
+            ArgumentType inType = Arguments.fileType()
+                    .acceptSystemIn()
+                    .verifyCanRead();
+
+            subparser.addArgument("-i", "--in")
+                    .help(inHelp)
+                    .metavar(metavarIn)
+                    .type(inType);
+            subparser.addArgument("in") // Positional alternative to "--in"
+                    .help(inHelp)
+                    .metavar(metavarIn)
+                    .type(inType)
+                    .nargs("?"); // Positional arguments are required by default
+        }
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)

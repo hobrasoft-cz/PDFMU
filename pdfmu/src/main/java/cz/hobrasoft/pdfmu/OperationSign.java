@@ -189,7 +189,6 @@ public class OperationSign implements Operation {
 
     @Override
     public void execute(Namespace namespace) throws OperationException {
-        // http://api.itextpdf.com/itext/com/itextpdf/text/pdf/PdfStamper.html#createSignature%28com.itextpdf.text.pdf.PdfReader,%20java.io.OutputStream,%20char%29
         File inFile = namespace.get("in");
         if (inFile == null) {
             throw new OperationException("Input PDF document has not been specified. Use the --in option to set the input PDF document.");

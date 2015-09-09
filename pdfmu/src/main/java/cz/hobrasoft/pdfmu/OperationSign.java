@@ -403,6 +403,7 @@ public class OperationSign implements Operation {
         subparser.addArgument("-a", "--alias")
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
+        // TODO?: Hardcode to first entry since most P12 keystores contain only one entry
         subparser.addArgument("-kp", "--keypass")
                 .help("key password (default: <empty>)")
                 .type(String.class);

@@ -29,6 +29,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Enumeration;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -141,11 +142,16 @@ public class OperationSign implements Operation {
         if (alias == null) {
             // Get the first alias in the keystore
             System.err.println("Keystore entry alias not set. Using the first entry in the keystore.");
+            Enumeration<String> aliases;
             try {
-                alias = ks.aliases().nextElement();
+                aliases = ks.aliases();
             } catch (KeyStoreException ex) {
-                throw new OperationException("Could not get alias from keystore.", ex);
+                throw new OperationException("Could not get aliases from keystore.", ex);
             }
+            if (!aliases.hasMoreElements()) {
+                throw new OperationException("Keystore is empty (no aliases).");
+            }
+            alias = aliases.nextElement();
             assert alias != null;
             System.err.println(String.format("Extracted keystore entry alias: %s", alias));
         }

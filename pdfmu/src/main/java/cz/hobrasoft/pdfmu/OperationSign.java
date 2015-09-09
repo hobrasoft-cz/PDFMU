@@ -190,6 +190,7 @@ public class OperationSign implements Operation {
         // Set key password if not set from command line
         if (keyPassword == null) {
             System.err.println("Key password not set. Using empty password.");
+            // TODO?: Use `ksPassword` instead
             keyPassword = "".toCharArray();
         }
 
@@ -405,6 +406,7 @@ public class OperationSign implements Operation {
         subparser.addArgument("-kp", "--keypass")
                 .help("key password (default: <empty>)")
                 .type(String.class);
+        // TODO?: Use "storepass" by default
 
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))

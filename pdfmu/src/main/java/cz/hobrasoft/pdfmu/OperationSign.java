@@ -328,6 +328,8 @@ public class OperationSign implements Operation {
             }
 
             String ksType = namespace.getString("type");
+
+            // Perform the magic!
             signDetached(stp, ksFile, ksType, ksPassword, alias, keyPassword);
             System.err.println("Successfully signed the document.");
 

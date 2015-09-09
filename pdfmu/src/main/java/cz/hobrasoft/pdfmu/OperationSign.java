@@ -46,11 +46,15 @@ public class OperationSign implements Operation {
     private static final BouncyCastleProvider provider = new BouncyCastleProvider();
 
     static {
+        // We need to register the provider because it needs to be accessible by its name globally.
+        // {@link com.itextpdf.text.pdf.security.PrivateKeySignature#PrivateKeySignature(PrivateKey pk, String hashAlgorithm, String provider)}
+        // uses the provider name.
         Security.addProvider(provider);
     }
 
     // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
     private static final String digestAlgorithm = DigestAlgorithms.SHA256; // TODO?: Expose
+    // Note: KDirSign uses SHA-512.
 
     private static void signDetached(PdfSignatureAppearance sap,
             ExternalDigest externalDigest,
@@ -82,11 +86,13 @@ public class OperationSign implements Operation {
             char[] ksPassword,
             String alias,
             char[] keyPassword) throws OperationException {
+        // Make sure keystore file is set
         if (ksFile == null) {
             throw new OperationException("Keystore name not set. Use --keystore option.");
         }
 
         // /com/itextpdf/itextpdf/5.5.6/itextpdf-5.5.6-javadoc.jar!/com/itextpdf/text/pdf/PdfStamper.html#createSignature(com.itextpdf.text.pdf.PdfReader%2C java.io.OutputStream%2C char%2C java.io.File%2C boolean)
+        // Configure signature appearance including signature metadata
         PdfSignatureAppearance sap = stp.getSignatureAppearance();
         sap.setReason(reason);
         sap.setLocation(location);
@@ -100,6 +106,7 @@ public class OperationSign implements Operation {
         sap.setCertificationLevel(PdfSignatureAppearance.NOT_CERTIFIED); // TODO?: Expose
 
         // digitalsignatures20130304.pdf : Code sample 2.2
+        // Initialize keystore
         KeyStore ks;
         try {
             ks = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -130,6 +137,7 @@ public class OperationSign implements Operation {
             }
         }
 
+        // Set alias if not set from command line
         if (alias == null) {
             // Get the first alias in the keystore
             System.err.println("Keystore entry alias not set. Using the first entry.");
@@ -142,23 +150,33 @@ public class OperationSign implements Operation {
             System.err.println(String.format("Extracted keystore entry alias: %s", alias));
         }
         System.err.println(String.format("Keystore entry alias: %s", alias));
+
+        // Set key password if not set from command line
         if (keyPassword == null) {
             System.err.println("Key password not set. Using empty password.");
             keyPassword = "".toCharArray();
         }
+
+        // Get private key from keystore
         PrivateKey pk;
         try {
             pk = (PrivateKey) ks.getKey(alias, keyPassword);
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
             throw new OperationException("Could not get key from keystore.", ex);
         }
+
+        // Get certificate chain from keystore
         Certificate[] chain;
         try {
             chain = ks.getCertificateChain(alias);
         } catch (KeyStoreException ex) {
             throw new OperationException("Could not get certificate chain from keystore.", ex);
         }
+
+        // Initialize digest algorithm
         ExternalDigest externalDigest = new BouncyCastleDigest();
+
+        // Initialize signature algorithm
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
 
         // digitalsignatures20130304.pdf : Section 2.2.1

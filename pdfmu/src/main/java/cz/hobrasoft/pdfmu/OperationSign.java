@@ -190,9 +190,7 @@ public class OperationSign implements Operation {
     @Override
     public void execute(Namespace namespace) throws OperationException {
         File inFile = namespace.get("in");
-        if (inFile == null) {
-            throw new OperationException("Input PDF document has not been specified. Use the --in option to set the input PDF document.");
-        }
+        assert inFile != null; // Required argument
 
         System.out.println(String.format("Input PDF document: %s", inFile));
 

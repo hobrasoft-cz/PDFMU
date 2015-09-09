@@ -30,7 +30,6 @@ import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.Collection;
 import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentType;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
@@ -317,18 +316,11 @@ public class OperationSign implements Operation {
                 .setDefault("command", OperationSign.class);
 
         // Add arguments to the subparser
-        { // Input PDF document
-            String inHelp = "input PDF document";
-            ArgumentType inType = Arguments.fileType()
-                    .acceptSystemIn()
-                    .verifyCanRead();
-
-            // Positional arguments are required by default
-            subparser.addArgument("in")
-                    .help(inHelp)
-                    .metavar(metavarIn)
-                    .type(inType);
-        }
+        // Positional arguments are required by default
+        subparser.addArgument("in")
+                .help("input PDF document")
+                .metavar(metavarIn)
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
 
         // Keystore
         // CLI inspired by `keytool`

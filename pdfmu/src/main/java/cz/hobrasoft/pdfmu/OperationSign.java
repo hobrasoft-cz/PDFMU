@@ -205,6 +205,9 @@ public class OperationSign implements Operation {
         } catch (UnrecoverableKeyException ex) {
             throw new OperationException("Could not get key from keystore. Incorrect key password? Incorrect keystore type?", ex);
         }
+        if (pk == null) {
+            throw new OperationException("Could not get key from keystore. Incorrect alias?");
+        }
 
         // Get certificate chain from keystore
         Certificate[] chain;

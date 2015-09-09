@@ -43,9 +43,9 @@ public class OperationSign implements Operation {
                 .metavar(metavarCertificate);
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
+                .metavar(metavarOut)
                 .type(String.class)
-                .nargs("?")
-                .metavar(metavarOut);
+                .nargs("?");
         subparser.addArgument("-f", "--force")
                 .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)

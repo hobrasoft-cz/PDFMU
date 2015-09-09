@@ -139,7 +139,9 @@ public class OperationSign implements Operation {
             }
             try {
                 ks.load(ksIs, ksPassword);
-            } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+            } catch (IOException ex) {
+                throw new OperationException("Could not load keystore. Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?", ex);
+            } catch (NoSuchAlgorithmException | CertificateException ex) {
                 throw new OperationException("Could not load keystore.", ex);
             }
             try {

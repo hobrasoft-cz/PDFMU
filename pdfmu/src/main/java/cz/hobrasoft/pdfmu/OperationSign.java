@@ -123,6 +123,7 @@ public class OperationSign implements Operation {
         } catch (KeyStoreException ex1) {
             throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", ksType), ex1);
         }
+        System.err.println(String.format("Keystore security provider: %s", ks.getProvider().getName()));
 
         // Load keystore
         { // ksIs

@@ -22,7 +22,6 @@ public class OperationSign implements Operation {
         String help = "Digitally sign a PDF document";
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
-        String metavarCertificate = "CERTIFICATE";
 
         Subparser subparser = subparsers.addParser("sign")
                 .help(help)
@@ -35,12 +34,6 @@ public class OperationSign implements Operation {
                 .required(true)
                 .nargs("?")
                 .metavar(metavarIn);
-        subparser.addArgument("-c", "--certificate")
-                .help("certificate file to sign with")
-                .type(String.class)
-                .required(true)
-                .nargs("?")
-                .metavar(metavarCertificate);
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)

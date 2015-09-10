@@ -39,6 +39,17 @@ class SignatureParameters implements ArgsConfiguration {
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())
                 .setDefault(sigtype);
+
+        // Possible names:
+        // - digest algorithm
+        // - Hash Algorithm
+        // - hash algorithm for making the signature
+        // Recommended choices:
+        // digitalsignatures20130304.pdf : Section 1.2.2; Code sample 1.5
+        parser.addArgument("-da", "--digest-algorithm")
+                .help("hash algorithm for making the signature")
+                .type(String.class)
+                .setDefault(digestAlgorithm);
     }
 
     @Override
@@ -46,8 +57,9 @@ class SignatureParameters implements ArgsConfiguration {
         for (ArgsConfiguration configuration : configurations) {
             configuration.setFromNamespace(namespace);
         }
+
         sigtype = namespace.get("sigtype");
-        // TODO?: Expose `digestAlgorithm`
+        digestAlgorithm = namespace.getString("digest_algorithm");
     }
 
 }

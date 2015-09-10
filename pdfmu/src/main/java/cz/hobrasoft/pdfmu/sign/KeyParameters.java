@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.sign;
 
+import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.OperationException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -14,11 +15,12 @@ import net.sourceforge.argparse4j.inf.Namespace;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-class KeyParameters {
+class KeyParameters implements ArgsConfiguration {
 
     public String alias = null;
     public char[] password = null;
 
+    @Override
     public void setFromNamespace(Namespace namespace) {
         alias = namespace.getString("alias");
         // Set password

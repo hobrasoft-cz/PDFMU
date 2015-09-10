@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.sign;
 
+import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.OperationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,12 +16,13 @@ import net.sourceforge.argparse4j.inf.Namespace;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-class KeystoreParameters {
+class KeystoreParameters implements ArgsConfiguration {
 
     public File file = null;
     public String type = null;
     public char[] password = null;
 
+    @Override
     public void setFromNamespace(Namespace namespace) {
         file = namespace.get("keystore");
         type = namespace.getString("type");

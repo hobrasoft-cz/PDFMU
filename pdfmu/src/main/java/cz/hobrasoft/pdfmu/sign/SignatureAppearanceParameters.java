@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu.sign;
 
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import java.util.Calendar;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -9,7 +10,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-class SignatureAppearanceParameters {
+class SignatureAppearanceParameters implements ArgsConfiguration {
 
     public String reason = null;
     public String location = null;
@@ -18,6 +19,7 @@ class SignatureAppearanceParameters {
     public Calendar signDate = null;
     public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;
 
+    @Override
     public void setFromNamespace(Namespace namespace) {
         reason = namespace.getString("reason");
         location = namespace.getString("location");

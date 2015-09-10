@@ -2,13 +2,14 @@ package cz.hobrasoft.pdfmu.sign;
 
 import com.itextpdf.text.pdf.security.DigestAlgorithms;
 import com.itextpdf.text.pdf.security.MakeSignature;
+import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-class SignatureParameters {
+class SignatureParameters implements ArgsConfiguration {
 
     public SignatureAppearanceParameters appearance = new SignatureAppearanceParameters();
     public KeystoreParameters keystore = new KeystoreParameters();
@@ -18,6 +19,7 @@ class SignatureParameters {
     public String digestAlgorithm = DigestAlgorithms.SHA256;
     public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
 
+    @Override
     public void setFromNamespace(Namespace namespace) {
         appearance.setFromNamespace(namespace);
         keystore.setFromNamespace(namespace);

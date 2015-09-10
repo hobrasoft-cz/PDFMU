@@ -28,6 +28,17 @@ class SignatureParameters implements ArgsConfiguration {
         for (ArgsConfiguration configuration : configurations) {
             configuration.addArguments(parser);
         }
+
+        // TODO?: Rename
+        // Possible names:
+        // - sigtype
+        // - CryptoStandard
+        // - SubFilter
+        parser.addArgument("--sigtype")
+                .help("cryptographic standard")
+                .type(MakeSignature.CryptoStandard.class)
+                .choices(MakeSignature.CryptoStandard.values())
+                .setDefault(sigtype);
     }
 
     @Override
@@ -35,8 +46,8 @@ class SignatureParameters implements ArgsConfiguration {
         for (ArgsConfiguration configuration : configurations) {
             configuration.setFromNamespace(namespace);
         }
+        sigtype = namespace.get("sigtype");
         // TODO?: Expose `digestAlgorithm`
-        // TODO?: Expose `sigtype`
     }
 
 }

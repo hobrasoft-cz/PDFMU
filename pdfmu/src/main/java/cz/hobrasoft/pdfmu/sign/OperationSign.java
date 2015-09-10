@@ -82,6 +82,8 @@ public class OperationSign implements Operation {
         // We need not change this unless we want to optimize the resulting PDF document size.
         int estimatedSize = 0;
 
+        System.err.println(String.format("Cryptographic standard (signature format): %s", sigtype));
+
         try {
             MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
@@ -104,6 +106,7 @@ public class OperationSign implements Operation {
             Certificate[] chain,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Initialize the signature algorithm
+        System.err.println(String.format("Digest algorithm: %s", digestAlgorithm));
         System.err.println(String.format("Signature security provider: %s", provider.getName()));
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
 

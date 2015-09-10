@@ -3,6 +3,7 @@ package cz.hobrasoft.pdfmu.sign;
 import com.itextpdf.text.pdf.security.DigestAlgorithms;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import java.util.Arrays;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -23,7 +24,7 @@ class SignatureParameters implements ArgsConfiguration {
     public String digestAlgorithm = DigestAlgorithms.SHA256;
     public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
 
-    private static final String[] digestAlgorithmChoices = {
+    private static String[] digestAlgorithmChoices = {
         // {@link DigestAlgorithms}:
         DigestAlgorithms.RIPEMD160,
         DigestAlgorithms.SHA1,
@@ -36,6 +37,10 @@ class SignatureParameters implements ArgsConfiguration {
         "RIPEMD128",
         "RIPEMD256"
     };
+
+    static {
+        Arrays.sort(digestAlgorithmChoices);
+    }
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -59,7 +64,8 @@ class SignatureParameters implements ArgsConfiguration {
         // - Hash Algorithm
         // - hash algorithm for making the signature
         parser.addArgument("-da", "--digest-algorithm")
-                .help(String.format("Hash algorithm for making the signature. Recommended values: {%s}", String.join(",", digestAlgorithmChoices)))
+                .help("hash algorithm for making the signature")
+                .metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
                 .type(String.class)
                 .setDefault(digestAlgorithm);
     }

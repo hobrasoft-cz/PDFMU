@@ -88,6 +88,8 @@ public class OperationSign implements Operation {
             MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
             throw new OperationException("Could not sign the document.", ex);
+        } catch (NullPointerException ex) {
+            throw new OperationException("Could not sign the document. Invalid digest algorithm?", ex);
         }
         System.err.println("Document successfully signed.");
     }

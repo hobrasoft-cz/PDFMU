@@ -105,6 +105,8 @@ public class OperationSign implements Operation {
             String digestAlgorithm,
             Certificate[] chain,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
+        assert digestAlgorithm != null;
+
         // Initialize the signature algorithm
         System.err.println(String.format("Digest algorithm: %s", digestAlgorithm));
         System.err.println(String.format("Signature security provider: %s", provider.getName()));

@@ -10,6 +10,8 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
@@ -21,6 +23,29 @@ class KeystoreParameters implements ArgsConfiguration {
     public File file = null;
     public String type = null;
     public char[] password = null;
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+        // Keystore
+        // CLI inspired by `keytool`
+        parser.addArgument("-ks", "--keystore")
+                .help("keystore file")
+                .type(Arguments.fileType().verifyCanRead())
+                .required(true);
+        // Valid types:
+        // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
+        // Type "pkcs12" file extensions: P12, PFX
+        // Source: https://en.wikipedia.org/wiki/PKCS_12
+        parser.addArgument("-t", "--type")
+                .help("keystore type")
+                .type(String.class)
+                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12"});
+        // TODO?: Guess type from file extension by default
+        // TODO?: Hardcode to "pkcs12" since it seems to be required for our purpose
+        parser.addArgument("-sp", "--storepass")
+                .help("keystore password (default: <empty>)")
+                .type(String.class);
+    }
 
     @Override
     public void setFromNamespace(Namespace namespace) {

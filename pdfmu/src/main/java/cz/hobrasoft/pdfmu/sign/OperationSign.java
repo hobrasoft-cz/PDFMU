@@ -52,6 +52,12 @@ public class OperationSign implements Operation {
     // Initialize the digest algorithm
     private static final ExternalDigest externalDigest = new BouncyCastleDigest();
 
+    // `signatureParameters` is a member variable
+    // so that we can add the arguments to the parser in `addParser`.
+    // We need an instance of {@link SignatureParameters} in `addParser`
+    // because the interface `ArgsConfiguration` does not allow static methods.
+    private SignatureParameters signatureParameters = new SignatureParameters();
+
     private static void sign(PdfSignatureAppearance sap,
             ExternalDigest externalDigest,
             ExternalSignature externalSignature,
@@ -263,7 +269,6 @@ public class OperationSign implements Operation {
         boolean append = true; // TODO?: Expose
 
         // Initialize signature parameters
-        SignatureParameters signatureParameters = new SignatureParameters();
         signatureParameters.setFromNamespace(namespace);
 
         sign(inFile, outFile, append, signatureParameters);
@@ -291,34 +296,6 @@ public class OperationSign implements Operation {
                 .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
                 .required(true);
 
-        // Keystore
-        // CLI inspired by `keytool`
-        subparser.addArgument("-ks", "--keystore")
-                .help("keystore file")
-                .type(Arguments.fileType().verifyCanRead())
-                .required(true);
-        // Valid types:
-        // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
-        // Type "pkcs12" file extensions: P12, PFX
-        // Source: https://en.wikipedia.org/wiki/PKCS_12
-        subparser.addArgument("-t", "--type")
-                .help("keystore type")
-                .type(String.class)
-                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12"});
-        // TODO?: Guess type from file extension by default
-        // TODO?: Hardcode to "pkcs12" since it seems to be required for our purpose
-        subparser.addArgument("-sp", "--storepass")
-                .help("keystore password (default: <empty>)")
-                .type(String.class);
-        subparser.addArgument("-a", "--alias")
-                .help("key keystore entry alias (default: <first entry in the keystore>)")
-                .type(String.class);
-        // TODO?: Hardcode to first entry since most P12 keystores contain only one entry
-        subparser.addArgument("-kp", "--keypass")
-                .help("key password (default: <empty>)")
-                .type(String.class);
-        // TODO?: Use "storepass" by default
-
         subparser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)
@@ -328,6 +305,8 @@ public class OperationSign implements Operation {
                 .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
+
+        signatureParameters.addArguments(subparser);
 
         return subparser;
     }

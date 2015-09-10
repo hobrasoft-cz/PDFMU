@@ -4,6 +4,7 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import java.util.Calendar;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
@@ -18,6 +19,10 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
     public String contact = null;
     public Calendar signDate = null;
     public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+    }
 
     @Override
     public void setFromNamespace(Namespace namespace) {

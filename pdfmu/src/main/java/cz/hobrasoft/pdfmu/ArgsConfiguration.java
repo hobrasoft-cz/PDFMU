@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
+import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
@@ -8,6 +9,13 @@ import net.sourceforge.argparse4j.inf.Namespace;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public interface ArgsConfiguration {
+
+    /**
+     * Add arguments that configure this configuration to a parser
+     *
+     * @param parser argument parser to add arguments to
+     */
+    public void addArguments(ArgumentParser parser);
 
     /**
      * Sets configuration values from parsed argument namespace

@@ -9,6 +9,7 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
@@ -19,6 +20,18 @@ class KeyParameters implements ArgsConfiguration {
 
     public String alias = null;
     public char[] password = null;
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+        parser.addArgument("-a", "--alias")
+                .help("key keystore entry alias (default: <first entry in the keystore>)")
+                .type(String.class);
+        // TODO?: Hardcode to first entry since most P12 keystores contain only one entry
+        parser.addArgument("-kp", "--keypass")
+                .help("key password (default: <empty>)")
+                .type(String.class);
+        // TODO?: Use "storepass" by default
+    }
 
     @Override
     public void setFromNamespace(Namespace namespace) {

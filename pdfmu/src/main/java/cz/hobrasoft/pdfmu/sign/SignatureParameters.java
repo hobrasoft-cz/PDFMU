@@ -34,7 +34,7 @@ class SignatureParameters implements ArgsConfiguration {
         // - sigtype
         // - CryptoStandard
         // - SubFilter
-        parser.addArgument("--sigtype")
+        parser.addArgument("-st", "--sigtype")
                 .help("cryptographic standard")
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())

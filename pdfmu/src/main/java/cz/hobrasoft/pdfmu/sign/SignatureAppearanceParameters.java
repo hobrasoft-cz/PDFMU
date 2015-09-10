@@ -22,6 +22,12 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
+        parser.addArgument("--reason")
+                .type(String.class);
+        parser.addArgument("--location")
+                .type(String.class);
+        parser.addArgument("--contact")
+                .type(String.class);
     }
 
     @Override

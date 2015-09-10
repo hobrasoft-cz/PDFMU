@@ -23,7 +23,6 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
     public void setFromNamespace(Namespace namespace) {
         reason = namespace.getString("reason");
         location = namespace.getString("location");
-        name = namespace.getString("name");
         contact = namespace.getString("contact");
         // TODO?: Expose `signDate`
         // TODO?: Expose `certificationLevel`
@@ -39,11 +38,6 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
         if (location != null) {
             System.err.println(String.format("Location: %s", location));
             sap.setLocation(location);
-        }
-        if (name != null) {
-            // `setVisibleSignature(null)` crashes
-            System.err.println(String.format("Name: %s", name));
-            sap.setVisibleSignature(name);
         }
         if (contact != null) {
             System.err.println(String.format("Contact: %s", contact));

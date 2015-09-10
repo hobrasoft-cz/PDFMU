@@ -80,9 +80,11 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
 
     public PdfSignatureAppearance getSignatureAppearance(PdfStamper stp) {
         assert stp != null;
+
         // Initialize the signature appearance
         PdfSignatureAppearance sap = stp.getSignatureAppearance();
         configureSignatureAppearance(sap);
+
         return sap;
     }
 

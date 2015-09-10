@@ -21,6 +21,19 @@ class SignatureParameters implements ArgsConfiguration {
     public String digestAlgorithm = DigestAlgorithms.SHA256;
     public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
 
+    private static final String[] digestAlgorithmChoices = {
+        // {@link DigestAlgorithms}:
+        DigestAlgorithms.RIPEMD160,
+        DigestAlgorithms.SHA1,
+        DigestAlgorithms.SHA256,
+        DigestAlgorithms.SHA384,
+        DigestAlgorithms.SHA512,
+        // digitalsignatures20130304.pdf : Section 1.2.2; Code sample 1.5
+        "MD5",
+        "SHA-224",
+        "RIPEMD128",
+        "RIPEMD256"
+    };
     private final ArgsConfiguration[] configurations = {appearance, keystore, key};
 
     @Override
@@ -44,8 +57,7 @@ class SignatureParameters implements ArgsConfiguration {
         // - digest algorithm
         // - Hash Algorithm
         // - hash algorithm for making the signature
-        // Recommended choices:
-        // digitalsignatures20130304.pdf : Section 1.2.2; Code sample 1.5
+        // Recommended choices: see `digestAlgorithmChoices`
         parser.addArgument("-da", "--digest-algorithm")
                 .help("hash algorithm for making the signature")
                 .type(String.class)

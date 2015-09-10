@@ -58,10 +58,8 @@ class SignatureParameters implements ArgsConfiguration {
         // - digest algorithm
         // - Hash Algorithm
         // - hash algorithm for making the signature
-        // Recommended choices: see `digestAlgorithmChoices`
         parser.addArgument("-da", "--digest-algorithm")
-                .help("hash algorithm for making the signature")
-                // TODO?: Display recommended choices
+                .help(String.format("Hash algorithm for making the signature. Recommended values: {%s}", String.join(",", digestAlgorithmChoices)))
                 .type(String.class)
                 .setDefault(digestAlgorithm);
     }

@@ -86,7 +86,7 @@ public class Main {
                 operation.execute(namespace);
             } catch (OperationException ex) {
                 System.err.println(ex.getMessage());
-                if (ex.getCause() != null) {
+                if (ex.getCause() != null && ex.getCause().getMessage() != null) {
                     System.err.println(ex.getCause().getMessage());
                 }
             }

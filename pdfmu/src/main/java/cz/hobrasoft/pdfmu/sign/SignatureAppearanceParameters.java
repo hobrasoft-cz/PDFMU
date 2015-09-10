@@ -15,7 +15,6 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
 
     public String reason = null;
     public String location = null;
-    public String name = null;
     public String contact = null;
     public Calendar signDate = null;
     public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;

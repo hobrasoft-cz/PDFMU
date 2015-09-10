@@ -42,15 +42,15 @@ public class OperationSign implements Operation {
     // Initialize the security provider
     private static final BouncyCastleProvider provider = new BouncyCastleProvider();
 
-    // Initialize the digest algorithm
-    private static final ExternalDigest externalDigest = new BouncyCastleDigest();
-
     static {
         // We need to register the provider because it needs to be accessible by its name globally.
         // {@link com.itextpdf.text.pdf.security.PrivateKeySignature#PrivateKeySignature(PrivateKey pk, String hashAlgorithm, String provider)}
         // uses the provider name.
         Security.addProvider(provider);
     }
+
+    // Initialize the digest algorithm
+    private static final ExternalDigest externalDigest = new BouncyCastleDigest();
 
     private static void sign(PdfSignatureAppearance sap,
             ExternalDigest externalDigest,

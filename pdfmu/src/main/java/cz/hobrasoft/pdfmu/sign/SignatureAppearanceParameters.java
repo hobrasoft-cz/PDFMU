@@ -25,12 +25,20 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
         ArgumentGroup group = parser.addArgumentGroup("signature metadata");
         // TODO: Add description
 
+        // The fields are explained in the following documents:
+        // digitalsignatures20130304.pdf : Section 2.3.3
+        // http://www.adobe.com/devnet-docs/acrobatetk/tools/DigSig/appearances.html
+        // https://www.pdfill.com/document_sign.html
         group.addArgument("--reason")
+                .help("What was the reason for signing? (default: <none>)")
                 .type(String.class);
         group.addArgument("--location")
+                .help("Where was the document signed? (default: <none>)")
                 .type(String.class);
         group.addArgument("--contact")
+                .help("signer contact information (defualt: <none>)")
                 .type(String.class);
+        // TODO: Unify the help strings
     }
 
     @Override

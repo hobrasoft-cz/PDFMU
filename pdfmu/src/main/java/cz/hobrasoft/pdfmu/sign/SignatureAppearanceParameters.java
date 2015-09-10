@@ -73,6 +73,9 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
             sap.setSignDate(signDate);
         }
         sap.setCertificationLevel(certificationLevel);
+
+        // TODO?: Set signer's name
+        // digitalsignatures20130304.pdf : Code sample 2.12
     }
 
     public PdfSignatureAppearance getSignatureAppearance(PdfStamper stp) {

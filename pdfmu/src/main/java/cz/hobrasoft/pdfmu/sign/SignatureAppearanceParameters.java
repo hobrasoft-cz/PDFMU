@@ -47,6 +47,8 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
         location = namespace.getString("location");
         contact = namespace.getString("contact");
         // TODO?: Expose `signDate`
+        // Note: Argparse4j does not seem to support time
+        // (namely {@link Calendar}) natively.
         // TODO?: Expose `certificationLevel`
     }
 

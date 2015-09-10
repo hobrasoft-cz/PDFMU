@@ -4,6 +4,7 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import java.util.Calendar;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -21,11 +22,14 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        parser.addArgument("--reason")
+        ArgumentGroup group = parser.addArgumentGroup("signature metadata");
+        // TODO: Add description
+
+        group.addArgument("--reason")
                 .type(String.class);
-        parser.addArgument("--location")
+        group.addArgument("--location")
                 .type(String.class);
-        parser.addArgument("--contact")
+        group.addArgument("--contact")
                 .type(String.class);
     }
 

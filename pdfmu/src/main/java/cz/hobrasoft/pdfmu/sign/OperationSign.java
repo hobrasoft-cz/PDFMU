@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.sign;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
@@ -6,13 +6,14 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.BouncyCastleDigest;
 import com.itextpdf.text.pdf.security.CrlClient;
-import com.itextpdf.text.pdf.security.DigestAlgorithms;
 import com.itextpdf.text.pdf.security.ExternalDigest;
 import com.itextpdf.text.pdf.security.ExternalSignature;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.Operation;
+import cz.hobrasoft.pdfmu.OperationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,16 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Security;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Enumeration;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -55,259 +50,6 @@ public class OperationSign implements Operation {
         // {@link com.itextpdf.text.pdf.security.PrivateKeySignature#PrivateKeySignature(PrivateKey pk, String hashAlgorithm, String provider)}
         // uses the provider name.
         Security.addProvider(provider);
-    }
-
-    // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
-    private static final String digestAlgorithm = DigestAlgorithms.SHA256; // TODO?: Expose
-    // Note: KDirSign uses SHA-512.
-
-    private static class KeystoreParameters {
-
-        public File file = null;
-        public String type = null;
-        public char[] password = null;
-
-        public void setFromNamespace(Namespace namespace) {
-            file = namespace.get("keystore");
-            type = namespace.getString("type");
-
-            // Set password
-            String passwordString = namespace.getString("keypass");
-            if (passwordString != null) {
-                password = passwordString.toCharArray();
-            } else {
-                password = null;
-            }
-        }
-
-        public void fixType() {
-            // Set keystore type if not set from command line
-            if (type == null) {
-                // TODO: Guess type from `ksFile` file extension
-                System.err.println("Keystore type not specified. Using the default type.");
-                type = KeyStore.getDefaultType();
-            }
-        }
-
-        public void fixPassword() {
-            if (password == null) {
-                System.err.println("Keystore password not set. Using empty password.");
-                password = "".toCharArray();
-            }
-        }
-
-        public KeyStore loadKeystore() throws OperationException {
-            if (file == null) {
-                throw new OperationException("Keystore not set but is required. Use --keystore option.");
-            }
-
-            System.err.println(String.format("Keystore file: %s", file));
-
-            fixType();
-            System.err.println(String.format("Keystore type: %s", type));
-
-            // digitalsignatures20130304.pdf : Code sample 2.2
-            // Initialize keystore
-            KeyStore ks;
-            try {
-                ks = KeyStore.getInstance(type);
-            } catch (KeyStoreException ex) {
-                throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", type), ex);
-            }
-            System.err.println(String.format("Keystore security provider: %s", ks.getProvider().getName()));
-
-            // Load keystore
-            { // ksIs
-                FileInputStream ksIs;
-                try {
-                    ksIs = new FileInputStream(file);
-                } catch (FileNotFoundException ex) {
-                    throw new OperationException("Could not open keystore file.", ex);
-                }
-                fixPassword();
-                try {
-                    ks.load(ksIs, password);
-                } catch (IOException ex) {
-                    throw new OperationException("Could not load keystore. Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?", ex);
-                } catch (NoSuchAlgorithmException | CertificateException ex) {
-                    throw new OperationException("Could not load keystore.", ex);
-                }
-                try {
-                    ksIs.close();
-                } catch (IOException ex) {
-                    throw new OperationException("Could not close keystore file.", ex);
-                }
-            }
-            return ks;
-        }
-    }
-
-    private static class KeyParameters {
-
-        public String alias = null;
-        public char[] password = null;
-
-        public void setFromNamespace(Namespace namespace) {
-            alias = namespace.getString("alias");
-
-            // Set password
-            String passwordString = namespace.getString("keypass");
-            if (passwordString != null) {
-                password = passwordString.toCharArray();
-            } else {
-                password = null;
-            }
-        }
-
-        public void fixAlias(KeyStore ks) throws OperationException {
-            if (alias == null) {
-                // Get the first alias in the keystore
-                System.err.println("Keystore entry alias not set. Using the first entry in the keystore.");
-                Enumeration<String> aliases;
-                try {
-                    aliases = ks.aliases();
-                } catch (KeyStoreException ex) {
-                    throw new OperationException("Could not get aliases from keystore.", ex);
-                }
-                if (!aliases.hasMoreElements()) {
-                    throw new OperationException("Keystore is empty (no aliases).");
-                }
-                alias = aliases.nextElement();
-                assert alias != null;
-            }
-            System.err.println(String.format("Keystore entry alias: %s", alias));
-
-            // Make sure the entry `alias` is present in the keystore
-            try {
-                if (!ks.containsAlias(alias)) {
-                    throw new OperationException(String.format("Keystore does not contain the alias %s.", alias));
-                }
-            } catch (KeyStoreException ex) {
-                throw new OperationException(String.format("Could not determine whether the keystore contains the alias %s.", alias), ex);
-            }
-
-            // Make sure `alias` is a key entry
-            try {
-                if (!ks.isKeyEntry(alias)) {
-                    throw new OperationException(String.format("The keystore entry associated with the alias %s is not a key entry.", alias));
-                }
-            } catch (KeyStoreException ex) {
-                throw new OperationException(String.format("Could not determine whether the keystore entry %s is a key.", alias), ex);
-            }
-        }
-
-        public void fixPassword() {
-            // Set key password if not set from command line
-            if (password == null) {
-                System.err.println("Key password not set. Using an empty password.");
-                password = "".toCharArray();
-            }
-        }
-
-        public void fix(KeyStore ks) throws OperationException {
-            fixAlias(ks);
-            fixPassword();
-        }
-
-        public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {
-            // Get private key from keystore
-            PrivateKey pk;
-            try {
-                pk = (PrivateKey) ks.getKey(alias, password);
-            } catch (KeyStoreException ex) {
-                throw new OperationException("Could not get key from keystore.", ex);
-            } catch (NoSuchAlgorithmException ex) {
-                throw new OperationException("Could not get key from keystore.", ex);
-            } catch (UnrecoverableKeyException ex) {
-                throw new OperationException("Could not get key from keystore. Incorrect key password? Incorrect keystore type?", ex);
-            }
-            if (pk == null) {
-                throw new OperationException("Could not get key from keystore. Incorrect alias?");
-            }
-            return pk;
-        }
-
-        public Certificate[] getCertificateChain(KeyStore ks) throws OperationException {
-            Certificate[] chain;
-            try {
-                chain = ks.getCertificateChain(alias);
-            } catch (KeyStoreException ex) {
-                throw new OperationException("Could not get certificate chain from keystore.", ex);
-            }
-            return chain;
-        }
-    }
-
-    private static class SignatureAppearanceParameters {
-
-        public String reason = null;
-        public String location = null;
-        public String name = null;
-        public String contact = null;
-        public Calendar signDate = null;
-        public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;
-
-        public void setFromNamespace(Namespace namespace) {
-            reason = namespace.getString("reason");
-            location = namespace.getString("location");
-            name = namespace.getString("name");
-            contact = namespace.getString("contact");
-            // TODO?: Expose `signDate`
-            // TODO?: Expose `certificationLevel`
-        }
-
-        public void configureSignatureAppearance(PdfSignatureAppearance sap) {
-            assert sap != null;
-            // Configure signature metadata
-            if (reason != null) {
-                System.err.println(String.format("Reason: %s", reason));
-                sap.setReason(reason);
-            }
-            if (location != null) {
-                System.err.println(String.format("Location: %s", location));
-                sap.setLocation(location);
-            }
-            if (name != null) {
-                // `setVisibleSignature(null)` crashes
-                System.err.println(String.format("Name: %s", name));
-                sap.setVisibleSignature(name);
-            }
-            if (contact != null) {
-                System.err.println(String.format("Contact: %s", contact));
-                sap.setContact(contact);
-            }
-            if (signDate != null) {
-                // `setSignDate(null)` crashes
-                System.err.println(String.format("Date: %s", signDate));
-                sap.setSignDate(signDate);
-            }
-            sap.setCertificationLevel(certificationLevel);
-        }
-
-        public PdfSignatureAppearance getSignatureAppearance(PdfStamper stp) {
-            assert stp != null;
-            // Initialize the signature appearance
-            PdfSignatureAppearance sap = stp.getSignatureAppearance();
-            configureSignatureAppearance(sap);
-            return sap;
-        }
-    }
-
-    private static class SignatureParameters {
-
-        public SignatureAppearanceParameters appearance = new SignatureAppearanceParameters();
-        public KeystoreParameters keystore = new KeystoreParameters();
-        public KeyParameters key = new KeyParameters();
-        public String digestAlgorithm = OperationSign.digestAlgorithm;
-        public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
-
-        public void setFromNamespace(Namespace namespace) {
-            appearance.setFromNamespace(namespace);
-            keystore.setFromNamespace(namespace);
-            key.setFromNamespace(namespace);
-            // TODO?: Expose `digestAlgorithm`
-            // TODO?: Expose `sigtype`
-        }
     }
 
     private static void sign(PdfSignatureAppearance sap,

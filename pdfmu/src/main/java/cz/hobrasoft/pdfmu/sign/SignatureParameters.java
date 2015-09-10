@@ -16,6 +16,8 @@ class SignatureParameters implements ArgsConfiguration {
     public KeystoreParameters keystore = new KeystoreParameters();
     public KeyParameters key = new KeyParameters();
 
+    private final ArgsConfiguration[] configurations = {appearance, keystore, key};
+
     // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
     // Note: KDirSign uses SHA-512.
     public String digestAlgorithm = DigestAlgorithms.SHA256;
@@ -34,7 +36,6 @@ class SignatureParameters implements ArgsConfiguration {
         "RIPEMD128",
         "RIPEMD256"
     };
-    private final ArgsConfiguration[] configurations = {appearance, keystore, key};
 
     @Override
     public void addArguments(ArgumentParser parser) {

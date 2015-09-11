@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  * Versions 1.2 to 1.7 are supported. This range corresponds to the versions
  * supported by iText, as seen in {@link com.itextpdf.text.pdf.PdfWriter}
  * static fields {@link com.itextpdf.text.pdf.PdfWriter#VERSION_1_2} etc.
+ *
+ * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class PdfVersion implements Comparable<PdfVersion> {
     private static Pattern p = Pattern.compile("1\\.(?<charValue>[2-7])");

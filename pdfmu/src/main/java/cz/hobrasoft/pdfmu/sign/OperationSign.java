@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.BouncyCastleDigest;
 import com.itextpdf.text.pdf.security.CrlClient;
+import com.itextpdf.text.pdf.security.DigestAlgorithms;
 import com.itextpdf.text.pdf.security.ExternalDigest;
 import com.itextpdf.text.pdf.security.ExternalSignature;
 import com.itextpdf.text.pdf.security.MakeSignature;
@@ -111,6 +112,10 @@ public class OperationSign implements Operation {
 
         // Initialize the signature algorithm
         System.err.println(String.format("Digest algorithm: %s", digestAlgorithm));
+        if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {
+            throw new OperationException(String.format("The digest algorithm %s is not supported.", digestAlgorithm));
+        }
+
         System.err.println(String.format("Signature security provider: %s", provider.getName()));
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
 

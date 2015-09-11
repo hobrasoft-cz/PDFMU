@@ -10,9 +10,9 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * <p>
  * Usage:
  * <ul>
- * <li>{@code pdfmu version --in in.pdf --out out.pdf --set 1.6}</li>
- * <li>{@code pdfmu version --in in.pdf --get}</li>
- * <li>{@code pdfmu version inout.pdf --force}</li>
+ * <li>{@code pdfmu version set in.pdf --out out.pdf --version 1.6}</li>
+ * <li>{@code pdfmu version get in.pdf}</li>
+ * <li>{@code pdfmu version set inout.pdf --force}</li>
  * </ul>
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>

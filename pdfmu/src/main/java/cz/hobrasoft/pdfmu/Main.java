@@ -1,7 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
-import cz.hobrasoft.pdfmu.version.OperationVersion;
 import cz.hobrasoft.pdfmu.sign.OperationSign;
+import cz.hobrasoft.pdfmu.version.OperationVersion;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;

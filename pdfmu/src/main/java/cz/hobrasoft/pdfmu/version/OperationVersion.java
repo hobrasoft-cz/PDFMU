@@ -1,5 +1,7 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.version;
 
+import cz.hobrasoft.pdfmu.Operation;
+import cz.hobrasoft.pdfmu.OperationException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;

@@ -57,7 +57,7 @@ public class OperationSign implements Operation {
     // so that we can add the arguments to the parser in `addParser`.
     // We need an instance of {@link SignatureParameters} in `addParser`
     // because the interface `ArgsConfiguration` does not allow static methods.
-    private SignatureParameters signatureParameters = new SignatureParameters();
+    private final SignatureParameters signatureParameters = new SignatureParameters();
 
     private static void sign(PdfSignatureAppearance sap,
             ExternalDigest externalDigest,

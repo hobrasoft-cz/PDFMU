@@ -12,15 +12,6 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public interface Operation {
 
     /**
-     * Executes the operation
-     *
-     * @param namespace parsed command line arguments
-     * @throws OperationException if some condition prevents the operation from
-     * finishing
-     */
-    public void execute(Namespace namespace) throws OperationException;
-
-    /**
      * Adds this operation's subparser to a given Subparsers object
      *
      * <p>
@@ -30,4 +21,13 @@ public interface Operation {
      * @return the subparser added to {@code subparsers}
      */
     public Subparser addParser(Subparsers subparsers);
+
+    /**
+     * Executes the operation
+     *
+     * @param namespace parsed command line arguments
+     * @throws OperationException if some condition prevents the operation from
+     * finishing
+     */
+    public void execute(Namespace namespace) throws OperationException;
 }

@@ -50,7 +50,7 @@ public class Main {
         Operation[] operations = {operationVersion, operationSign, operationAttach};
 
         for (Operation operation : operations) {
-            operation.addParser(subparsers);
+            operation.configureSubparser(subparsers.addParser(operation.getCommandName()));
         }
 
         Namespace namespace = null;

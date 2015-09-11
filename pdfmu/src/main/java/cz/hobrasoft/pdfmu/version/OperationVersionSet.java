@@ -13,7 +13,6 @@ import java.io.IOException;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Sets the PDF version of a PDF document
@@ -23,16 +22,20 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public class OperationVersionSet implements Operation {
 
     @Override
-    public Subparser addParser(Subparsers subparsers) {
+    public String getCommandName() {
+        return "set";
+    }
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
         String help = "Set PDF version of a PDF document";
 
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
         String metavarVersion = "VERSION";
 
-        // Add the subparser
-        Subparser subparser = subparsers.addParser("set")
-                .help(help)
+        // Configure the subparser
+        subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationVersionSet.class);

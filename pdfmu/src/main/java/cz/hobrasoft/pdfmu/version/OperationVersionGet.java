@@ -10,7 +10,6 @@ import java.io.IOException;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Displays the PDF version of a PDF document
@@ -20,14 +19,18 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public class OperationVersionGet implements Operation {
 
     @Override
-    public Subparser addParser(Subparsers subparsers) {
+    public String getCommandName() {
+        return "get";
+    }
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
         String help = "Display PDF version of a PDF document";
 
         String metavarIn = "IN.pdf";
 
-        // Add the subparser
-        Subparser subparser = subparsers.addParser("get")
-                .help(help)
+        // Configure the subparser
+        subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationVersionGet.class);

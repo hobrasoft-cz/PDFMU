@@ -26,23 +26,29 @@ public class OperationVersion implements Operation {
     private final Operation[] operations = {operationSet, operationGet};
 
     @Override
-    public Subparser addParser(Subparsers subparsers) {
+    public String getCommandName() {
+        return "version";
+    }
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
         String help = "Set or display PDF version of a PDF document";
 
-        // Add the subparser
-        Subparser subparser = subparsers.addParser("version")
-                .help(help)
+        // Configure the subparser
+        subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationVersion.class);
 
+        // Add subparsers group
         Subparsers subparsersVersion = subparser.addSubparsers()
                 .help("version operation to execute")
                 .metavar("OPERATION")
                 .dest("versionOperation");
 
+        // Configure the subparsers
         for (Operation operation : operations) {
-            operation.addParser(subparsersVersion);
+            operation.configureSubparser(subparsersVersion.addParser(operation.getCommandName()));
         }
 
         return subparser;

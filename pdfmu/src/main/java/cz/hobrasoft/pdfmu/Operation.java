@@ -2,7 +2,6 @@ package cz.hobrasoft.pdfmu;
 
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Manipulates a PDF file
@@ -12,15 +11,27 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public interface Operation {
 
     /**
-     * Adds this operation's subparser to a given Subparsers object
+     * Get this operation's name
+     *
+     * <p>
+     * Name is the alias that will be used from command line to execute the
+     * operation. It must be unique among the operations in the same subparser.
+     *
+     * @return the command name
+     */
+    public String getCommandName();
+
+    /**
+     * Configure this operation's subparser
      *
      * <p>
      * The subparser handles the arguments accepted by this operation.
      *
-     * @param subparsers Subparsers object to add the subparser to
+     * @param subparser Subparser object to configure, especially adding
+     * arguments
      * @return the subparser added to {@code subparsers}
      */
-    public Subparser addParser(Subparsers subparsers);
+    public Subparser configureSubparser(Subparser subparser);
 
     /**
      * Executes the operation

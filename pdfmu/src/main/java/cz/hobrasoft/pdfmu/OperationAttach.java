@@ -3,7 +3,6 @@ package cz.hobrasoft.pdfmu;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
 
 /**
  * Attaches one or more files to a PDF document
@@ -21,16 +20,15 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 public class OperationAttach implements Operation {
 
     @Override
-    public void execute(Namespace namespace) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getCommandName() {
+        return "attach";
     }
 
     @Override
-    public Subparser addParser(Subparsers subparsers) {
+    public Subparser configureSubparser(Subparser subparser) {
         String help = "Attach files to a PDF document";
 
-        Subparser subparser = subparsers.addParser("attach")
-                .help(help)
+        subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationAttach.class);
@@ -44,6 +42,11 @@ public class OperationAttach implements Operation {
                 .action(Arguments.append());
 
         return subparser;
+    }
+
+    @Override
+    public void execute(Namespace namespace) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

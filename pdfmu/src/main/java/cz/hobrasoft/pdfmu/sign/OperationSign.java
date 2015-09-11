@@ -29,7 +29,6 @@ import java.util.Collection;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -54,8 +53,8 @@ public class OperationSign implements Operation {
     private static final ExternalDigest externalDigest = new BouncyCastleDigest();
 
     // `signatureParameters` is a member variable
-    // so that we can add the arguments to the parser in `addParser`.
-    // We need an instance of {@link SignatureParameters} in `addParser`
+    // so that we can add the arguments to the parser in `configureSubparser`.
+    // We need an instance of {@link SignatureParameters} in `configureSubparser`
     // because the interface `ArgsConfiguration` does not allow static methods.
     private final SignatureParameters signatureParameters = new SignatureParameters();
 
@@ -287,15 +286,14 @@ public class OperationSign implements Operation {
     }
 
     @Override
-    public Subparser addParser(Subparsers subparsers) {
+    public Subparser configureSubparser(Subparser subparser) {
         String help = "Digitally sign a PDF document";
 
         String metavarIn = "IN.pdf";
         String metavarOut = "OUT.pdf";
 
-        // Add the subparser
-        Subparser subparser = subparsers.addParser("sign")
-                .help(help)
+        // Configure the subparser
+        subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
                 .setDefault("command", OperationSign.class);
@@ -321,6 +319,11 @@ public class OperationSign implements Operation {
         signatureParameters.addArguments(subparser);
 
         return subparser;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "sign";
     }
 
 }

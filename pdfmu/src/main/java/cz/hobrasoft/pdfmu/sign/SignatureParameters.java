@@ -1,9 +1,7 @@
 package cz.hobrasoft.pdfmu.sign;
 
-import com.itextpdf.text.pdf.security.DigestAlgorithms;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
-import java.util.Arrays;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -21,26 +19,26 @@ class SignatureParameters implements ArgsConfiguration {
 
     // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
     // Note: KDirSign uses SHA-512.
-    public String digestAlgorithm = DigestAlgorithms.SHA256;
+    public String digestAlgorithm = "SHA256";
     public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
 
-    private static String[] digestAlgorithmChoices = {
-        // {@link DigestAlgorithms}:
-        DigestAlgorithms.RIPEMD160,
-        DigestAlgorithms.SHA1,
-        DigestAlgorithms.SHA256,
-        DigestAlgorithms.SHA384,
-        DigestAlgorithms.SHA512,
+    private static final String[] digestAlgorithmChoices = {
+        // Source: {@link DigestAlgorithms#digestNames}
+        // Alternative source:
         // digitalsignatures20130304.pdf : Section 1.2.2; Code sample 1.5
+        // TODO?: Add dashes in the algorithm names
+        "MD2",
         "MD5",
-        "SHA-224",
+        "SHA1",
+        "SHA224",
+        "SHA256",
+        "SHA384",
+        "SHA512",
         "RIPEMD128",
-        "RIPEMD256"
+        "RIPEMD160",
+        "RIPEMD256",
+        "GOST3411"
     };
-
-    static {
-        Arrays.sort(digestAlgorithmChoices);
-    }
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -66,6 +64,7 @@ class SignatureParameters implements ArgsConfiguration {
         parser.addArgument("-da", "--digest-algorithm")
                 .help("hash algorithm for making the signature")
                 .metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
+                // TODO?: Limit the choices to `digesetAlgorithmChoices`
                 .type(String.class)
                 .setDefault(digestAlgorithm);
     }

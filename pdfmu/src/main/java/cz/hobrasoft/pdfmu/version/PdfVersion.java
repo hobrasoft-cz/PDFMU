@@ -75,7 +75,7 @@ public class PdfVersion implements Comparable<PdfVersion> {
      *
      * <p>
      * This format of PDF version is accepted for example by
-     * {@link PdfStamper#PdfStamper(PdfReader, OutputStream, char)}
+     * {@link com.itextpdf.text.pdf.PdfStamper#PdfStamper(PdfReader, OutputStream, char)}
      *
      * @return last character of the PDF version
      */

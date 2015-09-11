@@ -12,6 +12,11 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
+/**
+ * Displays the PDF version of a PDF document
+ *
+ * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
+ */
 public class OperationVersionGet implements Operation {
 
     @Override

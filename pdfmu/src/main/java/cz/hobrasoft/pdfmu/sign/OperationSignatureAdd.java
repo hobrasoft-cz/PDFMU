@@ -36,11 +36,11 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationSign implements Operation {
+public class OperationSignatureAdd implements Operation {
 
     @Override
     public String getCommandName() {
-        return "sign";
+        return "add";
     }
 
     @Override
@@ -54,7 +54,7 @@ public class OperationSign implements Operation {
         subparser.help(help)
                 .description(help)
                 .defaultHelp(true)
-                .setDefault("command", OperationSign.class);
+                .setDefault("command", OperationSignatureAdd.class);
 
         // Add arguments to the subparser
         // Positional arguments are required by default
@@ -297,7 +297,7 @@ public class OperationSign implements Operation {
             Certificate[] chain,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Use the static BouncyCastleDigest instance
-        sign(sap, OperationSign.externalDigest, externalSignature, chain, sigtype);
+        sign(sap, OperationSignatureAdd.externalDigest, externalSignature, chain, sigtype);
     }
 
     // Sign the document

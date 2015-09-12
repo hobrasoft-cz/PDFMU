@@ -1,6 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
-import cz.hobrasoft.pdfmu.sign.OperationSign;
+import cz.hobrasoft.pdfmu.sign.OperationSignature;
 import cz.hobrasoft.pdfmu.version.OperationVersion;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -45,9 +45,9 @@ public class Main {
                 .dest("operation");
 
         Operation operationVersion = new OperationVersion();
-        Operation operationSign = new OperationSign();
+        Operation operationSignature = new OperationSignature();
         Operation operationAttach = new OperationAttach();
-        Operation[] operations = {operationVersion, operationSign, operationAttach};
+        Operation[] operations = {operationVersion, operationSignature, operationAttach};
 
         for (Operation operation : operations) {
             operation.configureSubparser(subparsers.addParser(operation.getCommandName()));
@@ -71,8 +71,8 @@ public class Main {
                 case "version":
                     operation = operationVersion;
                     break;
-                case "sign":
-                    operation = operationSign;
+                case "signature":
+                    operation = operationSignature;
                     break;
                 case "attach":
                     operation = operationAttach;

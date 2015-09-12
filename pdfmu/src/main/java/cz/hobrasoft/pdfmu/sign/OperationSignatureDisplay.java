@@ -135,7 +135,7 @@ public class OperationSignatureDisplay implements Operation {
     private static PdfPKCS7 verifySignature(PdfPKCS7 pkcs7) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.2
         try {
-            System.err.println(String.format("  Integrity check OK?: %b", pkcs7.verify()));
+            System.err.println(String.format("  Integrity check OK: %b", pkcs7.verify()));
         } catch (GeneralSecurityException ex) {
             throw new OperationException("Could not verify a signature.", ex);
         }

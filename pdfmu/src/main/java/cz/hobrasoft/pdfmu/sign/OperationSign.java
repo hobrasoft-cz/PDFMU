@@ -120,7 +120,9 @@ public class OperationSign implements Operation {
             }
         }
 
-        boolean append = true; // TODO?: Expose
+        boolean append = true;
+        // With `append == false`, adding a signature invalidates the previous signature.
+        // In order to make `append == false` work correctly, we would need to remove the previous signature.
 
         // Initialize signature parameters
         signatureParameters.setFromNamespace(namespace);

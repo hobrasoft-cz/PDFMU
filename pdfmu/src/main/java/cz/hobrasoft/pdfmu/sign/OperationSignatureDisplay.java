@@ -139,6 +139,8 @@ public class OperationSignatureDisplay implements Operation {
         } catch (GeneralSecurityException ex) {
             throw new OperationException("Could not verify a signature.", ex);
         }
+
+        // Various signature properties can be extracted by calling `pkcs7` getters.
         return pkcs7;
     }
 

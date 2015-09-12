@@ -234,6 +234,7 @@ public class OperationSign implements Operation {
 
         // Initialize the signature appearance
         PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);
+        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method
 
         sign(sap, keystoreParameters, keyParameters, digestAlgorithm, sigtype);
     }

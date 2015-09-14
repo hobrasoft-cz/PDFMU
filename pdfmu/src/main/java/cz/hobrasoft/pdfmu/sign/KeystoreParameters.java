@@ -10,6 +10,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -23,6 +24,8 @@ class KeystoreParameters implements ArgsConfiguration {
     public File file = null;
     public String type = null;
     public char[] password = null;
+
+    private static final Logger logger = Logger.getLogger(KeystoreParameters.class.getName());
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -64,14 +67,14 @@ class KeystoreParameters implements ArgsConfiguration {
         // Set keystore type if not set from command line
         if (type == null) {
             // TODO: Guess type from `ksFile` file extension
-            System.err.println("Keystore type not specified. Using the default type.");
+            logger.info("Keystore type not specified. Using the default type.");
             type = KeyStore.getDefaultType();
         }
     }
 
     public void fixPassword() {
         if (password == null) {
-            System.err.println("Keystore password not set. Using empty password.");
+            logger.info("Keystore password not set. Using empty password.");
             password = "".toCharArray();
         }
     }
@@ -80,9 +83,9 @@ class KeystoreParameters implements ArgsConfiguration {
         if (file == null) {
             throw new OperationException("Keystore not set but is required. Use --keystore option.");
         }
-        System.err.println(String.format("Keystore file: %s", file));
+        logger.info(String.format("Keystore file: %s", file));
         fixType();
-        System.err.println(String.format("Keystore type: %s", type));
+        logger.info(String.format("Keystore type: %s", type));
         // digitalsignatures20130304.pdf : Code sample 2.2
         // Initialize keystore
         KeyStore ks;
@@ -91,7 +94,7 @@ class KeystoreParameters implements ArgsConfiguration {
         } catch (KeyStoreException ex) {
             throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", type), ex);
         }
-        System.err.println(String.format("Keystore security provider: %s", ks.getProvider().getName()));
+        logger.info(String.format("Keystore security provider: %s", ks.getProvider().getName()));
         // Load keystore
         {
             // ksIs

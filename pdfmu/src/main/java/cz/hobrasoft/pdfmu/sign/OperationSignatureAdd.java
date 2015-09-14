@@ -26,6 +26,7 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.Collection;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -37,6 +38,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationSignatureAdd implements Operation {
+
+    private static final Logger logger = Logger.getLogger(OperationSignatureAdd.class.getName());
 
     @Override
     public String getCommandName() {
@@ -104,17 +107,17 @@ public class OperationSignatureAdd implements Operation {
         // Input file
         File inFile = namespace.get("in");
         assert inFile != null; // Required argument
-        System.err.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Output file
         File outFile = namespace.get("out");
         if (outFile == null) {
-            System.err.println("--out option not specified; assuming in-place version change");
+            logger.info("--out option not specified; assuming in-place version change");
             outFile = inFile;
         }
-        System.err.println(String.format("Output PDF document: %s", outFile));
+        logger.info(String.format("Output PDF document: %s", outFile));
         if (outFile.exists()) {
-            System.err.println("Output file already exists.");
+            logger.info("Output file already exists.");
             if (!namespace.getBoolean("force")) {
                 throw new OperationException("Set --force flag to overwrite.");
             }
@@ -137,7 +140,7 @@ public class OperationSignatureAdd implements Operation {
             SignatureParameters signatureParameters) throws OperationException {
         assert inFile != null;
 
-        System.err.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream
         FileInputStream inStream;
@@ -157,7 +160,7 @@ public class OperationSignatureAdd implements Operation {
         }
 
         if (outFile == null) {
-            System.err.println("Output file not set. Commencing in-place operation.");
+            logger.info("Output file not set. Commencing in-place operation.");
             outFile = inFile;
         }
 
@@ -181,7 +184,7 @@ public class OperationSignatureAdd implements Operation {
             SignatureParameters signatureParameters) throws OperationException {
         assert outFile != null;
 
-        System.err.println(String.format("Output PDF document: %s", outFile));
+        logger.info(String.format("Output PDF document: %s", outFile));
 
         // Open the output stream
         FileOutputStream os;
@@ -192,9 +195,9 @@ public class OperationSignatureAdd implements Operation {
         }
 
         if (append) {
-            System.err.println("Appending signature.");
+            logger.info("Appending signature.");
         } else {
-            System.err.println("Replacing signature.");
+            logger.info("Replacing signature.");
         }
 
         PdfStamper stp;
@@ -280,12 +283,12 @@ public class OperationSignatureAdd implements Operation {
         assert digestAlgorithm != null;
 
         // Initialize the signature algorithm
-        System.err.println(String.format("Digest algorithm: %s", digestAlgorithm));
+        logger.info(String.format("Digest algorithm: %s", digestAlgorithm));
         if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {
             throw new OperationException(String.format("The digest algorithm %s is not supported.", digestAlgorithm));
         }
 
-        System.err.println(String.format("Signature security provider: %s", provider.getName()));
+        logger.info(String.format("Signature security provider: %s", provider.getName()));
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
 
         sign(sap, externalSignature, chain, sigtype);
@@ -325,7 +328,7 @@ public class OperationSignatureAdd implements Operation {
         // We need not change this unless we want to optimize the resulting PDF document size.
         int estimatedSize = 0;
 
-        System.err.println(String.format("Cryptographic standard (signature format): %s", sigtype));
+        logger.info(String.format("Cryptographic standard (signature format): %s", sigtype));
 
         try {
             MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);
@@ -334,7 +337,7 @@ public class OperationSignatureAdd implements Operation {
         } catch (NullPointerException ex) {
             throw new OperationException("Could not sign the document. Invalid digest algorithm?", ex);
         }
-        System.err.println("Document successfully signed.");
+        logger.info("Document successfully signed.");
     }
 
 }

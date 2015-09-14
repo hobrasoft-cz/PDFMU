@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import javax.security.auth.x500.X500Principal;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -24,6 +25,8 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationSignatureDisplay implements Operation {
+
+    private static final Logger logger = Logger.getLogger(OperationSignatureDisplay.class.getName());
 
     @Override
     public String getCommandName() {
@@ -58,7 +61,7 @@ public class OperationSignatureDisplay implements Operation {
         // Input file
         File inFile = namespace.get("in");
         assert inFile != null; // Required argument
-        System.err.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         display(inFile);
     }
@@ -66,7 +69,7 @@ public class OperationSignatureDisplay implements Operation {
     private static void display(File inFile) throws OperationException {
         assert inFile != null;
 
-        System.err.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream
         FileInputStream inStream;
@@ -113,20 +116,20 @@ public class OperationSignatureDisplay implements Operation {
         ArrayList<String> names = fields.getSignatureNames();
 
         // Print number of signatures
-        System.err.println(String.format("Number of signatures: %d", names.size()));
-        System.err.println(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
+        logger.info(String.format("Number of signatures: %d", names.size()));
+        logger.info(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
 
         for (String name : names) {
-            System.err.println(); // Separate singatures by an empty line
-            System.err.println(String.format("Signature field name: %s", name));
+            logger.info(""); // Separate singatures by an empty line
+            logger.info(String.format("Signature field name: %s", name));
             verifySignature(fields, name);
         }
     }
 
     private static PdfPKCS7 verifySignature(AcroFields fields, String name) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.2
-        System.err.println(String.format("  Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
-        System.err.println(String.format("  Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
+        logger.info(String.format("  Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
+        logger.info(String.format("  Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);
         verifySignature(pkcs7);
@@ -137,17 +140,17 @@ public class OperationSignatureDisplay implements Operation {
     private static PdfPKCS7 verifySignature(PdfPKCS7 pkcs7) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.2
         try {
-            System.err.println(String.format("  Integrity check OK: %b", pkcs7.verify()));
+            logger.info(String.format("  Integrity check OK: %b", pkcs7.verify()));
         } catch (GeneralSecurityException ex) {
             throw new OperationException("Could not verify a signature.", ex);
         }
 
-        System.err.println(String.format("  name: %s", pkcs7.getSignName()));
-        System.err.println(String.format("  reason: %s", pkcs7.getReason()));
-        System.err.println(String.format("  location: %s", pkcs7.getLocation()));
+        logger.info(String.format("  name: %s", pkcs7.getSignName()));
+        logger.info(String.format("  reason: %s", pkcs7.getReason()));
+        logger.info(String.format("  location: %s", pkcs7.getLocation()));
 
         // TODO: Format date
-        //System.err.println(String.format("  date: %s", pkcs7.getSignDate()));
+        //logger.info(String.format("  date: %s", pkcs7.getSignDate()));
         X509Certificate cert = pkcs7.getSigningCertificate();
         showCertInfo(cert);
 
@@ -165,7 +168,7 @@ public class OperationSignatureDisplay implements Operation {
 
     private static void showPrincipalInfo(X500Principal principal) {
         // TODO: Parse using javax.naming.ldap.LdapName
-        System.err.println(principal.getName());
+        logger.info(principal.getName());
     }
 
 }

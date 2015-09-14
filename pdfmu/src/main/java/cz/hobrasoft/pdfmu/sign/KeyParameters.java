@@ -9,6 +9,7 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -20,6 +21,8 @@ class KeyParameters implements ArgsConfiguration {
 
     public String alias = null;
     public char[] password = null;
+
+    private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -48,7 +51,7 @@ class KeyParameters implements ArgsConfiguration {
     public void fixAlias(KeyStore ks) throws OperationException {
         if (alias == null) {
             // Get the first alias in the keystore
-            System.err.println("Keystore entry alias not set. Using the first entry in the keystore.");
+            logger.info("Keystore entry alias not set. Using the first entry in the keystore.");
             Enumeration<String> aliases;
             try {
                 aliases = ks.aliases();
@@ -61,7 +64,7 @@ class KeyParameters implements ArgsConfiguration {
             alias = aliases.nextElement();
             assert alias != null;
         }
-        System.err.println(String.format("Keystore entry alias: %s", alias));
+        logger.info(String.format("Keystore entry alias: %s", alias));
         // Make sure the entry `alias` is present in the keystore
         try {
             if (!ks.containsAlias(alias)) {
@@ -83,7 +86,7 @@ class KeyParameters implements ArgsConfiguration {
     public void fixPassword() {
         // Set key password if not set from command line
         if (password == null) {
-            System.err.println("Key password not set. Using an empty password.");
+            logger.info("Key password not set. Using an empty password.");
             password = "".toCharArray();
         }
     }

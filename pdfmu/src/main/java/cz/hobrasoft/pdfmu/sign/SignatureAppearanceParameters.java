@@ -4,6 +4,7 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import java.util.Calendar;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -19,6 +20,8 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
     public String contact = null;
     public Calendar signDate = null;
     public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;
+
+    private static final Logger logger = Logger.getLogger(SignatureAppearanceParameters.class.getName());
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -56,20 +59,20 @@ class SignatureAppearanceParameters implements ArgsConfiguration {
         assert sap != null;
         // Configure signature metadata
         if (reason != null) {
-            System.err.println(String.format("Reason: %s", reason));
+            logger.info(String.format("Reason: %s", reason));
             sap.setReason(reason);
         }
         if (location != null) {
-            System.err.println(String.format("Location: %s", location));
+            logger.info(String.format("Location: %s", location));
             sap.setLocation(location);
         }
         if (contact != null) {
-            System.err.println(String.format("Contact: %s", contact));
+            logger.info(String.format("Contact: %s", contact));
             sap.setContact(contact);
         }
         if (signDate != null) {
             // `setSignDate(null)` crashes
-            System.err.println(String.format("Date: %s", signDate));
+            logger.info(String.format("Date: %s", signDate));
             sap.setSignDate(signDate);
         }
         sap.setCertificationLevel(certificationLevel);

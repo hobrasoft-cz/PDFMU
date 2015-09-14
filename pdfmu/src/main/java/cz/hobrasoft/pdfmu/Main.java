@@ -2,6 +2,10 @@ package cz.hobrasoft.pdfmu;
 
 import cz.hobrasoft.pdfmu.sign.OperationSignature;
 import cz.hobrasoft.pdfmu.version.OperationVersion;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -14,6 +18,19 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class Main {
+
+    static {
+        // http://stackoverflow.com/a/3363747
+        LogManager.getLogManager().reset(); // Remove default handler(s)
+
+        Handler handler = new ConsoleHandler(); // Prints to `System.err`
+        handler.setFormatter(new VerbatimFormatter());
+        // http://stackoverflow.com/questions/2533227/how-can-i-disable-the-default-console-handler-while-using-the-java-logging-api/2533250#comment34752130_2533250
+        Logger rootLogger = Logger.getLogger("");
+        rootLogger.addHandler(handler);
+    }
+
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     /**
      * The main entry point of PDFMU
@@ -86,9 +103,9 @@ public class Main {
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {
-                System.err.println(ex.getMessage());
+                logger.info(ex.getMessage());
                 if (ex.getCause() != null && ex.getCause().getMessage() != null) {
-                    System.err.println(ex.getCause().getMessage());
+                    logger.info(ex.getCause().getMessage());
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -63,9 +64,10 @@ class SignatureParameters implements ArgsConfiguration {
         // - hash algorithm for making the signature
         parser.addArgument("-da", "--digest-algorithm")
                 .help("hash algorithm for making the signature")
-                // Java 8:
+                // Java 8 (using `String.join`):
                 //.metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
-                // TODO: Show the choices in a way compatible with Java 7
+                // Java 7 (using `org.apache.commons.lang3.StringUtils.join`):
+                .metavar(String.format("{%s}", StringUtils.join(digestAlgorithmChoices, ",")))
                 // TODO?: Limit the choices to `digesetAlgorithmChoices`
                 .type(String.class)
                 .setDefault(digestAlgorithm);

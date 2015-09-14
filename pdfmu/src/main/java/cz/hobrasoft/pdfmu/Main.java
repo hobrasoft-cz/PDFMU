@@ -104,8 +104,9 @@ public class Main {
                 operation.execute(namespace);
             } catch (OperationException ex) {
                 logger.info(ex.getMessage());
-                if (ex.getCause() != null && ex.getCause().getMessage() != null) {
-                    logger.info(ex.getCause().getMessage());
+                Throwable cause = ex.getCause();
+                if (cause != null && cause.getMessage() != null) {
+                    logger.info(cause.getMessage());
                 }
             }
         }

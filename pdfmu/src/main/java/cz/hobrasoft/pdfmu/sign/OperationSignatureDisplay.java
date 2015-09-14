@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import javax.security.auth.x500.X500Principal;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -140,8 +142,30 @@ public class OperationSignatureDisplay implements Operation {
             throw new OperationException("Could not verify a signature.", ex);
         }
 
+        System.err.println(String.format("  name: %s", pkcs7.getSignName()));
+        System.err.println(String.format("  reason: %s", pkcs7.getReason()));
+        System.err.println(String.format("  location: %s", pkcs7.getLocation()));
+
+        // TODO: Format date
+        //System.err.println(String.format("  date: %s", pkcs7.getSignDate()));
+        X509Certificate cert = pkcs7.getSigningCertificate();
+        showCertInfo(cert);
+
         // Various signature properties can be extracted by calling `pkcs7` getters.
         return pkcs7;
+    }
+
+    private static void showCertInfo(X509Certificate cert) {
+        X500Principal issuer = cert.getIssuerX500Principal();
+        X500Principal subject = cert.getSubjectX500Principal();
+
+        showPrincipalInfo(issuer);
+        showPrincipalInfo(subject);
+    }
+
+    private static void showPrincipalInfo(X500Principal principal) {
+        // TODO: Parse using javax.naming.ldap.LdapName
+        System.err.println(principal.getName());
     }
 
 }

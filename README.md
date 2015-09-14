@@ -2,7 +2,7 @@
 
 ## Quick start
 
-1. Install [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 8u60
+1. Install [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 7u80
 2. Install [NetBeans](https://netbeans.org/downloads/) 8.0.2
 3. Run NetBeans
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
@@ -10,7 +10,7 @@
 
 ## Software dependencies
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 8u60
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 7u80
 * [NetBeans](https://netbeans.org/downloads/) 8.0.2
 * [Maven](http://maven.apache.org/download.cgi) 3.3.3
 * [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10

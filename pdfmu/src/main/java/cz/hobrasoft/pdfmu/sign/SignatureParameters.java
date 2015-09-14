@@ -63,7 +63,9 @@ class SignatureParameters implements ArgsConfiguration {
         // - hash algorithm for making the signature
         parser.addArgument("-da", "--digest-algorithm")
                 .help("hash algorithm for making the signature")
-                .metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
+                // Java 8:
+                //.metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
+                // TODO: Show the choices in a way compatible with Java 7
                 // TODO?: Limit the choices to `digesetAlgorithmChoices`
                 .type(String.class)
                 .setDefault(digestAlgorithm);

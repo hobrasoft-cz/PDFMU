@@ -61,7 +61,6 @@ public class OperationSignatureDisplay implements Operation {
         // Input file
         File inFile = namespace.get("in");
         assert inFile != null; // Required argument
-        logger.info(String.format("Input PDF document: %s", inFile));
 
         display(inFile);
     }

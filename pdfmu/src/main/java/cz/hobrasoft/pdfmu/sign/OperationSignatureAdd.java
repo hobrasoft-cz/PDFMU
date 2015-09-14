@@ -140,6 +140,7 @@ public class OperationSignatureAdd implements Operation {
             SignatureParameters signatureParameters) throws OperationException {
         assert inFile != null;
 
+        // TODO: Remove one of the duplicit messages
         logger.info(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream

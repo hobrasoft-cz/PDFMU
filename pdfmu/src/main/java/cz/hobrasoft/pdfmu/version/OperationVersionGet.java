@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -17,6 +18,8 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationVersionGet implements Operation {
+
+    private static final Logger logger = Logger.getLogger(OperationVersionGet.class.getName());
 
     @Override
     public String getCommandName() {
@@ -49,7 +52,7 @@ public class OperationVersionGet implements Operation {
         File inFile = namespace.get("in");
         assert inFile != null;
 
-        System.out.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream
         FileInputStream inStream = null;
@@ -72,7 +75,7 @@ public class OperationVersionGet implements Operation {
 
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-        System.out.println(String.format("Input PDF document version: %s", inVersion));
+        logger.info(String.format("Input PDF document version: %s", inVersion));
 
         // Close the PDF reader
         pdfReader.close();

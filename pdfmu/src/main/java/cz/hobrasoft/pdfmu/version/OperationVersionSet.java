@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -20,6 +21,8 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationVersionSet implements Operation {
+
+    private static final Logger logger = Logger.getLogger(OperationVersionSet.class.getName());
 
     @Override
     public String getCommandName() {
@@ -69,7 +72,7 @@ public class OperationVersionSet implements Operation {
         File inFile = namespace.get("in");
         assert inFile != null;
 
-        System.out.println(String.format("Input PDF document: %s", inFile));
+        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream
         FileInputStream inStream = null;
@@ -92,13 +95,13 @@ public class OperationVersionSet implements Operation {
 
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-        System.out.println(String.format("Input PDF document version: %s", inVersion));
+        logger.info(String.format("Input PDF document version: %s", inVersion));
 
         // Commence to set the PDF version of the output PDF document
         // Determine the desired PDF version
         PdfVersion outVersion = namespace.get("version");
         assert outVersion != null; // The argument "version" has a default value
-        System.out.println(String.format("Desired output PDF version: %s", outVersion));
+        logger.info(String.format("Desired output PDF version: %s", outVersion));
 
         if (outVersion.compareTo(inVersion) < 0) {
             // The desired version is lower than the current version.
@@ -107,14 +110,14 @@ public class OperationVersionSet implements Operation {
         } else {
             File outFile = namespace.get("out");
             if (outFile == null) {
-                System.out.println("--out option not specified; assuming in-place version change");
+                logger.info("--out option not specified; assuming in-place version change");
                 outFile = inFile;
             }
 
-            System.out.println(String.format("Output PDF document: %s", outFile));
+            logger.info(String.format("Output PDF document: %s", outFile));
 
             if (outFile.exists()) {
-                System.out.println("Output file already exists.");
+                logger.info("Output file already exists.");
             }
 
             if (!outFile.exists() || namespace.getBoolean("force")) {
@@ -159,7 +162,7 @@ public class OperationVersionSet implements Operation {
         }
         assert pdfStamper != null;
 
-        System.out.println("The PDF version has been successfully set.");
+        logger.info("The PDF version has been successfully set.");
 
         // Close PDF stamper
         try {

@@ -1,6 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
-import cz.hobrasoft.pdfmu.sign.OperationSignature;
+import cz.hobrasoft.pdfmu.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.version.OperationVersion;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;

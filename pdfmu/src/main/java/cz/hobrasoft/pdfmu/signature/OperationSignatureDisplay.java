@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.sign;
+package cz.hobrasoft.pdfmu.signature;
 
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;

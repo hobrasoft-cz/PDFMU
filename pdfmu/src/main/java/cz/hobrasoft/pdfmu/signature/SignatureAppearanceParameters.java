@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.sign;
+package cz.hobrasoft.pdfmu.signature;
 
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;

@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.sign;
+package cz.hobrasoft.pdfmu.signature;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.OperationException;

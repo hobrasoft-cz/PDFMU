@@ -82,6 +82,16 @@ public class Console {
     }
 
     /**
+     * Print message and increment indentation
+     *
+     * @param message message to print
+     */
+    public static void indentMore(String message) {
+        println(message);
+        indentMore();
+    }
+
+    /**
      * Decrements the indentation level
      */
     public static void indentLess() {

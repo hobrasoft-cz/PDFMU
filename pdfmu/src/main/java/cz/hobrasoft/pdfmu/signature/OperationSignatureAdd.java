@@ -152,6 +152,8 @@ public class OperationSignatureAdd implements Operation {
             throw new OperationException("Could not open the input PDF document.", ex);
         }
 
+        // Set `outFile` to `inFile` if not set
+        // Handle calls of type `pdfmu signature add INOUT.pdf`
         if (outFile == null) {
             logger.info("Output file not specified. Assuming in-place operation.");
             outFile = inFile;

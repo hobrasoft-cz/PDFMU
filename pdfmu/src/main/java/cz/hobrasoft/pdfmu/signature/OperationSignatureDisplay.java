@@ -137,18 +137,16 @@ public class OperationSignatureDisplay implements Operation {
         }
     }
 
-    private static PdfPKCS7 display(AcroFields fields, String name) {
+    private static void display(AcroFields fields, String name) {
         // digitalsignatures20130304.pdf : Code sample 5.2
         Console.println(String.format("Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
         Console.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);
         display(pkcs7);
-
-        return pkcs7;
     }
 
-    private static PdfPKCS7 display(PdfPKCS7 pkcs7) {
+    private static void display(PdfPKCS7 pkcs7) {
         // digitalsignatures20130304.pdf : Code sample 5.3
         Console.println("Signature metadata:");
         {
@@ -183,7 +181,6 @@ public class OperationSignatureDisplay implements Operation {
         }
 
         // Various signature properties can be extracted by calling `pkcs7` getters.
-        return pkcs7;
     }
 
     private static void showCertInfo(X509Certificate cert) {

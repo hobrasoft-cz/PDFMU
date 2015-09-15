@@ -107,26 +107,26 @@ public class OperationVersionSet implements Operation {
             // The desired version is lower than the current version.
             throw new OperationException("Cannot lower the PDF version.");
             // TODO: Add --force-lower-version flag that enables lowering the version
-        } else {
-            File outFile = namespace.get("out");
-            if (outFile == null) {
-                logger.info("Output file not specified. Assuming in-place operation.");
-                outFile = inFile;
-            }
+        }
 
-            logger.info(String.format("Output PDF document: %s", outFile));
+        File outFile = namespace.get("out");
+        if (outFile == null) {
+            logger.info("Output file not specified. Assuming in-place operation.");
+            outFile = inFile;
+        }
 
-            if (outFile.exists()) {
-                logger.info("Output file already exists.");
-            }
+        logger.info(String.format("Output PDF document: %s", outFile));
 
-            if (!outFile.exists() || namespace.getBoolean("force")) {
-                // Creating a new file or allowed to overwrite the old one
-                setPdfVersion(outFile, pdfReader, outVersion.toChar());
+        if (outFile.exists()) {
+            logger.info("Output file already exists.");
+            if (namespace.getBoolean("force")) {
+                logger.info("Overwriting the output file (--force flag is set).");
             } else {
                 throw new OperationException("Set --force flag to overwrite.");
             }
         }
+
+        setPdfVersion(outFile, pdfReader, outVersion.toChar());
 
         // Close the PDF reader
         pdfReader.close();

@@ -93,4 +93,8 @@ public class Console {
     private static void updatePrefix() {
         prefix = StringUtils.repeat("  ", indent);
     }
+
+    // Instancing is discouraged
+    private Console() {
+    }
 }

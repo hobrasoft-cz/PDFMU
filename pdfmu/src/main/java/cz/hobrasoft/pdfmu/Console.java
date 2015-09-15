@@ -37,6 +37,7 @@ public class Console {
 
         // Initialize the default logger
         Handler handler = new ConsoleHandler(); // Prints to `System.err`
+        // TODO: Change handler so that it supports unicode characters
         handler.setFormatter(new VerbatimFormatter());
         logger.addHandler(handler);
         logger.setUseParentHandlers(false); // Only print using the ConsoleHandler

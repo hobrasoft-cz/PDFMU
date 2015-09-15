@@ -171,7 +171,12 @@ public class OperationSignatureDisplay implements Operation {
         // TODO: Format date
         //Console.println(String.format("  date: %s", pkcs7.getSignDate()));
         X509Certificate cert = pkcs7.getSigningCertificate();
-        showCertInfo(cert);
+
+        { // Signing certificate
+            Console.indentMore("Signing certificate:");
+            showCertInfo(cert);
+            Console.indentLess();
+        }
 
         // Various signature properties can be extracted by calling `pkcs7` getters.
         return pkcs7;

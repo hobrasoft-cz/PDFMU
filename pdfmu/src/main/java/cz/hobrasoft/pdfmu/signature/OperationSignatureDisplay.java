@@ -106,13 +106,13 @@ public class OperationSignatureDisplay implements Operation {
         pdfReader.close();
     }
 
-    private static void display(PdfReader pdfReader) throws OperationException {
+    private static void display(PdfReader pdfReader) {
         // digitalsignatures20130304.pdf : Code sample 5.1
         AcroFields fields = pdfReader.getAcroFields();
         display(fields);
     }
 
-    private static void display(AcroFields fields) throws OperationException {
+    private static void display(AcroFields fields) {
         // digitalsignatures20130304.pdf : Code sample 5.1
         ArrayList<String> names = fields.getSignatureNames();
 
@@ -137,7 +137,7 @@ public class OperationSignatureDisplay implements Operation {
         }
     }
 
-    private static PdfPKCS7 display(AcroFields fields, String name) throws OperationException {
+    private static PdfPKCS7 display(AcroFields fields, String name) {
         // digitalsignatures20130304.pdf : Code sample 5.2
         Console.println(String.format("Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
         Console.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
@@ -148,7 +148,7 @@ public class OperationSignatureDisplay implements Operation {
         return pkcs7;
     }
 
-    private static PdfPKCS7 display(PdfPKCS7 pkcs7) throws OperationException {
+    private static PdfPKCS7 display(PdfPKCS7 pkcs7) {
         // digitalsignatures20130304.pdf : Code sample 5.3
         Console.println("Signature metadata:");
         {

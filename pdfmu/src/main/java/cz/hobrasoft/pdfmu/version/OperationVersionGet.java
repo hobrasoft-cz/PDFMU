@@ -23,6 +23,7 @@ public class OperationVersionGet implements Operation {
 
     @Override
     public String getCommandName() {
+        // TODO: Make consistent with `pdfmu signature display`
         return "get";
     }
 

@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Prints possibly indented messages to {@link System#err}
+ * Prints possibly indented messages to a logger
  *
  * <p>
- * Maintains indentation level.
+ * Indents the messages by an indentation level that is maintained. The
+ * indentation level can be changed by calling {@link Console#indentMore} and
+ * {@link Console#indentLess}.
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
@@ -18,6 +20,15 @@ public class Console {
 
     private static int indent = 0;
     private static String prefix = "";
+
+    /**
+     * This logger is used for printing the messages
+     *
+     * <p>
+     * By default, a logger that <em>only</em> outputs the messages to
+     * {@link System#err} is used. The default logger's name is the fully
+     * qualified name of this class (that is {@link Console}).
+     */
     public static Logger logger = Logger.getLogger(Console.class.getName());
 
     static {
@@ -30,16 +41,48 @@ public class Console {
         logger.setUseParentHandlers(false); // Only print using the ConsoleHandler
     }
 
+    /**
+     * Prints a message on a separate line
+     *
+     * <p>
+     * The message is indented by {@link Console#indent} and logged as an info
+     * message ({@link Level#INFO}) using {@link Console#logger}.
+     *
+     * @param message message to print
+     */
     public static void println(String message) {
         assert prefix.length() == indent * "  ".length();
         logger.log(Level.INFO, "{0}{1}", new Object[]{prefix, message});
     }
 
+    /**
+     * Increments the indentation level
+     *
+     * <p>
+     * If the code between {@link Console#indentMore} and
+     * {@link Console#indentLess} may throw a (checked) exception, surround the
+     * code with a {@code try}-{@code finally} block like this to maintain
+     * consistency:
+     * <pre>
+     * {@code
+     * Console.indentMore();
+     * try {
+     *  // Do stuff, possibly throwing an exception
+     * // Possibly catch the exception
+     * } finally {
+     *   Console.indentLess();
+     * }
+     * }
+     * </pre>
+     */
     public static void indentMore() {
         ++indent;
         updatePrefix();
     }
 
+    /**
+     * Decrements the indentation level
+     */
     public static void indentLess() {
         if (indent > 0) {
             --indent;

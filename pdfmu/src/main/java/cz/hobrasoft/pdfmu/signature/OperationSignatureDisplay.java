@@ -149,11 +149,19 @@ public class OperationSignatureDisplay implements Operation {
         Console.println("Signature metadata:");
         {
             Console.indentMore();
+
+            // Only name may be null.
+            // The values are set in {@link PdfPKCS7#verifySignature}.
             { // name
                 String name = pkcs7.getSignName(); // May be null
+                if (name == null) {
+                    name = "N/A";
+                }
                 Console.println(String.format("Name: %s", name));
             }
 
+            // TODO?: Print "N/A" if the value is an empty string
+            // TODO?: Determine whether the value is set in the signature
             Console.println(String.format("Reason: %s", pkcs7.getReason()));
             Console.println(String.format("Location: %s", pkcs7.getLocation()));
 

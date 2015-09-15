@@ -210,6 +210,7 @@ public class OperationSignatureAdd implements Operation {
             throw new OperationException("Could not open the output file.", ex);
         }
 
+        // TODO: Remove the "append" option
         if (append) {
             logger.info("Appending signature.");
         } else {

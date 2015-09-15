@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.security.auth.x500.X500Principal;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -183,6 +184,12 @@ public class OperationSignatureDisplay implements Operation {
     }
 
     private static void showCertInfo(X509Certificate cert) {
+        { // Self-signed?
+            X500Principal principalSubject = cert.getSubjectX500Principal();
+            X500Principal principalIssuer = cert.getIssuerX500Principal();
+            boolean selfSigned = principalSubject.equals(principalIssuer);
+            Console.println(String.format("Self-signed (root authority): %s", (selfSigned ? "Yes" : "No")));
+        }
         { // Issuer
             Console.indentMore("Issuer:");
             showX500Name(CertificateInfo.getIssuerFields(cert));

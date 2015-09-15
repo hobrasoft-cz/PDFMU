@@ -161,7 +161,7 @@ public class OperationSignatureAdd implements Operation {
         }
 
         if (outFile == null) {
-            logger.info("Output file not set. Commencing in-place operation.");
+            logger.info("Output file not specified. Assuming in-place operation.");
             outFile = inFile;
         }
 

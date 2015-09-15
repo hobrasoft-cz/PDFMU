@@ -110,7 +110,7 @@ public class OperationVersionSet implements Operation {
         } else {
             File outFile = namespace.get("out");
             if (outFile == null) {
-                logger.info("--out option not specified; assuming in-place version change");
+                logger.info("Output file not specified. Assuming in-place operation.");
                 outFile = inFile;
             }
 

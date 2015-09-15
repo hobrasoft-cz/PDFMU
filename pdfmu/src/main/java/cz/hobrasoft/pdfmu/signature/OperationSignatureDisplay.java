@@ -169,11 +169,13 @@ public class OperationSignatureDisplay implements Operation {
             Console.println(String.format("Reason: %s", pkcs7.getReason()));
             Console.println(String.format("Location: %s", pkcs7.getLocation()));
 
+            { // Date
+                Date date = pkcs7.getSignDate().getTime();
+                Console.println(String.format("Date and time: %s", date));
+            }
+
             Console.indentLess();
         }
-
-        // TODO: Format date
-        //Console.println(String.format("  date: %s", pkcs7.getSignDate()));
         { // Certificate chain
             Console.indentMore("Certificate chain:");
             Certificate[] certificates = pkcs7.getSignCertificateChain();

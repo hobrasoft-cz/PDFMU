@@ -210,15 +210,14 @@ public class OperationSignatureDisplay implements Operation {
             boolean selfSigned = principalSubject.equals(principalIssuer);
             Console.println(String.format("Self-signed (root authority): %s", (selfSigned ? "Yes" : "No")));
         }
-        { // Issuer
-            Console.indentMore("Issuer:");
-            showX500Name(CertificateInfo.getIssuerFields(cert));
-            Console.indentLess();
-        }
-
         { // Subject
             Console.indentMore("Subject:");
             showX500Name(CertificateInfo.getSubjectFields(cert));
+            Console.indentLess();
+        }
+        { // Issuer
+            Console.indentMore("Issuer:");
+            showX500Name(CertificateInfo.getIssuerFields(cert));
             Console.indentLess();
         }
     }

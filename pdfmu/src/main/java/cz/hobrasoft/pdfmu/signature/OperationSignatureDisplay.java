@@ -200,7 +200,7 @@ public class OperationSignatureDisplay implements Operation {
             X500Principal principalSubject = cert.getSubjectX500Principal();
             X500Principal principalIssuer = cert.getIssuerX500Principal();
             boolean selfSigned = principalSubject.equals(principalIssuer);
-            Console.println(String.format("Self-signed (root authority): %s", (selfSigned ? "Yes" : "No")));
+            Console.println(String.format("Self-signed: %s", (selfSigned ? "Yes" : "No")));
         }
         { // Subject
             Console.indentMore("Subject:");

@@ -107,21 +107,9 @@ public class OperationSignatureAdd implements Operation {
         // Input file
         File inFile = namespace.get("in");
         assert inFile != null; // Required argument
-        logger.info(String.format("Input PDF document: %s", inFile));
 
         // Output file
         File outFile = namespace.get("out");
-        if (outFile == null) {
-            logger.info("--out option not specified; assuming in-place version change");
-            outFile = inFile;
-        }
-        logger.info(String.format("Output PDF document: %s", outFile));
-        if (outFile.exists()) {
-            logger.info("Output file already exists.");
-            if (!namespace.getBoolean("force")) {
-                throw new OperationException("Set --force flag to overwrite.");
-            }
-        }
 
         boolean append = true;
         // With `append == false`, adding a signature invalidates the previous signature.
@@ -130,12 +118,16 @@ public class OperationSignatureAdd implements Operation {
         // Initialize signature parameters
         signatureParameters.setFromNamespace(namespace);
 
-        sign(inFile, outFile, append, signatureParameters);
+        boolean forceOverwrite = namespace.getBoolean("force");
+        // Note: "force" argument is required
+
+        sign(inFile, outFile, forceOverwrite, append, signatureParameters);
     }
 
     // Open the PDF reader
     private static void sign(File inFile,
             File outFile,
+            boolean forceOverwrite,
             boolean append,
             SignatureParameters signatureParameters) throws OperationException {
         assert inFile != null;
@@ -165,7 +157,7 @@ public class OperationSignatureAdd implements Operation {
             outFile = inFile;
         }
 
-        sign(pdfReader, outFile, append, signatureParameters);
+        sign(pdfReader, outFile, forceOverwrite, append, signatureParameters);
 
         // Close the PDF reader
         pdfReader.close();
@@ -178,14 +170,35 @@ public class OperationSignatureAdd implements Operation {
         }
     }
 
-    // Open the PDF stamper
+    // Handle overwriting
     private static void sign(PdfReader pdfReader,
             File outFile,
+            boolean forceOverwrite,
             boolean append,
             SignatureParameters signatureParameters) throws OperationException {
         assert outFile != null;
 
         logger.info(String.format("Output PDF document: %s", outFile));
+
+        if (outFile.exists()) {
+            logger.info("Output file already exists.");
+            if (forceOverwrite) {
+                logger.info("Overwriting the output file (--force flag is set).");
+            } else {
+                throw new OperationException("Set --force flag to overwrite.");
+            }
+        }
+
+        sign(pdfReader, outFile, append, signatureParameters);
+    }
+
+    // Open the PDF stamper
+    // Overwrite `outFile` if it already exists.
+    private static void sign(PdfReader pdfReader,
+            File outFile,
+            boolean append,
+            SignatureParameters signatureParameters) throws OperationException {
+        assert outFile != null;
 
         // Open the output stream
         FileOutputStream os;

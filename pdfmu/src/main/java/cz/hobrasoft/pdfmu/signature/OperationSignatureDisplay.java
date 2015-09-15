@@ -174,21 +174,13 @@ public class OperationSignatureDisplay implements Operation {
 
         // TODO: Format date
         //Console.println(String.format("  date: %s", pkcs7.getSignDate()));
-        X509Certificate cert = pkcs7.getSigningCertificate();
-
-        { // Signing certificate
-            Console.indentMore("Signing certificate:");
-            showCertInfo(cert);
-            Console.indentLess();
-        }
-
         { // Certificate chain
             Console.indentMore("Certificate chain:");
             Certificate[] certificates = pkcs7.getSignCertificateChain();
             Console.println(String.format("Number of certificates: %d", certificates.length));
             int i = 0;
             for (Certificate certificate : certificates) {
-                Console.indentMore(String.format("Certificate %d:", i));
+                Console.indentMore(String.format("Certificate %d%s:", i, (i == 0 ? " (signing certificate)" : "")));
                 String type = certificate.getType();
                 Console.println(String.format("Type: %s", type));
                 // http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html#AppA

@@ -18,8 +18,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Console {
 
-    private static int indent = 0;
+    private static int indentLevel = 0;
     private static String prefix = "";
+    private static final String indentString = "  ";
 
     /**
      * This logger is used for printing the messages
@@ -32,7 +33,7 @@ public class Console {
     public static Logger logger = Logger.getLogger(Console.class.getName());
 
     static {
-        assert prefix.length() == indent;
+        assert prefix.length() == indentLevel * indentString.length();
 
         // Initialize the default logger
         Handler handler = new ConsoleHandler(); // Prints to `System.err`
@@ -45,13 +46,13 @@ public class Console {
      * Prints a message on a separate line
      *
      * <p>
-     * The message is indented by {@link Console#indent} and logged as an info
-     * message ({@link Level#INFO}) using {@link Console#logger}.
+     * The message is indented by {@link Console#indentLevel} level and logged
+     * as an info message ({@link Level#INFO}) using {@link Console#logger}.
      *
      * @param message message to print
      */
     public static void println(String message) {
-        assert prefix.length() == indent * "  ".length();
+        assert prefix.length() == indentLevel * indentString.length();
         logger.log(Level.INFO, "{0}{1}", new Object[]{prefix, message});
     }
 
@@ -76,7 +77,7 @@ public class Console {
      * </pre>
      */
     public static void indentMore() {
-        ++indent;
+        ++indentLevel;
         updatePrefix();
     }
 
@@ -84,14 +85,14 @@ public class Console {
      * Decrements the indentation level
      */
     public static void indentLess() {
-        if (indent > 0) {
-            --indent;
+        if (indentLevel > 0) {
+            --indentLevel;
             updatePrefix();
         }
     }
 
     private static void updatePrefix() {
-        prefix = StringUtils.repeat("  ", indent);
+        prefix = StringUtils.repeat(indentString, indentLevel);
     }
 
     // Instancing is discouraged

@@ -250,7 +250,7 @@ public class OperationSignatureDisplay implements Operation {
         attributeTypeAliases.put("DC", "Domain component");
         attributeTypeAliases.put("UID", "User ID");
         attributeTypeAliases.put("E", "Email address");
-        attributeTypeAliases.put("SN", "Device serial number");
+        attributeTypeAliases.put("SN", "Serial number");
         attributeTypeAliases.put("T", "Title");
     }
 

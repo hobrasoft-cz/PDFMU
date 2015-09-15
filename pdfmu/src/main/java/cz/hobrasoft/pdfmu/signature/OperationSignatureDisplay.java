@@ -3,6 +3,7 @@ package cz.hobrasoft.pdfmu.signature;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
+import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
 import java.io.File;
@@ -13,7 +14,6 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import javax.security.auth.x500.X500Principal;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -25,8 +25,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationSignatureDisplay implements Operation {
-
-    private static final Logger logger = Logger.getLogger(OperationSignatureDisplay.class.getName());
 
     @Override
     public String getCommandName() {
@@ -68,7 +66,7 @@ public class OperationSignatureDisplay implements Operation {
     private static void display(File inFile) throws OperationException {
         assert inFile != null;
 
-        logger.info(String.format("Input PDF document: %s", inFile));
+        Console.println(String.format("Input PDF document: %s", inFile));
 
         // Open the input stream
         FileInputStream inStream;
@@ -115,41 +113,51 @@ public class OperationSignatureDisplay implements Operation {
         ArrayList<String> names = fields.getSignatureNames();
 
         // Print number of signatures
-        logger.info(String.format("Number of signatures: %d", names.size()));
-        logger.info(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
+        Console.println(String.format("Number of signatures: %d", names.size()));
+        Console.println(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
+
+        if (names.size() > 0) {
+            Console.println(""); // Precede the first signature with an empty line
+        }
 
         for (String name : names) {
-            logger.info(""); // Separate singatures by an empty line
-            logger.info(String.format("Signature field name: %s", name));
-            verifySignature(fields, name);
+            Console.println(String.format("Signature field name: %s", name));
+
+            Console.indentMore();
+            try {
+                display(fields, name); // May throw OperationException
+            } finally {
+                Console.indentLess();
+                Console.println(""); // Follow each signature with an empty line
+            }
         }
     }
 
-    private static PdfPKCS7 verifySignature(AcroFields fields, String name) throws OperationException {
+    private static PdfPKCS7 display(AcroFields fields, String name) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.2
-        logger.info(String.format("  Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
-        logger.info(String.format("  Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
+        Console.println(String.format("Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
+        Console.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);
-        verifySignature(pkcs7);
+        display(pkcs7);
 
         return pkcs7;
     }
 
-    private static PdfPKCS7 verifySignature(PdfPKCS7 pkcs7) throws OperationException {
+    private static PdfPKCS7 display(PdfPKCS7 pkcs7) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.2
         try {
-            logger.info(String.format("  Integrity check OK: %b", pkcs7.verify()));
+            Console.println(String.format("Integrity check OK: %b", pkcs7.verify()));
         } catch (GeneralSecurityException ex) {
             throw new OperationException("Could not verify a signature.", ex);
         }
 
-        logger.info(String.format("  name: %s", pkcs7.getSignName()));
-        logger.info(String.format("  reason: %s", pkcs7.getReason()));
-        logger.info(String.format("  location: %s", pkcs7.getLocation()));
+        Console.println(String.format("name: %s", pkcs7.getSignName()));
+        Console.println(String.format("reason: %s", pkcs7.getReason()));
+        Console.println(String.format("location: %s", pkcs7.getLocation()));
 
         // TODO: Format date
-        //logger.info(String.format("  date: %s", pkcs7.getSignDate()));
+        //Console.println(String.format("  date: %s", pkcs7.getSignDate()));
         X509Certificate cert = pkcs7.getSigningCertificate();
         showCertInfo(cert);
 
@@ -167,7 +175,7 @@ public class OperationSignatureDisplay implements Operation {
 
     private static void showPrincipalInfo(X500Principal principal) {
         // TODO: Parse using javax.naming.ldap.LdapName
-        logger.info(principal.getName());
+        Console.println(principal.getName());
     }
 
 }

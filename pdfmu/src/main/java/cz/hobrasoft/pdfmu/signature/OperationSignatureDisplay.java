@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,6 +182,25 @@ public class OperationSignatureDisplay implements Operation {
             Console.indentLess();
         }
 
+        { // Certificate chain
+            Console.indentMore("Certificate chain:");
+            Certificate[] certificates = pkcs7.getSignCertificateChain();
+            Console.println(String.format("Number of certificates: %d", certificates.length));
+            int i = 0;
+            for (Certificate certificate : certificates) {
+                Console.indentMore(String.format("Certificate %d:", i));
+                String type = certificate.getType();
+                Console.println(String.format("Type: %s", type));
+                // http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html#AppA
+                if ("X.509".equals(type)) {
+                    X509Certificate certificateX509 = (X509Certificate) certificate;
+                    showCertInfo(certificateX509);
+                }
+                Console.indentLess();
+                ++i;
+            }
+            Console.indentLess();
+        }
     }
 
     private static void showCertInfo(X509Certificate cert) {

@@ -180,7 +180,6 @@ public class OperationSignatureDisplay implements Operation {
             Console.indentLess();
         }
 
-        // Various signature properties can be extracted by calling `pkcs7` getters.
     }
 
     private static void showCertInfo(X509Certificate cert) {

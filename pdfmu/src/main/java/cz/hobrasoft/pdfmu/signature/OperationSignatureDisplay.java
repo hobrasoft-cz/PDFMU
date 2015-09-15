@@ -204,6 +204,9 @@ public class OperationSignatureDisplay implements Operation {
             boolean selfSigned = principalSubject.equals(principalIssuer);
             Console.println(String.format("Self-signed: %s", (selfSigned ? "Yes" : "No")));
         }
+
+        // Note: More attributes may be available by more direct processing of `cert`
+        // than by using `CertificateInfo.get*Fields`.
         { // Subject
             Console.indentMore("Subject:");
             showX500Name(CertificateInfo.getSubjectFields(cert));

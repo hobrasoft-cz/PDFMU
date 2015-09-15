@@ -2,6 +2,8 @@ package cz.hobrasoft.pdfmu.signature;
 
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.security.CertificateInfo;
+import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.Operation;
@@ -14,10 +16,13 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import javax.security.auth.x500.X500Principal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Displays signatures of a PDF document
@@ -183,16 +188,60 @@ public class OperationSignatureDisplay implements Operation {
     }
 
     private static void showCertInfo(X509Certificate cert) {
-        X500Principal issuer = cert.getIssuerX500Principal();
-        X500Principal subject = cert.getSubjectX500Principal();
+        { // Issuer
+            Console.indentMore("Issuer:");
+            showX500Name(CertificateInfo.getIssuerFields(cert));
+            Console.indentLess();
+        }
 
-        showPrincipalInfo(issuer);
-        showPrincipalInfo(subject);
+        { // Subject
+            Console.indentMore("Subject:");
+            showX500Name(CertificateInfo.getSubjectFields(cert));
+            Console.indentLess();
+        }
     }
 
-    private static void showPrincipalInfo(X500Principal principal) {
-        // TODO: Parse using javax.naming.ldap.LdapName
-        Console.println(principal.getName());
+    private static void showX500Name(X500Name name) {
+        Map<String, ArrayList<String>> fields = name.getFields();
+        // TODO?: Sort (show known attributes first in a pre-defined order)
+        for (Entry<String, ArrayList<String>> field : fields.entrySet()) {
+            String type = field.getKey();
+            type = niceX500AttributeType(type);
+            ArrayList<String> values = field.getValue();
+            String valuesString = StringUtils.join(values, ", ");
+            Console.println(String.format("%s: %s", type, valuesString));
+        }
+    }
+
+    private static final Map<String, String> attributeTypeAliases = new HashMap<>();
+
+    static {
+        // Alias sources:
+        // http://www.ietf.org/rfc/rfc2253.txt : Section 2.3
+        // http://api.itextpdf.com/itext/com/itextpdf/text/pdf/security/CertificateInfo.X500Name.html
+        attributeTypeAliases.put("CN", "Common name");
+        attributeTypeAliases.put("L", "Locality");
+        attributeTypeAliases.put("ST", "State or province");
+        attributeTypeAliases.put("O", "Organization");
+        attributeTypeAliases.put("OU", "Organizational unit");
+        attributeTypeAliases.put("C", "Country code");
+        attributeTypeAliases.put("STREET", "Street address");
+        attributeTypeAliases.put("DC", "Domain component");
+        attributeTypeAliases.put("UID", "User ID");
+        attributeTypeAliases.put("E", "Email address");
+        attributeTypeAliases.put("SN", "Device serial number");
+        attributeTypeAliases.put("T", "Title");
+    }
+
+    private static String niceX500AttributeType(String type) {
+        String nice = attributeTypeAliases.get(type);
+        if (nice != null) {
+            type = nice;
+        } else {
+            return String.format("<%s>", type);
+        }
+
+        return type;
     }
 
 }

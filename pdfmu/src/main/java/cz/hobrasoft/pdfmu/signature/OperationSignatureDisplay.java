@@ -146,10 +146,19 @@ public class OperationSignatureDisplay implements Operation {
 
     private static PdfPKCS7 display(PdfPKCS7 pkcs7) throws OperationException {
         // digitalsignatures20130304.pdf : Code sample 5.3
+        Console.println("Signature metadata:");
+        {
+            Console.indentMore();
+            { // name
+                String name = pkcs7.getSignName(); // May be null
+                Console.println(String.format("Name: %s", name));
+            }
 
-        Console.println(String.format("name: %s", pkcs7.getSignName()));
-        Console.println(String.format("reason: %s", pkcs7.getReason()));
-        Console.println(String.format("location: %s", pkcs7.getLocation()));
+            Console.println(String.format("Reason: %s", pkcs7.getReason()));
+            Console.println(String.format("Location: %s", pkcs7.getLocation()));
+
+            Console.indentLess();
+        }
 
         // TODO: Format date
         //Console.println(String.format("  date: %s", pkcs7.getSignDate()));

@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.signature;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.OperationException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -41,6 +42,13 @@ class KeyParameters implements ArgsConfiguration {
         alias = namespace.getString("alias");
         // Set password
         String passwordString = namespace.getString("keypass");
+        if (passwordString == null) {
+            // Load the password from an environment variable
+            passwordString = System.getenv("PDFMU_KEYPASS");
+            if (passwordString != null) {
+                Console.println("Key password loaded from an environment variable.");
+            }
+        }
         if (passwordString != null) {
             password = passwordString.toCharArray();
         } else {

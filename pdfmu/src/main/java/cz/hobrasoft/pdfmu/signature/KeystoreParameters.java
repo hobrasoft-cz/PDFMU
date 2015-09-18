@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.signature;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.OperationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,8 +55,16 @@ class KeystoreParameters implements ArgsConfiguration {
     public void setFromNamespace(Namespace namespace) {
         file = namespace.get("keystore");
         type = namespace.getString("type");
+
         // Set password
         String passwordString = namespace.getString("storepass");
+        if (passwordString == null) {
+            // Load the password from an environment variable
+            passwordString = System.getenv("PDFMU_STOREPASS");
+            if (passwordString != null) {
+                Console.println("Keystore password loaded from an environment variable.");
+            }
+        }
         if (passwordString != null) {
             password = passwordString.toCharArray();
         } else {

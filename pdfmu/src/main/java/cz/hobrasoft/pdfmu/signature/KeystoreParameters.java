@@ -55,7 +55,7 @@ class KeystoreParameters implements ArgsConfiguration {
         file = namespace.get("keystore");
         type = namespace.getString("type");
         // Set password
-        String passwordString = namespace.getString("keypass");
+        String passwordString = namespace.getString("storepass");
         if (passwordString != null) {
             password = passwordString.toCharArray();
         } else {

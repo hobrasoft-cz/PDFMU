@@ -146,7 +146,7 @@ public class OperationSignatureDisplay implements Operation {
 
     private static void display(AcroFields fields, String name) {
         // digitalsignatures20130304.pdf : Code sample 5.2
-        Console.println(String.format("Signature covers the whole document: %b", fields.signatureCoversWholeDocument(name)));
+        Console.println(String.format("Signature covers the whole document: %s", (fields.signatureCoversWholeDocument(name) ? "Yes" : "No")));
         Console.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);

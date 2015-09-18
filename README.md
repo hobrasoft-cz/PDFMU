@@ -2,16 +2,16 @@
 
 ## Quick start
 
-1. Install [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 7u80
-2. Install [NetBeans](http://download.netbeans.org/netbeans/8.1/beta/) 8.1 Beta
+1. Install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+2. Install [NetBeans 8.1 Beta](http://download.netbeans.org/netbeans/8.1/beta/)
 3. Run NetBeans
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Run Project (pdfmu)
 
 ## Software dependencies
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 7u80
-* [NetBeans](http://download.netbeans.org/netbeans/8.1/beta/) 8.1 Beta
+* [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+* [NetBeans 8.1 Beta](http://download.netbeans.org/netbeans/8.1/beta/)
 * [Maven](http://maven.apache.org/download.cgi) 3.3.3
 * [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10
 

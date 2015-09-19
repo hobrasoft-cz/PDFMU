@@ -43,7 +43,8 @@ public class PasswordArgs implements ArgsConfiguration {
     @Override
     public void addArguments(ArgumentParser parser) {
         MutuallyExclusiveGroup keypassGroup = parser.addMutuallyExclusiveGroup(title);
-        // TODO?: Add description that states that the arguments are mutually exclusive.
+        // TODO?: Add description that states that the arguments are mutually exclusive
+        // and that `passArg` takes precedence to `envvarArg`.
         keypassGroup.addArgument("-" + passArgNameShort, "--" + passArgNameLong)
                 .help(passArgHelp)
                 .type(String.class);

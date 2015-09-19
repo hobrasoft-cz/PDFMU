@@ -23,6 +23,7 @@ class KeyParameters implements ArgsConfiguration {
     public String alias = null;
     public char[] password = null;
 
+    // TODO: Replace with Console
     private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());
 
     private final PasswordArgs passwordArgs = new PasswordArgs("key password",

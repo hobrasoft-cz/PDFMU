@@ -1,8 +1,8 @@
 package cz.hobrasoft.pdfmu.signature;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.PasswordArgs;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -25,35 +25,33 @@ class KeyParameters implements ArgsConfiguration {
 
     private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());
 
+    private final PasswordArgs passwordArgs = new PasswordArgs("key password",
+            "kp",
+            "keypass",
+            "key password (default: <empty>)",
+            "kpev",
+            "keypassenvvar",
+            "key password environment variable",
+            "PDFMU_KEYPASS");
+
     @Override
     public void addArguments(ArgumentParser parser) {
         parser.addArgument("-a", "--alias")
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
         // TODO?: Hardcode to first entry since most P12 keystores contain only one entry
-        parser.addArgument("-kp", "--keypass")
-                .help("key password (default: <empty>)")
-                .type(String.class);
-        // TODO?: Use "storepass" by default
+
+        passwordArgs.addArguments(parser);
     }
 
     @Override
     public void setFromNamespace(Namespace namespace) {
         alias = namespace.getString("alias");
+
         // Set password
-        String passwordString = namespace.getString("keypass");
-        if (passwordString == null) {
-            // Load the password from an environment variable
-            passwordString = System.getenv("PDFMU_KEYPASS");
-            if (passwordString != null) {
-                Console.println("Key password loaded from an environment variable.");
-            }
-        }
-        if (passwordString != null) {
-            password = passwordString.toCharArray();
-        } else {
-            password = null;
-        }
+        passwordArgs.setFromNamespace(namespace);
+        password = passwordArgs.getPassword();
+        // TODO?: Use keystore password by default
     }
 
     public void fixAlias(KeyStore ks) throws OperationException {

@@ -1,8 +1,8 @@
 package cz.hobrasoft.pdfmu.signature;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.PasswordArgs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +28,15 @@ class KeystoreParameters implements ArgsConfiguration {
 
     private static final Logger logger = Logger.getLogger(KeystoreParameters.class.getName());
 
+    private final PasswordArgs passwordArgs = new PasswordArgs("keystore password",
+            "sp",
+            "storepass",
+            "keystore password (default: <empty>)",
+            "spev",
+            "storepassenvvar",
+            "keystore password environment variable",
+            "PDFMU_STOREPASS");
+
     @Override
     public void addArguments(ArgumentParser parser) {
         // Keystore
@@ -45,10 +54,9 @@ class KeystoreParameters implements ArgsConfiguration {
                 .type(String.class)
                 .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12"});
         // TODO?: Guess type from file extension by default
-        // TODO?: Hardcode to "pkcs12" since it seems to be required for our purpose
-        parser.addArgument("-sp", "--storepass")
-                .help("keystore password (default: <empty>)")
-                .type(String.class);
+        // TODO?: Default to "pkcs12"
+
+        passwordArgs.addArguments(parser);
     }
 
     @Override
@@ -57,19 +65,8 @@ class KeystoreParameters implements ArgsConfiguration {
         type = namespace.getString("type");
 
         // Set password
-        String passwordString = namespace.getString("storepass");
-        if (passwordString == null) {
-            // Load the password from an environment variable
-            passwordString = System.getenv("PDFMU_STOREPASS");
-            if (passwordString != null) {
-                Console.println("Keystore password loaded from an environment variable.");
-            }
-        }
-        if (passwordString != null) {
-            password = passwordString.toCharArray();
-        } else {
-            password = null;
-        }
+        passwordArgs.setFromNamespace(namespace);
+        password = passwordArgs.getPassword();
     }
 
     public void fixType() {

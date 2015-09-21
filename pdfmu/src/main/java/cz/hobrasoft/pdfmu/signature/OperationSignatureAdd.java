@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.Collection;
@@ -288,7 +289,21 @@ public class OperationSignatureAdd implements Operation {
         PrivateKey pk = keyParameters.getPrivateKey(ks);
         Certificate[] chain = keyParameters.getCertificateChain(ks);
 
-        sign(sap, pk, digestAlgorithm, chain, sigtype);
+        Provider signatureProvider;
+        { // ksProvider
+            Provider ksProvider = ks.getProvider();
+            // "SunMSCAPI" provider must be used for signing if it was used for keystore loading.
+            // In case of other keystore providers,
+            // we use the default signature provider.
+            // https://community.oracle.com/thread/1528230
+            if ("SunMSCAPI".equals(ksProvider.getName())) {
+                signatureProvider = ksProvider;
+            } else {
+                signatureProvider = provider;
+            }
+        }
+
+        sign(sap, pk, digestAlgorithm, chain, sigtype, signatureProvider);
     }
 
     // Initialize the signature algorithm
@@ -296,7 +311,8 @@ public class OperationSignatureAdd implements Operation {
             PrivateKey pk,
             String digestAlgorithm,
             Certificate[] chain,
-            MakeSignature.CryptoStandard sigtype) throws OperationException {
+            MakeSignature.CryptoStandard sigtype,
+            Provider signatureProvider) throws OperationException {
         assert digestAlgorithm != null;
 
         // Initialize the signature algorithm
@@ -305,8 +321,8 @@ public class OperationSignatureAdd implements Operation {
             throw new OperationException(String.format("The digest algorithm %s is not supported.", digestAlgorithm));
         }
 
-        logger.info(String.format("Signature security provider: %s", provider.getName()));
-        ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, provider.getName());
+        logger.info(String.format("Signature security provider: %s", signatureProvider.getName()));
+        ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, signatureProvider.getName());
 
         sign(sap, externalSignature, chain, sigtype);
     }

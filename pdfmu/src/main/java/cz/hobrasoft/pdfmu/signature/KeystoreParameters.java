@@ -44,18 +44,19 @@ class KeystoreParameters implements ArgsConfiguration {
         // CLI inspired by `keytool`
         parser.addArgument("-ks", "--keystore")
                 .help("keystore file")
-                .type(Arguments.fileType().verifyCanRead())
-                .required(true);
+                .type(Arguments.fileType().verifyCanRead());
         // Valid types:
         // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
         // Type "pkcs12" file extensions: P12, PFX
         // Source: https://en.wikipedia.org/wiki/PKCS_12
+        // Another type: "Windows-MY" - Windows Certificate Store
         parser.addArgument("-t", "--type")
                 .help("keystore type")
                 .type(String.class)
-                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12"});
+                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12", "Windows-MY"});
         // TODO?: Guess type from file extension by default
         // TODO?: Default to "pkcs12"
+        // TODO: Only allow "Windows-MY" when running in Windows
 
         passwordArgs.addArguments(parser);
     }
@@ -87,10 +88,6 @@ class KeystoreParameters implements ArgsConfiguration {
     }
 
     public KeyStore loadKeystore() throws OperationException {
-        if (file == null) {
-            throw new OperationException("Keystore not set but is required. Use --keystore option.");
-        }
-        logger.info(String.format("Keystore file: %s", file));
         fixType();
         logger.info(String.format("Keystore type: %s", type));
         // digitalsignatures20130304.pdf : Code sample 2.2
@@ -102,30 +99,49 @@ class KeystoreParameters implements ArgsConfiguration {
             throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", type), ex);
         }
         logger.info(String.format("Keystore security provider: %s", ks.getProvider().getName()));
-        // Load keystore
-        {
-            // ksIs
-            FileInputStream ksIs;
-            try {
-                ksIs = new FileInputStream(file);
-            } catch (FileNotFoundException ex) {
-                throw new OperationException("Could not open keystore file.", ex);
-            }
-            fixPassword();
-            try {
-                ks.load(ksIs, password);
-            } catch (IOException ex) {
-                throw new OperationException("Could not load keystore. Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?", ex);
-            } catch (NoSuchAlgorithmException | CertificateException ex) {
-                throw new OperationException("Could not load keystore.", ex);
-            }
-            try {
-                ksIs.close();
-            } catch (IOException ex) {
-                throw new OperationException("Could not close keystore file.", ex);
-            }
+        switch (type) {
+            case "Windows-MY":
+                loadWindowsKeystore(ks);
+                break;
+            default:
+                loadFileKeystore(ks);
         }
         return ks;
+    }
+
+    private void loadFileKeystore(KeyStore ks) throws OperationException {
+        if (file == null) {
+            throw new OperationException("Keystore not set but is required. Use --keystore option.");
+        }
+        logger.info(String.format("Keystore file: %s", file));
+        // ksIs
+        FileInputStream ksIs;
+        try {
+            ksIs = new FileInputStream(file);
+        } catch (FileNotFoundException ex) {
+            throw new OperationException("Could not open keystore file.", ex);
+        }
+        fixPassword();
+        try {
+            ks.load(ksIs, password);
+        } catch (IOException ex) {
+            throw new OperationException("Could not load keystore. Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?", ex);
+        } catch (NoSuchAlgorithmException | CertificateException ex) {
+            throw new OperationException("Could not load keystore.", ex);
+        }
+        try {
+            ksIs.close();
+        } catch (IOException ex) {
+            throw new OperationException("Could not close keystore file.", ex);
+        }
+    }
+
+    private void loadWindowsKeystore(KeyStore ks) throws OperationException {
+        try {
+            ks.load(null, null);
+        } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+            throw new OperationException("Could not load keystore.", ex);
+        }
     }
 
 }

@@ -90,17 +90,25 @@ class KeyParameters implements ArgsConfiguration {
         }
     }
 
-    public void fixPassword() {
-        // Set key password if not set from command line
-        if (password == null) {
-            logger.info("Key password not set. Using an empty password.");
-            password = "".toCharArray();
+    public void fixPassword(KeyStore ks) {
+        switch (ks.getType()) {
+            case "Windows-MY":
+                if (password != null) {
+                    logger.info("The keystore Windows-MY does not accept key password.");
+                    password = null;
+                }
+            default:
+                // Set key password to empty string if not set from command line
+                if (password == null) {
+                    logger.info("Key password not set. Using an empty password.");
+                    password = "".toCharArray();
+                }
         }
     }
 
     public void fix(KeyStore ks) throws OperationException {
         fixAlias(ks);
-        fixPassword();
+        fixPassword(ks);
     }
 
     public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {

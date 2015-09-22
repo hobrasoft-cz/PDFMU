@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
+import cz.hobrasoft.pdfmu.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.version.OperationVersion;
 import java.util.logging.ConsoleHandler;
@@ -64,7 +65,8 @@ public class Main {
         Operation operationVersion = new OperationVersion();
         Operation operationSignature = new OperationSignature();
         Operation operationAttach = new OperationAttach();
-        Operation[] operations = {operationVersion, operationSignature, operationAttach};
+        Operation operationMetadata = new OperationMetadata();
+        Operation[] operations = {operationVersion, operationSignature, operationAttach, operationMetadata};
 
         for (Operation operation : operations) {
             operation.configureSubparser(subparsers.addParser(operation.getCommandName()));
@@ -93,6 +95,9 @@ public class Main {
                     break;
                 case "attach":
                     operation = operationAttach;
+                    break;
+                case "metadata":
+                    operation = operationMetadata;
                     break;
                 default:
                     // Invalid or none operation was specified,

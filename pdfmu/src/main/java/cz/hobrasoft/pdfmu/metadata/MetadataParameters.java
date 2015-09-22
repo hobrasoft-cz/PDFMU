@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu.metadata;
 
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -20,18 +22,32 @@ public class MetadataParameters implements ArgsConfiguration {
         return info;
     }
 
+    private static final List<String> standardProperties = Arrays.asList(new String[]{
+        "Title", "Subject", "Author", "Keywords", "Creator", "Producer",
+        "CreationDate", "ModDate", "Trapped"});
+
     @Override
     public void addArguments(ArgumentParser parser) {
+        // Generic properties
         parser.addArgument("-kv", "--keyvalue")
                 .help("set the property K to the value V")
                 .nargs(2)
                 .type(String.class)
                 .action(Arguments.append())
                 .metavar("K", "V");
+
+        // Standard properties
+        ArgumentGroup group = parser.addArgumentGroup("standard properties");
+        for (String property : standardProperties) {
+            group.addArgument("--" + property)
+                    .help(property) // TODO: Change to something sensible
+                    .type(String.class);
+        }
     }
 
     @Override
     public void setFromNamespace(Namespace namespace) {
+        // Generic properties
         List<List<String>> elements = namespace.getList("keyvalue");
         if (elements != null) {
             for (List<String> element : elements) {
@@ -40,6 +56,13 @@ public class MetadataParameters implements ArgsConfiguration {
                 info.put(key, value);
             }
         }
+
+        // Standard properties
+        for (String property : standardProperties) {
+            String value = namespace.getString(property);
+            if (value != null) {
+                info.put(property, value);
+            }
         }
     }
 
@@ -48,9 +71,7 @@ public class MetadataParameters implements ArgsConfiguration {
     }
 
     private static final Comparator<String> propertyComparator
-            = new PreferenceListComparator<>(new String[]{
-        "Title", "Subject", "Author", "Keywords", "Creator", "Producer",
-        "CreationDate", "ModDate", "Trapped"});
+            = new PreferenceListComparator<>(standardProperties);
 
     public SortedMap<String, String> getSorted() {
         SortedMap<String, String> infoSorted = new TreeMap<>(propertyComparator);

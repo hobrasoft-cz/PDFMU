@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -178,9 +180,20 @@ public class OperationMetadataSet implements Operation {
         }
     }
 
+    private static final List<String> ignoredProperties
+            = Arrays.asList(new String[]{"Producer", "ModDate"});
+
     private static void set(PdfStamper stp, Map<String, String> info) {
         assert stp != null;
         assert info != null;
+
+        for (String key : ignoredProperties) {
+            if (info.containsKey(key)) {
+                String value = info.get(key);
+                Console.println(String.format("Warning: The property %s is set automatically. The value \"%s\" will be ignored.", key, value));
+            }
+        }
+
         stp.setMoreInfo(info);
         Console.println("PDF metadata have been set.");
     }

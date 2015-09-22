@@ -8,8 +8,7 @@ import java.util.List;
  *
  * <p>
  * The items in the preference list are placed before the items that do not
- * appear in the preference list. The order of items that do not appear in the
- * preference list is preserved.
+ * appear in the preference list.
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */

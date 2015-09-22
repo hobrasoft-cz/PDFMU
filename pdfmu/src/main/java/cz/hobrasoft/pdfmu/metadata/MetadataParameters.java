@@ -26,6 +26,11 @@ public class MetadataParameters implements ArgsConfiguration {
         "Title", "Subject", "Author", "Keywords", "Creator", "Producer",
         "CreationDate", "ModDate", "Trapped"});
 
+    // iText does not let us set the Producer property.
+    // The ModDate property also seems to be set automatically.
+    private static final List<String> standardSettableProperties = Arrays.asList(new String[]{
+        "Title", "Subject", "Author", "Keywords", "Creator", "CreationDate", "Trapped"});
+
     @Override
     public void addArguments(ArgumentParser parser) {
         // Generic properties
@@ -38,7 +43,7 @@ public class MetadataParameters implements ArgsConfiguration {
 
         // Standard properties
         ArgumentGroup group = parser.addArgumentGroup("standard properties");
-        for (String property : standardProperties) {
+        for (String property : standardSettableProperties) {
             group.addArgument("--" + property)
                     .help(property) // TODO: Change to something sensible
                     .type(String.class);
@@ -58,7 +63,7 @@ public class MetadataParameters implements ArgsConfiguration {
         }
 
         // Standard properties
-        for (String property : standardProperties) {
+        for (String property : standardSettableProperties) {
             String value = namespace.getString(property);
             if (value != null) {
                 info.put(property, value);

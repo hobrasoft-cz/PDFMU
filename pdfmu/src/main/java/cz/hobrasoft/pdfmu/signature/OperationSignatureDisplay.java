@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -238,51 +239,10 @@ public class OperationSignatureDisplay implements Operation {
         types.add("C");
     }
 
-    private static class AttributeTypeComparator implements Comparator<String> {
-
-        /**
-         * @return negative iff `o1 < o2`, that is `o1` should come before `o2`
-         */
-        @Override
-        public int compare(String o1, String o2) {
-            if (o1.equals(o2)) {
-                return 0;
-            }
-
-            int i1 = types.indexOf(o1);
-            int i2 = types.indexOf(o2);
-
-            if (i1 == -1 && i2 != -1) {
-                // `o1` is not in `types` but `o2` is.
-                // "Prefer" `o2`, that is claim it smaller than `o1`.
-                return 1;
-            }
-            if (i2 == -1 && i1 != -1) {
-                return -1;
-            }
-            if (i1 == -1 && i2 == -1) {
-                // HACK:
-                // None of `o1` and `o2` is in `types`.
-                // Prefer `o1` (the former), preserving the order.
-                // With this hack, it may happen that `a < b` and `b < a`,
-                // so the comparator does not provide a <em>linear</em> order.
-                return -1;
-            }
-
-            // `i1 == i2` can only occur if `o1.equals(o1)`
-            // or when none of `o1` and `o2` is in `types`.
-            assert i1 != i2;
-
-            // If `o1` comes before `o1` in `types`, the result will be negative.
-            return i1 - i2;
-        }
-
-    }
-
     private static void showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 
-        SortedMap<String, ArrayList<String>> fieldsSorted = new TreeMap<>(new AttributeTypeComparator());
+        SortedMap<String, ArrayList<String>> fieldsSorted = new TreeMap<>(new PreferenceListComparator(types));
         fieldsSorted.putAll(fields);
 
         for (Entry<String, ArrayList<String>> field : fieldsSorted.entrySet()) {

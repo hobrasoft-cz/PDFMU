@@ -226,23 +226,13 @@ public class OperationSignatureDisplay implements Operation {
     }
 
     // The desired order of DN attributes by their type
-    private static final List<String> types = new ArrayList<>();
-
-    static {
-        types.add("CN");
-        types.add("E");
-        types.add("OU");
-        types.add("O");
-        types.add("STREET");
-        types.add("L");
-        types.add("ST");
-        types.add("C");
-    }
+    private static final Comparator<String> dnTypeComparator = new PreferenceListComparator(new String[]{
+        "CN", "E", "OU", "O", "STREET", "L", "ST", "C"});
 
     private static void showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 
-        SortedMap<String, ArrayList<String>> fieldsSorted = new TreeMap<>(new PreferenceListComparator(types));
+        SortedMap<String, ArrayList<String>> fieldsSorted = new TreeMap<>(dnTypeComparator);
         fieldsSorted.putAll(fields);
 
         for (Entry<String, ArrayList<String>> field : fieldsSorted.entrySet()) {

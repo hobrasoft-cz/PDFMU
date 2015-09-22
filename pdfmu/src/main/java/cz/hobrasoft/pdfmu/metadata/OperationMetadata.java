@@ -18,6 +18,10 @@ public class OperationMetadata implements Operation {
             Operation operationSet = new OperationMetadataSet();
             operations.put(operationSet.getCommandName(), operationSet);
         }
+        { // get
+            Operation operationGet = new OperationMetadataGet();
+            operations.put(operationGet.getCommandName(), operationGet);
+        }
     }
 
     @Override

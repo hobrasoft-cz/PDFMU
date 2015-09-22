@@ -23,7 +23,7 @@ public class MetadataParameters implements ArgsConfiguration {
     @Override
     public void addArguments(ArgumentParser parser) {
         parser.addArgument("-kv", "--keyvalue")
-                .help("generic metadata element")
+                .help("set the property K to the value V")
                 .nargs(2)
                 .type(String.class)
                 .action(Arguments.append())

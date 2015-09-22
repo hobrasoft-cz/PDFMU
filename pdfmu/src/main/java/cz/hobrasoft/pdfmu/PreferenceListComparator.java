@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,6 +19,10 @@ public class PreferenceListComparator<T> implements Comparator<T> {
 
     public PreferenceListComparator(List<T> preferred) {
         this.preferred = preferred;
+    }
+
+    public PreferenceListComparator(T[] preferred) {
+        this(Arrays.asList(preferred));
     }
 
     @Override

@@ -33,10 +33,13 @@ public class MetadataParameters implements ArgsConfiguration {
     @Override
     public void setFromNamespace(Namespace namespace) {
         List<List<String>> elements = namespace.getList("keyvalue");
-        for (List<String> element : elements) {
-            String key = element.get(0);
-            String value = element.get(1);
-            info.put(key, value);
+        if (elements != null) {
+            for (List<String> element : elements) {
+                String key = element.get(0);
+                String value = element.get(1);
+                info.put(key, value);
+            }
+        }
         }
     }
 

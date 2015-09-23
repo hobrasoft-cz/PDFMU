@@ -64,10 +64,10 @@ public class MetadataParameters implements ArgsConfiguration {
         // Generic properties
         parser.addArgument("-kv", "--keyvalue")
                 .help("set the property K to the value V")
+                .metavar("K", "V")
                 .nargs(2)
                 .type(String.class)
-                .action(Arguments.append())
-                .metavar("K", "V");
+                .action(Arguments.append());
 
         // Standard properties
         ArgumentGroup group = parser.addArgumentGroup("standard properties");

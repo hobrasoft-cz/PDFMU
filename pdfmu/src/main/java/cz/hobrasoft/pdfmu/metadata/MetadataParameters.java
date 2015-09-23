@@ -54,6 +54,13 @@ public class MetadataParameters implements ArgsConfiguration {
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
 
+        parser.addArgument("-c", "--clear")
+                .help("clear the property P")
+                .metavar("P")
+                .nargs("?")
+                .type(String.class)
+                .action(Arguments.append());
+
         // Generic properties
         parser.addArgument("-kv", "--keyvalue")
                 .help("set the property K to the value V")
@@ -74,6 +81,16 @@ public class MetadataParameters implements ArgsConfiguration {
     @Override
     public void setFromNamespace(Namespace namespace) {
         clearall = namespace.getBoolean("clearall");
+
+        // Clear the selected properties
+        { // clearedProperties
+            List<String> clearedProperties = namespace.getList("clear");
+            if (clearedProperties != null) {
+                for (String p : clearedProperties) {
+                    info.put(p, null);
+                }
+            }
+        }
 
         // Generic properties
         List<List<String>> elements = namespace.getList("keyvalue");

@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.metadata;
 
+import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.util.Arrays;
@@ -17,8 +18,22 @@ import net.sourceforge.argparse4j.inf.Namespace;
 public class MetadataParameters implements ArgsConfiguration {
 
     private Map<String, String> info = new HashMap<>();
+    private boolean clearall = false;
 
-    public Map<String, String> getInfo() {
+    public Map<String, String> getInfo(PdfReader pdfReader) {
+        if (clearall) {
+            // We need the keys that are already set in the input file.
+            Map<String, String> inInfo = pdfReader.getInfo();
+            Map<String, String> res = new HashMap<>();
+            for (String key : inInfo.keySet()) {
+                // Unset the property `key`
+                // TODO?: Do not unset the properties "Producer" and "ModDate"
+                res.put(key, null);
+            }
+            // Set all the properties in `info`, possibly overwriting the unset properties
+            res.putAll(info);
+            return res;
+        }
         return info;
     }
 
@@ -33,6 +48,12 @@ public class MetadataParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
+        // Remove all properties
+        parser.addArgument("-ca", "--clearall")
+                .help("clear all properties")
+                .type(boolean.class)
+                .action(Arguments.storeTrue());
+
         // Generic properties
         parser.addArgument("-kv", "--keyvalue")
                 .help("set the property K to the value V")
@@ -52,6 +73,8 @@ public class MetadataParameters implements ArgsConfiguration {
 
     @Override
     public void setFromNamespace(Namespace namespace) {
+        clearall = namespace.getBoolean("clearall");
+
         // Generic properties
         List<List<String>> elements = namespace.getList("keyvalue");
         if (elements != null) {

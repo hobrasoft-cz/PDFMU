@@ -77,10 +77,13 @@ public class OperationMetadataSet implements Operation {
 
         metadataParameters.setFromNamespace(namespace);
 
-        set(inFile, outFile, forceOverwrite, metadataParameters.getInfo());
+        set(inFile, outFile, forceOverwrite, metadataParameters);
     }
 
-    private static void set(File inFile, File outFile, boolean forceOverwrite, Map<String, String> info) throws OperationException {
+    private static void set(File inFile,
+            File outFile,
+            boolean forceOverwrite,
+            MetadataParameters metadataParameters) throws OperationException {
         assert inFile != null;
 
         Console.println(String.format("Input PDF document: %s", inFile));
@@ -109,7 +112,7 @@ public class OperationMetadataSet implements Operation {
             outFile = inFile;
         }
 
-        set(pdfReader, outFile, forceOverwrite, info);
+        set(pdfReader, outFile, forceOverwrite, metadataParameters);
 
         // Close the PDF reader
         pdfReader.close();
@@ -120,6 +123,14 @@ public class OperationMetadataSet implements Operation {
         } catch (IOException ex) {
             throw new OperationException("Could not close the input file.", ex);
         }
+    }
+
+    private static void set(PdfReader pdfReader,
+            File outFile,
+            boolean forceOverwrite,
+            MetadataParameters metadataParameters) throws OperationException {
+        Map<String, String> info = metadataParameters.getInfo(pdfReader);
+        set(pdfReader, outFile, forceOverwrite, info);
     }
 
     private static void set(PdfReader pdfReader,

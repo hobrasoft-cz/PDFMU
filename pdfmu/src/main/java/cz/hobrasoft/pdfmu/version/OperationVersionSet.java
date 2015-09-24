@@ -30,8 +30,6 @@ public class OperationVersionSet implements Operation {
     public Subparser configureSubparser(Subparser subparser) {
         String help = "Set PDF version of a PDF document";
 
-        String metavarVersion = "VERSION";
-
         // Configure the subparser
         subparser.help(help)
                 .description(help)
@@ -39,6 +37,8 @@ public class OperationVersionSet implements Operation {
                 .setDefault("command", OperationVersionSet.class);
 
         inout.addArguments(subparser);
+
+        String metavarVersion = "VERSION";
         subparser.addArgument("-v", "--version")
                 .help(String.format("set PDF version to %s", metavarVersion))
                 .metavar(metavarVersion)

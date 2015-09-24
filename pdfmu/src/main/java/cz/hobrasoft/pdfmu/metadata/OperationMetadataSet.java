@@ -65,7 +65,7 @@ public class OperationMetadataSet implements Operation {
     private static final List<String> ignoredProperties
             = Arrays.asList(new String[]{"Producer", "ModDate"});
 
-    private static void set(PdfStamper stp, Map<String, String> info) {
+    public static void set(PdfStamper stp, Map<String, String> info) {
         assert stp != null;
         assert info != null;
 

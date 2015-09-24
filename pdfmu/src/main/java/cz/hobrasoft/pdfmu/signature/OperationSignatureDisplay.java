@@ -6,27 +6,21 @@ import com.itextpdf.text.pdf.security.CertificateInfo;
 import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
+import cz.hobrasoft.pdfmu.InPdfArgs;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.security.auth.x500.X500Principal;
-import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import org.apache.commons.lang3.StringUtils;
@@ -43,11 +37,11 @@ public class OperationSignatureDisplay implements Operation {
         return "display";
     }
 
+    private final InPdfArgs in = new InPdfArgs();
+
     @Override
     public Subparser configureSubparser(Subparser subparser) {
         String help = "Display signatures of a PDF document";
-
-        String metavarIn = "IN.pdf";
 
         // Configure the subparser
         subparser.help(help)
@@ -55,63 +49,18 @@ public class OperationSignatureDisplay implements Operation {
                 .defaultHelp(true)
                 .setDefault("command", this.getClass());
 
-        // Add arguments to the subparser
-        // Positional arguments are required by default
-        subparser.addArgument("in")
-                .help("input PDF document")
-                .metavar(metavarIn)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
-                .required(true);
+        in.addArguments(subparser);
 
         return subparser;
     }
 
     @Override
     public void execute(Namespace namespace) throws OperationException {
-        // Input file
-        File inFile = namespace.get("in");
-        assert inFile != null; // Required argument
+        in.setFromNamespace(namespace);
 
-        display(inFile);
-    }
-
-    private static void display(File inFile) throws OperationException {
-        assert inFile != null;
-
-        Console.println(String.format("Input PDF document: %s", inFile));
-
-        // Open the input stream
-        FileInputStream inStream;
-        try {
-            inStream = new FileInputStream(inFile);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException("Input file not found.", ex);
-        }
-
-        display(inStream);
-
-        // Close the input stream
-        try {
-            inStream.close();
-        } catch (IOException ex) {
-            throw new OperationException("Could not close the input file.", ex);
-        }
-    }
-
-    private static void display(InputStream inStream) throws OperationException {
-        // Open the PDF reader
-        // PdfReader parses a PDF document.
-        PdfReader pdfReader;
-        try {
-            pdfReader = new PdfReader(inStream);
-        } catch (IOException ex) {
-            throw new OperationException("Could not open the input PDF document.", ex);
-        }
-
-        display(pdfReader);
-
-        // Close the PDF reader
-        pdfReader.close();
+        in.open();
+        display(in.getPdfReader());
+        in.close();
     }
 
     private static void display(PdfReader pdfReader) {

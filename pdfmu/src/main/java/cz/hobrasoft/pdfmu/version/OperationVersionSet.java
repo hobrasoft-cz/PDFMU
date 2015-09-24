@@ -1,17 +1,12 @@
 package cz.hobrasoft.pdfmu.version;
 
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.InOutPdfArgs;
+import cz.hobrasoft.pdfmu.InPdfArgs;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import cz.hobrasoft.pdfmu.OutPdfArgs;
 import java.util.logging.Logger;
-import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -29,12 +24,12 @@ public class OperationVersionSet implements Operation {
         return "set";
     }
 
+    private final InOutPdfArgs inout = new InOutPdfArgs();
+
     @Override
     public Subparser configureSubparser(Subparser subparser) {
         String help = "Set PDF version of a PDF document";
 
-        String metavarIn = "IN.pdf";
-        String metavarOut = "OUT.pdf";
         String metavarVersion = "VERSION";
 
         // Configure the subparser
@@ -43,20 +38,7 @@ public class OperationVersionSet implements Operation {
                 .defaultHelp(true)
                 .setDefault("command", OperationVersionSet.class);
 
-        // Add arguments to the subparser
-        subparser.addArgument("in") // Positional alternative to "--in"
-                .help("input PDF document")
-                .metavar(metavarIn)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
-        subparser.addArgument("-o", "--out")
-                .help("output PDF document")
-                .metavar(metavarOut)
-                .type(Arguments.fileType().verifyCanCreate())
-                .nargs("?");
-        subparser.addArgument("--force")
-                .help(String.format("overwrite %s if it exists", metavarOut))
-                .type(boolean.class)
-                .action(Arguments.storeTrue());
+        inout.addArguments(subparser);
         subparser.addArgument("-v", "--version")
                 .help(String.format("set PDF version to %s", metavarVersion))
                 .metavar(metavarVersion)
@@ -69,29 +51,23 @@ public class OperationVersionSet implements Operation {
 
     @Override
     public void execute(Namespace namespace) throws OperationException {
-        File inFile = namespace.get("in");
-        assert inFile != null;
+        inout.setFromNamespace(namespace);
+        PdfVersion outVersion = namespace.get("version");
 
-        logger.info(String.format("Input PDF document: %s", inFile));
+        execute(inout, outVersion);
+    }
 
-        // Open the input stream
-        FileInputStream inStream = null;
-        try {
-            inStream = new FileInputStream(inFile);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException("Input file not found.", ex);
-        }
-        assert inStream != null;
+    private static void execute(InOutPdfArgs inout, PdfVersion outVersion) throws OperationException {
+        InPdfArgs in = inout.in;
+        OutPdfArgs out = inout.out;
 
-        // Open the PDF reader
-        // PdfReader parses a PDF document.
-        PdfReader pdfReader = null;
-        try {
-            pdfReader = new PdfReader(inStream);
-        } catch (IOException ex) {
-            throw new OperationException("Could not open the input PDF document.", ex);
-        }
-        assert pdfReader != null;
+        execute(in, out, outVersion);
+    }
+
+    private static void execute(InPdfArgs in, OutPdfArgs out, PdfVersion outVersion) throws OperationException {
+        in.open();
+
+        PdfReader pdfReader = in.getPdfReader();
 
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
@@ -99,7 +75,6 @@ public class OperationVersionSet implements Operation {
 
         // Commence to set the PDF version of the output PDF document
         // Determine the desired PDF version
-        PdfVersion outVersion = namespace.get("version");
         assert outVersion != null; // The argument "version" has a default value
         logger.info(String.format("Desired output PDF version: %s", outVersion));
 
@@ -109,74 +84,10 @@ public class OperationVersionSet implements Operation {
             // TODO: Add --force-lower-version flag that enables lowering the version
         }
 
-        File outFile = namespace.get("out");
-        if (outFile == null) {
-            logger.info("Output file not specified. Assuming in-place operation.");
-            outFile = inFile;
-        }
+        out.open(pdfReader, false, outVersion.toChar());
 
-        logger.info(String.format("Output PDF document: %s", outFile));
-
-        if (outFile.exists()) {
-            logger.info("Output file already exists.");
-            if (namespace.getBoolean("force")) {
-                logger.info("Overwriting the output file (--force flag is set).");
-            } else {
-                throw new OperationException("Set --force flag to overwrite.");
-            }
-        }
-
-        setPdfVersion(outFile, pdfReader, outVersion.toChar());
-
-        // Close the PDF reader
-        pdfReader.close();
-
-        // Close the input stream
-        try {
-            inStream.close();
-        } catch (IOException ex) {
-            throw new OperationException("Could not close the input file.", ex);
-        }
-    }
-
-    /**
-     * Copies a PDF document, changing its version
-     */
-    private void setPdfVersion(File outFile, PdfReader inPdfReader, char outPdfVersion) throws OperationException {
-        // Open output stream
-        FileOutputStream os = null;
-        try {
-            os = new FileOutputStream(outFile);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException("Could not open the output file.", ex);
-        }
-        assert os != null;
-
-        // Open PDF stamper
-        PdfStamper pdfStamper = null;
-        try {
-            // Set version immediately when opening the stamper
-            pdfStamper = new PdfStamper(inPdfReader, os, outPdfVersion);
-        } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not open PDF stamper.", ex);
-        }
-        assert pdfStamper != null;
-
-        logger.info("The PDF version has been successfully set.");
-
-        // Close PDF stamper
-        try {
-            pdfStamper.close();
-        } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not close PDF stamper.", ex);
-        }
-
-        // Close output stream
-        try {
-            os.close();
-        } catch (IOException ex) {
-            throw new OperationException("Could not close the output file.", ex);
-        }
+        out.close();
+        in.close();
     }
 
 }

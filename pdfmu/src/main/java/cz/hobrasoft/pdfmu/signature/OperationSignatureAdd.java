@@ -1,7 +1,6 @@
 package cz.hobrasoft.pdfmu.signature;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.BouncyCastleDigest;
@@ -13,12 +12,9 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.InOutPdfArgs;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -28,7 +24,6 @@ import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.Collection;
 import java.util.logging.Logger;
-import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -47,12 +42,11 @@ public class OperationSignatureAdd implements Operation {
         return "add";
     }
 
+    private final InOutPdfArgs inout = new InOutPdfArgs();
+
     @Override
     public Subparser configureSubparser(Subparser subparser) {
         String help = "Digitally sign a PDF document";
-
-        String metavarIn = "IN.pdf";
-        String metavarOut = "OUT.pdf";
 
         // Configure the subparser
         subparser.help(help)
@@ -60,24 +54,7 @@ public class OperationSignatureAdd implements Operation {
                 .defaultHelp(true)
                 .setDefault("command", OperationSignatureAdd.class);
 
-        // Add arguments to the subparser
-        // Positional arguments are required by default
-        subparser.addArgument("in")
-                .help("input PDF document")
-                .metavar(metavarIn)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
-                .required(true);
-
-        subparser.addArgument("-o", "--out")
-                .help(String.format("output PDF document (default: <%s>)", metavarIn))
-                .metavar(metavarOut)
-                .type(Arguments.fileType().verifyCanCreate())
-                .nargs("?");
-        subparser.addArgument("-f", "--force")
-                .help(String.format("overwrite %s if it exists", metavarOut))
-                .type(boolean.class)
-                .action(Arguments.storeTrue());
-
+        inout.addArguments(subparser);
         signatureParameters.addArguments(subparser);
 
         return subparser;
@@ -105,143 +82,19 @@ public class OperationSignatureAdd implements Operation {
 
     @Override
     public void execute(Namespace namespace) throws OperationException {
-        // Input file
-        File inFile = namespace.get("in");
-        assert inFile != null; // Required argument
-
-        // Output file
-        File outFile = namespace.get("out");
-
-        boolean append = true;
-        // With `append == false`, adding a signature invalidates the previous signature.
-        // In order to make `append == false` work correctly, we would need to remove the previous signature.
+        inout.setFromNamespace(namespace);
 
         // Initialize signature parameters
         signatureParameters.setFromNamespace(namespace);
 
-        boolean forceOverwrite = namespace.getBoolean("force");
-        // Note: "force" argument is required
-
-        sign(inFile, outFile, forceOverwrite, append, signatureParameters);
+        sign(inout, signatureParameters);
     }
 
-    // Open the PDF reader
-    private static void sign(File inFile,
-            File outFile,
-            boolean forceOverwrite,
-            boolean append,
-            SignatureParameters signatureParameters) throws OperationException {
-        assert inFile != null;
-
-        // TODO: Remove one of the duplicit messages
-        logger.info(String.format("Input PDF document: %s", inFile));
-
-        // Open the input stream
-        FileInputStream inStream;
-        try {
-            inStream = new FileInputStream(inFile);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException("Input file not found.", ex);
-        }
-
-        // Open the PDF reader
-        // PdfReader parses a PDF document.
-        PdfReader pdfReader;
-        try {
-            pdfReader = new PdfReader(inStream);
-        } catch (IOException ex) {
-            throw new OperationException("Could not open the input PDF document.", ex);
-        }
-
-        // Set `outFile` to `inFile` if not set
-        // Handle calls of type `pdfmu signature add INOUT.pdf`
-        if (outFile == null) {
-            logger.info("Output file not specified. Assuming in-place operation.");
-            outFile = inFile;
-        }
-
-        sign(pdfReader, outFile, forceOverwrite, append, signatureParameters);
-
-        // Close the PDF reader
-        pdfReader.close();
-
-        // Close the input stream
-        try {
-            inStream.close();
-        } catch (IOException ex) {
-            throw new OperationException("Could not close the input file.", ex);
-        }
-    }
-
-    // Handle overwriting
-    private static void sign(PdfReader pdfReader,
-            File outFile,
-            boolean forceOverwrite,
-            boolean append,
-            SignatureParameters signatureParameters) throws OperationException {
-        assert outFile != null;
-
-        logger.info(String.format("Output PDF document: %s", outFile));
-
-        if (outFile.exists()) {
-            logger.info("Output file already exists.");
-            if (forceOverwrite) {
-                logger.info("Overwriting the output file (--force flag is set).");
-            } else {
-                throw new OperationException("Set --force flag to overwrite.");
-            }
-        }
-
-        sign(pdfReader, outFile, append, signatureParameters);
-    }
-
-    // Open the PDF stamper
-    // Overwrite `outFile` if it already exists.
-    private static void sign(PdfReader pdfReader,
-            File outFile,
-            boolean append,
-            SignatureParameters signatureParameters) throws OperationException {
-        assert outFile != null;
-
-        // Open the output stream
-        FileOutputStream os;
-        try {
-            os = new FileOutputStream(outFile);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException("Could not open the output file.", ex);
-        }
-
-        // TODO: Remove the "append" option
-        if (append) {
-            logger.info("Appending signature.");
-        } else {
-            logger.info("Replacing signature.");
-        }
-
-        PdfStamper stp;
-        try {
-            // digitalsignatures20130304.pdf : Code sample 2.17
-            // TODO?: Make sure version is high enough
-            stp = PdfStamper.createSignature(pdfReader, os, '\0', null, append);
-        } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not open the PDF stamper.", ex);
-        }
-
+    private static void sign(InOutPdfArgs inout, SignatureParameters signatureParameters) throws OperationException {
+        inout.openSignature();
+        PdfStamper stp = inout.getPdfStamper();
         sign(stp, signatureParameters);
-
-        // Close the PDF stamper
-        try {
-            stp.close();
-        } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not close PDF stamper.", ex);
-        }
-
-        // Close the output stream
-        try {
-            os.close();
-        } catch (IOException ex) {
-            throw new OperationException("Could not close the output file.", ex);
-        }
+        inout.close();
     }
 
     // Initialize the signature appearance

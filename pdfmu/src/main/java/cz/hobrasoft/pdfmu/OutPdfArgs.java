@@ -41,7 +41,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         file = namespace.get("out");
         overwrite = namespace.getBoolean("force");
     }
-    
+
     public void setDefaultFile(File file) {
         if (this.file == null) {
             Console.println("Output file has not been specified. Assuming in-place operation.");
@@ -57,7 +57,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
             throw new OperationException("Output file has not been specified.");
         }
         assert os == null;
-        
+
         Console.println(String.format("Output file: %s", file));
 
         if (file.exists()) {

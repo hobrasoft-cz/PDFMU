@@ -160,7 +160,7 @@ public class OperationSignatureAdd implements Operation {
     }
 
     // Initialize the signature algorithm
-    private static void sign(PdfSignatureAppearance sap,
+    public static void sign(PdfSignatureAppearance sap,
             PrivateKey pk,
             String digestAlgorithm,
             Certificate[] chain,
@@ -181,7 +181,7 @@ public class OperationSignatureAdd implements Operation {
     }
 
     // Set the "external digest" algorithm
-    private static void sign(PdfSignatureAppearance sap,
+    public static void sign(PdfSignatureAppearance sap,
             ExternalSignature externalSignature,
             Certificate[] chain,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
@@ -190,7 +190,7 @@ public class OperationSignatureAdd implements Operation {
     }
 
     // Sign the document
-    private static void sign(PdfSignatureAppearance sap,
+    public static void sign(PdfSignatureAppearance sap,
             ExternalDigest externalDigest,
             ExternalSignature externalSignature,
             Certificate[] chain,

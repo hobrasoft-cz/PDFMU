@@ -43,7 +43,6 @@ public class OperationVersionSet implements Operation {
                 .help(String.format("set PDF version to %s", metavarVersion))
                 .metavar(metavarVersion)
                 .type(PdfVersion.class)
-                .nargs("?")
                 .setDefault(new PdfVersion("1.6"));
 
         return subparser;

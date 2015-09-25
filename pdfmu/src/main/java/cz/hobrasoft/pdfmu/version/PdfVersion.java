@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class PdfVersion implements Comparable<PdfVersion> {
 
     private static final Pattern p = Pattern.compile("1\\.(?<charValue>[2-7])");
+
     private char charValue;
 
     /**

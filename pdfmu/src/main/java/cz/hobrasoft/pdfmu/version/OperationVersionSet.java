@@ -57,8 +57,8 @@ public class OperationVersionSet implements Operation {
     }
 
     private static void execute(InOutPdfArgs inout, PdfVersion outVersion) throws OperationException {
-        InPdfArgs in = inout.in;
-        OutPdfArgs out = inout.out;
+        InPdfArgs in = inout.getIn();
+        OutPdfArgs out = inout.getOut();
 
         execute(in, out, outVersion);
     }

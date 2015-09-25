@@ -41,11 +41,11 @@ public class OperationAttach implements Operation {
                 .help(String.format("file to attach to %s", metavarIn))
                 .metavar(metavarAttachment)
                 .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
-        subparser.addArgument("-d", "--description")
-                .help("attachment file description shown in the output PDF document (default: <none>)")
-                .type(String.class);
         subparser.addArgument("-r", "--rename")
                 .help(String.format("attachment filename shown in the output PDF document (default: <%s>)", metavarAttachment))
+                .type(String.class);
+        subparser.addArgument("-d", "--description")
+                .help("attachment file description shown in the output PDF document (default: <none>)")
                 .type(String.class);
 
         return subparser;

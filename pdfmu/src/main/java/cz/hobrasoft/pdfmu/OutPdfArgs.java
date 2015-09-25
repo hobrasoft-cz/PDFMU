@@ -153,4 +153,8 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         return stp;
     }
 
+    public File getFile() {
+        return file;
+    }
+
 }

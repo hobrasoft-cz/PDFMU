@@ -43,6 +43,7 @@ public class OperationAttach implements Operation {
                 .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
         subparser.addArgument("-r", "--rename")
                 .help(String.format("attachment filename shown in the output PDF document (default: <%s>)", metavarAttachment))
+                .metavar("FILENAME")
                 .type(String.class);
         subparser.addArgument("-d", "--description")
                 .help("attachment file description shown in the output PDF document (default: <none>)")

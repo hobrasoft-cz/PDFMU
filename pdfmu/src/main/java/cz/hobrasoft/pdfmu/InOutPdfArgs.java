@@ -8,9 +8,17 @@ import net.sourceforge.argparse4j.inf.Namespace;
 // Handle unset output file (in-place change)
 public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
-    private final String metavarIn = "IN.pdf";
-    public final InPdfArgs in = new InPdfArgs(metavarIn);
-    public final OutPdfArgs out = new OutPdfArgs(metavarIn);
+    private InPdfArgs in;
+    private OutPdfArgs out;
+
+    public InOutPdfArgs() {
+        this("IN.pdf");
+    }
+
+    public InOutPdfArgs(String metavarIn) {
+        in = new InPdfArgs(metavarIn);
+        out = new OutPdfArgs(metavarIn);
+    }
 
     @Override
     public void addArguments(ArgumentParser parser) {

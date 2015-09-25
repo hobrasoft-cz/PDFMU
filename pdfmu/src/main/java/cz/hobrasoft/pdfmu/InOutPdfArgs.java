@@ -60,4 +60,13 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
         in.close();
     }
 
+    public InPdfArgs getIn() {
+        return in;
+    }
+
+    // :)
+    public OutPdfArgs getOut() {
+        return out;
+    }
+
 }

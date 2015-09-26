@@ -35,6 +35,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+            <!--A newer version (20141113) is available. However, it requires JRE 1.8.-->
+        </dependency>
     </dependencies>
     
     <build>
@@ -93,6 +99,8 @@
                         See option "-link" of the command "javadoc".
                         http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#bottom
                         -->
+                        <link>http://docs.oracle.com/javaee/7/api/</link>
+                        <link>http://www.json.org/javadoc/</link>
                         <link>http://argparse4j.sourceforge.net/apidocs/</link>
                         <link>http://api.itextpdf.com/itext/</link>
                     </links>

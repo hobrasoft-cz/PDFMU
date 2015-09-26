@@ -3,6 +3,9 @@ package cz.hobrasoft.pdfmu;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Orders the items by a preference list.
@@ -58,4 +61,16 @@ public class PreferenceListComparator<T> implements Comparator<T> {
         // If `o1` comes before `o1` in `preferred`, the result will be negative.
         return i1 - i2;
     }
+
+    public static <K, V> SortedMap<K, V> sort(Map<K, V> unsorted, List<K> preferenceList) {
+        Comparator<K> comparator = new PreferenceListComparator<>(preferenceList);
+        return sort(unsorted, comparator);
+    }
+
+    public static <K, V> SortedMap<K, V> sort(Map<K, V> unsorted, Comparator<K> comparator) {
+        SortedMap<K, V> sorted = new TreeMap<>(comparator);
+        sorted.putAll(unsorted);
+        return sorted;
+    }
+
 }

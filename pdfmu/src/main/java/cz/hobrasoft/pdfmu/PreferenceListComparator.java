@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Orders the items by a preference list
+ * Orders the items by a preference list.
  *
  * <p>
  * The items in the preference list are placed before the items that do not

@@ -7,19 +7,18 @@ import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.InPdfArgs;
+import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.Operation;
 import cz.hobrasoft.pdfmu.OperationException;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.security.auth.x500.X500Principal;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -175,14 +174,13 @@ public class OperationSignatureDisplay implements Operation {
     }
 
     // The desired order of DN attributes by their type
-    private static final Comparator<String> dnTypeComparator = new PreferenceListComparator(new String[]{
+    private static final MapSorter<String> dnTypeSorter = new PreferenceListComparator(new String[]{
         "CN", "E", "OU", "O", "STREET", "L", "ST", "C"});
 
     private static void showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 
-        SortedMap<String, ArrayList<String>> fieldsSorted = new TreeMap<>(dnTypeComparator);
-        fieldsSorted.putAll(fields);
+        SortedMap<String, ArrayList<String>> fieldsSorted = dnTypeSorter.sort(fields);
 
         for (Entry<String, ArrayList<String>> field : fieldsSorted.entrySet()) {
             String type = field.getKey();

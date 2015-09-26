@@ -2,14 +2,13 @@ package cz.hobrasoft.pdfmu.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -115,12 +114,11 @@ public class MetadataParameters implements ArgsConfiguration {
         this.info = info;
     }
 
-    private static final Comparator<String> propertyComparator
+    private static final MapSorter<String> propertySorter
             = new PreferenceListComparator<>(standardProperties);
 
     public SortedMap<String, String> getSorted() {
-        SortedMap<String, String> infoSorted = new TreeMap<>(propertyComparator);
-        infoSorted.putAll(info);
+        SortedMap<String, String> infoSorted = propertySorter.sort(info);
         return infoSorted;
     }
 

@@ -43,7 +43,7 @@ import java.util.TreeMap;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class PreferenceListComparator<T> implements Comparator<T> {
+public class PreferenceListComparator<T> implements Comparator<T>, MapSorter<T> {
 
     private final List<T> preferred;
 
@@ -161,4 +161,8 @@ public class PreferenceListComparator<T> implements Comparator<T> {
         return sorted;
     }
 
+    @Override
+    public <V> SortedMap<T, V> sort(Map<T, V> unsorted) {
+        return sort(unsorted, this);
+    }
 }

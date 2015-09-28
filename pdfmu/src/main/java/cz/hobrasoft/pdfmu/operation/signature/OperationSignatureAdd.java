@@ -12,7 +12,7 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
-import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationSignatureAdd implements Operation {
+public class OperationSignatureAdd extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationSignatureAdd.class.getName());
 

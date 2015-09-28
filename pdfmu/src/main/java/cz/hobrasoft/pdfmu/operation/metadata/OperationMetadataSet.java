@@ -3,7 +3,7 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.Console;
-import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Map;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
-public class OperationMetadataSet implements Operation {
+public class OperationMetadataSet extends OperationCommon {
 
     private final MetadataParameters metadataParameters = new MetadataParameters();
 

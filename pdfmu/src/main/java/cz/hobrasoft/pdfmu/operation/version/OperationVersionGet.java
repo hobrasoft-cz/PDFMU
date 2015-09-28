@@ -1,7 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import com.itextpdf.text.pdf.PdfReader;
-import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationVersionGet implements Operation {
+public class OperationVersionGet extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationVersionGet.class.getName());
 

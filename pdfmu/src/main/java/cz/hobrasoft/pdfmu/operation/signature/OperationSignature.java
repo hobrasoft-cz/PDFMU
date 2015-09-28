@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
 import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -11,7 +12,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationSignature implements Operation {
+public class OperationSignature extends OperationCommon {
 
     private final Operation operationAdd = new OperationSignatureAdd();
     private final Operation operationDisplay = new OperationSignatureDisplay();

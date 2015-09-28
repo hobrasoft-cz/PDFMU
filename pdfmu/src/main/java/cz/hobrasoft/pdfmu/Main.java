@@ -6,6 +6,9 @@ import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.LogManager;
@@ -65,14 +68,16 @@ public class Main {
                 .metavar("OPERATION")
                 .dest("operation");
 
-        Operation operationVersion = OperationVersion.getInstance();
-        Operation operationSignature = OperationSignature.getInstance();
-        Operation operationAttach = OperationAttach.getInstance();
-        Operation operationMetadata = OperationMetadata.getInstance();
-        Operation[] operations = {operationVersion, operationSignature, operationAttach, operationMetadata};
+        SortedMap<String, Operation> operations = new TreeMap<>();
+        operations.put("version", OperationVersion.getInstance());
+        operations.put("signature", OperationSignature.getInstance());
+        operations.put("attach", OperationAttach.getInstance());
+        operations.put("metadata", OperationMetadata.getInstance());
 
-        for (Operation operation : operations) {
-            operation.configureSubparser(subparsers.addParser(operation.getCommandName()));
+        for (Map.Entry<String, Operation> e : operations.entrySet()) {
+            String name = e.getKey();
+            Operation operation = e.getValue();
+            operation.configureSubparser(subparsers.addParser(name));
         }
 
         Namespace namespace = null;
@@ -88,26 +93,12 @@ public class Main {
             parser.handleError(e);
         }
         if (namespace != null) {
-            Operation operation = null;
-            switch (namespace.getString("operation")) {
-                case "version":
-                    operation = operationVersion;
-                    break;
-                case "signature":
-                    operation = operationSignature;
-                    break;
-                case "attach":
-                    operation = operationAttach;
-                    break;
-                case "metadata":
-                    operation = operationMetadata;
-                    break;
-                default:
-                    // Invalid or none operation was specified,
-                    // so `parser.parseArgs` should have thrown an exception.
-                    assert false;
-            }
+            String operationName = namespace.getString("operation");
+            assert operationName != null; // Sub-command -> required
+
+            Operation operation = operations.get(operationName);
             assert operation != null;
+
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {

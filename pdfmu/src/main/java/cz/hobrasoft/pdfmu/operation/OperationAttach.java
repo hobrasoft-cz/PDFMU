@@ -110,4 +110,17 @@ public class OperationAttach extends OperationCommon {
         Console.println(String.format("The file \"%s\" has been attached.", file));
     }
 
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationAttach();
+        }
+        return instance;
+    }
+
+    private OperationAttach() {
+        // Singleton
+    }
+
 }

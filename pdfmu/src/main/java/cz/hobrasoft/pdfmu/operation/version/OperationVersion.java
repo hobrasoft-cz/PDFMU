@@ -1,11 +1,9 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import cz.hobrasoft.pdfmu.operation.Operation;
-import cz.hobrasoft.pdfmu.operation.OperationCommon;
-import cz.hobrasoft.pdfmu.operation.OperationException;
-import net.sourceforge.argparse4j.inf.Namespace;
-import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
+import cz.hobrasoft.pdfmu.operation.OperationFork;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Gets or sets the version of a PDF file
@@ -20,60 +18,30 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationVersion extends OperationCommon {
+public class OperationVersion {
 
-    private final Operation operationSet = new OperationVersionSet();
-    private final Operation operationGet = new OperationVersionGet();
-    private final Operation[] operations = {operationSet, operationGet};
+    private static final String commandName = "version";
+    private static final String help = "Set or display PDF version of a PDF document";
+    private static final String dest = "operation_version";
 
-    @Override
-    public String getCommandName() {
-        return "version";
+    private static SortedMap<String, Operation> getOperations() {
+        SortedMap<String, Operation> operations = new TreeMap<>();
+        operations.put("set", OperationVersionSet.getInstance());
+        operations.put("get", OperationVersionGet.getInstance());
+        return operations;
     }
 
-    @Override
-    public Subparser configureSubparser(Subparser subparser) {
-        String help = "Set or display PDF version of a PDF document";
+    private static Operation instance = null;
 
-        // Configure the subparser
-        subparser.help(help)
-                .description(help)
-                .defaultHelp(true)
-                .setDefault("command", OperationVersion.class);
-
-        // Add subparsers group
-        Subparsers subparsersVersion = subparser.addSubparsers()
-                .help("version operation to execute")
-                .metavar("OPERATION")
-                .dest("versionOperation");
-
-        // Configure the subparsers
-        for (Operation operation : operations) {
-            operation.configureSubparser(subparsersVersion.addParser(operation.getCommandName()));
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationFork(commandName, help, dest, getOperations());
         }
-
-        return subparser;
+        return instance;
     }
 
-    @Override
-    public void execute(Namespace namespace) throws OperationException {
-        Operation operation = null;
-        switch (namespace.getString("versionOperation")) {
-            case "set":
-                operation = operationSet;
-                break;
-            case "get":
-                operation = operationGet;
-                break;
-            default:
-                // Invalid or none operation was specified,
-                // so `parser.parseArgs` should have thrown an exception.
-                assert false;
-        }
-        assert operation != null;
-
-        // If `operation` throws an `OperationException`, we pass it on.
-        operation.execute(namespace);
+    private OperationVersion() {
+        // Disabled
     }
 
 }

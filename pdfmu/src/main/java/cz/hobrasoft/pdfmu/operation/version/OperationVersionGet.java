@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import com.itextpdf.text.pdf.PdfReader;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
@@ -52,6 +53,19 @@ public class OperationVersionGet extends OperationCommon {
         logger.info(String.format("Input PDF document version: %s", inVersion));
 
         in.close();
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationVersionGet();
+        }
+        return instance;
+    }
+
+    private OperationVersionGet() {
+        // Singleton
     }
 
 }

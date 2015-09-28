@@ -65,10 +65,10 @@ public class Main {
                 .metavar("OPERATION")
                 .dest("operation");
 
-        Operation operationVersion = new OperationVersion();
-        Operation operationSignature = new OperationSignature();
-        Operation operationAttach = new OperationAttach();
-        Operation operationMetadata = new OperationMetadata();
+        Operation operationVersion = OperationVersion.getInstance();
+        Operation operationSignature = OperationSignature.getInstance();
+        Operation operationAttach = OperationAttach.getInstance();
+        Operation operationMetadata = OperationMetadata.getInstance();
         Operation[] operations = {operationVersion, operationSignature, operationAttach, operationMetadata};
 
         for (Operation operation : operations) {

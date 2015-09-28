@@ -12,6 +12,7 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
@@ -224,6 +225,19 @@ public class OperationSignatureAdd extends OperationCommon {
             throw new OperationException("Could not sign the document. Invalid digest algorithm?", ex);
         }
         logger.info("Document successfully signed.");
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationSignatureAdd();
+        }
+        return instance;
+    }
+
+    private OperationSignatureAdd() {
+        // Singleton
     }
 
 }

@@ -1,7 +1,7 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
-import cz.hobrasoft.pdfmu.Operation;
-import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;

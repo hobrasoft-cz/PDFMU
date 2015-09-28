@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
@@ -12,9 +12,9 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
-import cz.hobrasoft.pdfmu.InOutPdfArgs;
-import cz.hobrasoft.pdfmu.Operation;
-import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;

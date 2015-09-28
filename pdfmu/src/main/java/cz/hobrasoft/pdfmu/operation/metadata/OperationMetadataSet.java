@@ -1,11 +1,11 @@
-package cz.hobrasoft.pdfmu.metadata;
+package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.Console;
-import cz.hobrasoft.pdfmu.InOutPdfArgs;
-import cz.hobrasoft.pdfmu.Operation;
-import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

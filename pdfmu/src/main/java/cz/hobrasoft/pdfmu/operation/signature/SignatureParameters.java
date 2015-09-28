@@ -1,7 +1,7 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.security.MakeSignature;
-import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.lang3.StringUtils;

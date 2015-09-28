@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
@@ -6,10 +6,10 @@ import com.itextpdf.text.pdf.security.CertificateInfo;
 import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
-import cz.hobrasoft.pdfmu.InPdfArgs;
+import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import cz.hobrasoft.pdfmu.MapSorter;
-import cz.hobrasoft.pdfmu.Operation;
-import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;

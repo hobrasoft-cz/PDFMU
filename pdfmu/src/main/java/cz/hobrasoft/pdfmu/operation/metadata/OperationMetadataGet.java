@@ -1,10 +1,10 @@
-package cz.hobrasoft.pdfmu.metadata;
+package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.Console;
-import cz.hobrasoft.pdfmu.InPdfArgs;
-import cz.hobrasoft.pdfmu.Operation;
-import cz.hobrasoft.pdfmu.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.util.Map;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;

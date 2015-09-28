@@ -1,8 +1,8 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
-import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import java.util.Calendar;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;

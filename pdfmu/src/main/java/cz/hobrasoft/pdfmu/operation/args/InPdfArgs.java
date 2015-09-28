@@ -1,6 +1,8 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation.args;
 
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import com.itextpdf.text.pdf.PdfReader;
+import cz.hobrasoft.pdfmu.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

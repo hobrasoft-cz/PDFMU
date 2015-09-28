@@ -1,9 +1,9 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation;
 
 /**
  * This exception is thrown by {@link Operation#execute(Namespace)} to notify
- * {@link Main#main(String[])} that the operation has encountered a condition it
- * cannot recover from.
+ * {@link cz.hobrasoft.pdfmu.Main#main(String[])} that the operation has
+ * encountered a condition it cannot recover from.
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */

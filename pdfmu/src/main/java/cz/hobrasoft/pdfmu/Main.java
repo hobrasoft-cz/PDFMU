@@ -1,8 +1,11 @@
 package cz.hobrasoft.pdfmu;
 
-import cz.hobrasoft.pdfmu.metadata.OperationMetadata;
-import cz.hobrasoft.pdfmu.signature.OperationSignature;
-import cz.hobrasoft.pdfmu.version.OperationVersion;
+import cz.hobrasoft.pdfmu.operation.OperationAttach;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
+import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
+import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.LogManager;

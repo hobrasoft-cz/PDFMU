@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.Console;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
@@ -57,6 +58,19 @@ public class OperationMetadataGet extends OperationCommon {
             }
             Console.indentLess();
         }
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationMetadataGet();
+        }
+        return instance;
+    }
+
+    private OperationMetadataGet() {
+        // Singleton
     }
 
 }

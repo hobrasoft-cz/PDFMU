@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import com.itextpdf.text.pdf.PdfReader;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
@@ -87,6 +88,19 @@ public class OperationVersionSet extends OperationCommon {
 
         out.close();
         in.close();
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationVersionSet();
+        }
+        return instance;
+    }
+
+    private OperationVersionSet() {
+        // Singleton
     }
 
 }

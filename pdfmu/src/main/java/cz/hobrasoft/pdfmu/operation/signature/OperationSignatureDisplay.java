@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
@@ -220,6 +221,19 @@ public class OperationSignatureDisplay extends OperationCommon {
         }
 
         return type;
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationSignatureDisplay();
+        }
+        return instance;
+    }
+
+    private OperationSignatureDisplay() {
+        // Singleton
     }
 
 }

@@ -3,6 +3,7 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import cz.hobrasoft.pdfmu.Console;
+import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
@@ -78,6 +79,19 @@ public class OperationMetadataSet extends OperationCommon {
 
         stp.setMoreInfo(info);
         Console.println("PDF metadata have been set.");
+    }
+
+    private static Operation instance = null;
+
+    public static Operation getInstance() {
+        if (instance == null) {
+            instance = new OperationMetadataSet();
+        }
+        return instance;
+    }
+
+    private OperationMetadataSet() {
+        // Singleton
     }
 
 }

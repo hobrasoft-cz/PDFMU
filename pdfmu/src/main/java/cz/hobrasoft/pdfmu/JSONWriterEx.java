@@ -2,6 +2,8 @@ package cz.hobrasoft.pdfmu;
 
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -23,12 +25,28 @@ import org.json.JSONWriter;
 public class JSONWriterEx extends JSONWriter implements Flushable {
 
     /**
-     * Makes a fresh JSONWriter.
+     * Makes a JSON writer that outputs data to a {@link Writer}.
      *
      * @param w the writer to write the JSON-formatted data to
      */
     public JSONWriterEx(Writer w) {
         super(w);
+    }
+
+    /**
+     * Makes a JSON writer that outputs data to an {@link OutputStream}.
+     *
+     * <p>
+     * Common uses:
+     * <ul>
+     * <li>{@code JSONWriterEx(System.out)} - standard output stream
+     * <li>{@code JSONWriterEx(System.err)} - standard error output stream
+     * </ul>
+     *
+     * @param os the output stream to writer the JSON-formatted data to
+     */
+    public JSONWriterEx(OutputStream os) {
+        this(new OutputStreamWriter(os));
     }
 
     /**

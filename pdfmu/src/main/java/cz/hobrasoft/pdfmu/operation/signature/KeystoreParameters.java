@@ -1,7 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
-import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
 import java.io.File;
 import java.io.FileInputStream;

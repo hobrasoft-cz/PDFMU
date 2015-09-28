@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu.version;
+package cz.hobrasoft.pdfmu.operation.version;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

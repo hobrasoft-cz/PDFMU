@@ -1,7 +1,7 @@
-package cz.hobrasoft.pdfmu.metadata;
+package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
-import cz.hobrasoft.pdfmu.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import java.util.Arrays;

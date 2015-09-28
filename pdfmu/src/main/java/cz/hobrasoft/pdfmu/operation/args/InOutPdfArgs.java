@@ -1,5 +1,6 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation.args;
 
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import net.sourceforge.argparse4j.inf.ArgumentParser;

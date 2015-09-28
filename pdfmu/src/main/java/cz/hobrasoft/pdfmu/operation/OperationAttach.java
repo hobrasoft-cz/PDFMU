@@ -1,6 +1,8 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.Console;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;

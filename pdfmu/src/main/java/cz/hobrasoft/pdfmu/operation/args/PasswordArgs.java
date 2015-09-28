@@ -1,5 +1,6 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation.args;
 
+import cz.hobrasoft.pdfmu.Console;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;

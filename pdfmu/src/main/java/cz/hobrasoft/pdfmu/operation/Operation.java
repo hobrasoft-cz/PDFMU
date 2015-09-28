@@ -1,4 +1,4 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.operation;
 
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;

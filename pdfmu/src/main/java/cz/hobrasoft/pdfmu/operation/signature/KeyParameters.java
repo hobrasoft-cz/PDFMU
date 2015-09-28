@@ -1,8 +1,8 @@
-package cz.hobrasoft.pdfmu.signature;
+package cz.hobrasoft.pdfmu.operation.signature;
 
-import cz.hobrasoft.pdfmu.ArgsConfiguration;
-import cz.hobrasoft.pdfmu.OperationException;
-import cz.hobrasoft.pdfmu.PasswordArgs;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;

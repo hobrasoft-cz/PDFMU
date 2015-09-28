@@ -25,7 +25,7 @@ public class JSONWriterEx extends JSONWriter implements Flushable {
     /**
      * Makes a fresh JSONWriter.
      *
-     * @param w writer to write the JSON-formatted data to
+     * @param w the writer to write the JSON-formatted data to
      */
     public JSONWriterEx(Writer w) {
         super(w);

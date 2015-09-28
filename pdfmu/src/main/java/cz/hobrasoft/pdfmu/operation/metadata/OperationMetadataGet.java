@@ -12,11 +12,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
 
 public class OperationMetadataGet extends OperationCommon {
 
-    @Override
-    public String getCommandName() {
-        return "get";
-    }
-
     private final InPdfArgs in = new InPdfArgs();
 
     @Override

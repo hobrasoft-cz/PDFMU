@@ -18,11 +18,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
  */
 public class OperationAttach extends OperationCommon {
 
-    @Override
-    public String getCommandName() {
-        return "attach";
-    }
-
     private final String metavarIn = "IN.pdf";
     private final InOutPdfArgs inout = new InOutPdfArgs(metavarIn);
 

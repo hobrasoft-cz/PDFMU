@@ -21,6 +21,14 @@ import org.json.JSONWriter;
  * cascade style chains of operations are not possible using
  * {@link JSONWriterEx}.
  *
+ * <p>
+ * Note that an instance of {@link JSONWriter} (and by extension of
+ * {@link JSONWriterEx}) maintains an internal JSON document context and can
+ * only be used for writing a single JSON document. This holds for discarding
+ * writers as well (namely writers instantiated by calling
+ * {@link #JSONWriterEx()}) - in all cases a new instance must be created for
+ * every JSON document to be written or discarded.
+ *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class JSONWriterEx extends JSONWriter implements Flushable {

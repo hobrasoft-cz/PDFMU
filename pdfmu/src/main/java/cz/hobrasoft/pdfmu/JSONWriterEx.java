@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import org.apache.commons.io.output.NullOutputStream;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
@@ -41,12 +42,25 @@ public class JSONWriterEx extends JSONWriter implements Flushable {
      * <ul>
      * <li>{@code JSONWriterEx(System.out)} - standard output stream
      * <li>{@code JSONWriterEx(System.err)} - standard error output stream
+     * <li>{@code JSONWriterEx(NullOutputStream.NULL_OUTPUT_STREAM)} - null
+     * (that is discarding) output stream; implemented in
+     * {@link #JSONWriterEx()}
      * </ul>
      *
      * @param os the output stream to writer the JSON-formatted data to
      */
     public JSONWriterEx(OutputStream os) {
         this(new OutputStreamWriter(os));
+    }
+
+    /**
+     * Makes a JSON writer that discards all the received data.
+     *
+     * <p>
+     * All the data is sent to {@link NullOutputStream#NULL_OUTPUT_STREAM}.
+     */
+    public JSONWriterEx() {
+        this(NullOutputStream.NULL_OUTPUT_STREAM);
     }
 
     /**

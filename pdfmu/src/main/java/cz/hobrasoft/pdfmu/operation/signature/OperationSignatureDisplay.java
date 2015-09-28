@@ -8,7 +8,7 @@ import com.itextpdf.text.pdf.security.PdfPKCS7;
 import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
-import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import java.security.cert.Certificate;
@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationSignatureDisplay implements Operation {
+public class OperationSignatureDisplay extends OperationCommon {
 
     @Override
     public String getCommandName() {

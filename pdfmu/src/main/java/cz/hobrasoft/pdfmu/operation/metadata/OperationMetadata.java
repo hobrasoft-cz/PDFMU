@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.metadata;
 
 import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -8,7 +9,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
-public class OperationMetadata implements Operation {
+public class OperationMetadata extends OperationCommon {
 
     //private final Operation[] operations = {};
     private final SortedMap<String, Operation> operations = new TreeMap<>();

@@ -16,7 +16,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationAttach implements Operation {
+public class OperationAttach extends OperationCommon {
 
     @Override
     public String getCommandName() {

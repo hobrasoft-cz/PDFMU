@@ -33,7 +33,8 @@ public class JSONWriterEx extends JSONWriter implements Flushable {
 
     /**
      * Flushes the underlying writer by writing any buffered output to the
-     * underlying stream.
+     * underlying stream. Makes the data recorded so far available to the
+     * listener of the stream.
      *
      * @throws IOException if an I/O error occurs
      */

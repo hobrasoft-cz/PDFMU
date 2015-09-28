@@ -1,10 +1,10 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import com.itextpdf.text.pdf.PdfReader;
-import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
-import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
+import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import cz.hobrasoft.pdfmu.operation.args.OutPdfArgs;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.Namespace;

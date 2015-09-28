@@ -57,12 +57,16 @@ public class OperationFork extends OperationCommon {
 
         String operationName = namespace.getString(dest);
         assert operationName != null; // Sub-command -> required
+        json.write("operation", operationName);
+        json.object("result");
 
         Operation operation = operations.get(operationName);
         assert operation != null; // Required
 
         // If `operation` throws an `OperationException`, we pass it on.
         operation.execute(namespace);
+
+        json.endObject(); // result
     }
 
     /**

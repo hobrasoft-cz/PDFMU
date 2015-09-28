@@ -12,17 +12,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
 public interface Operation extends JsonWriting {
 
     /**
-     * Get this operation's name
-     *
-     * <p>
-     * Name is the alias that will be used from command line to execute the
-     * operation. It must be unique among the operations in the same subparser.
-     *
-     * @return the command name
-     */
-    public String getCommandName();
-
-    /**
      * Configure this operation's subparser
      *
      * <p>

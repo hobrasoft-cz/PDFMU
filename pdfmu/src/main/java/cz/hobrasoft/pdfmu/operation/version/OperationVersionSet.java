@@ -20,11 +20,6 @@ public class OperationVersionSet extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationVersionSet.class.getName());
 
-    @Override
-    public String getCommandName() {
-        return "set";
-    }
-
     private final InOutPdfArgs inout = new InOutPdfArgs();
 
     @Override

@@ -18,12 +18,6 @@ public class OperationVersionGet extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationVersionGet.class.getName());
 
-    @Override
-    public String getCommandName() {
-        // TODO: Make consistent with `pdfmu signature display`
-        return "get";
-    }
-
     private final InPdfArgs in = new InPdfArgs();
 
     @Override

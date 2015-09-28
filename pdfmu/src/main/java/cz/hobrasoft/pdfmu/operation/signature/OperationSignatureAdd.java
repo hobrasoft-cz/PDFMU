@@ -38,11 +38,6 @@ public class OperationSignatureAdd extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationSignatureAdd.class.getName());
 
-    @Override
-    public String getCommandName() {
-        return "add";
-    }
-
     private final InOutPdfArgs inout = new InOutPdfArgs();
 
     @Override

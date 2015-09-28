@@ -32,11 +32,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class OperationSignatureDisplay extends OperationCommon {
 
-    @Override
-    public String getCommandName() {
-        return "display";
-    }
-
     private final InPdfArgs in = new InPdfArgs();
 
     @Override

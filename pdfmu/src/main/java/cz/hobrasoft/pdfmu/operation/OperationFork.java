@@ -26,11 +26,6 @@ public class OperationFork extends OperationCommon {
     }
 
     @Override
-    public String getCommandName() {
-        return commandName;
-    }
-
-    @Override
     public Subparser configureSubparser(Subparser subparser) {
         // Configure the subparser
         subparser.help(help)

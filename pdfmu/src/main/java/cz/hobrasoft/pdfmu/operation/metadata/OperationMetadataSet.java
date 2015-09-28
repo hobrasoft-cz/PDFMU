@@ -17,11 +17,6 @@ public class OperationMetadataSet extends OperationCommon {
 
     private final MetadataParameters metadataParameters = new MetadataParameters();
 
-    @Override
-    public String getCommandName() {
-        return "set";
-    }
-
     private final InOutPdfArgs inout = new InOutPdfArgs();
 
     @Override

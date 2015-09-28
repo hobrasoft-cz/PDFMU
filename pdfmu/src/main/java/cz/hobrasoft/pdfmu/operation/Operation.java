@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.operation;
 
+import cz.hobrasoft.pdfmu.JsonWriting;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -8,7 +9,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public interface Operation {
+public interface Operation extends JsonWriting {
 
     /**
      * Get this operation's name

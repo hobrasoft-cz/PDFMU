@@ -111,6 +111,7 @@ public class Main {
                     break;
                 case "text":
                     Console.enable();
+                    break;
                 default:
                     assert false; // Argument has limited choices
             }

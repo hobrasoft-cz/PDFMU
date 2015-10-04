@@ -1,7 +1,5 @@
 package cz.hobrasoft.pdfmu.operation;
 
-import cz.hobrasoft.pdfmu.JSONWriterEx;
-import cz.hobrasoft.pdfmu.JsonWriting;
 import java.util.Map;
 import java.util.SortedMap;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -63,17 +61,6 @@ public class OperationFork extends OperationCommon {
 
         // If `operation` throws an `OperationException`, we pass it on.
         operation.execute(namespace);
-    }
-
-    /**
-     * Delegates the JSON writer to the sub-operations.
-     */
-    @Override
-    public void setJsonWriter(JSONWriterEx json) {
-        super.setJsonWriter(json);
-        for (JsonWriting operation : operations.values()) {
-            operation.setJsonWriter(json);
-        }
     }
 
 }

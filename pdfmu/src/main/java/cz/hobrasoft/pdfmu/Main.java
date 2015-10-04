@@ -1,5 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -102,6 +104,10 @@ public class Main {
             String outputFormat = namespace.getString("output_format");
             switch (outputFormat) {
                 case "json":
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(SerializationFeature.INDENT_OUTPUT); // nice formatting
+                    WritingMapper wm = new WritingMapper(mapper, System.err);
+                    operation.setWritingMapper(wm);
                     break;
                 case "text":
                     Console.enable();

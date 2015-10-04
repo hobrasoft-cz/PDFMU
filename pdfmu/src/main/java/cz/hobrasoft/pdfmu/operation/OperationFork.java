@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.operation;
 
+import cz.hobrasoft.pdfmu.WritingMapper;
 import java.util.Map;
 import java.util.SortedMap;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -61,6 +62,14 @@ public class OperationFork extends OperationCommon {
 
         // If `operation` throws an `OperationException`, we pass it on.
         operation.execute(namespace);
+    }
+
+    @Override
+    public void setWritingMapper(WritingMapper wm) {
+        super.setWritingMapper(wm);
+        for (Operation operation : operations.values()) {
+            operation.setWritingMapper(wm);
+        }
     }
 
 }

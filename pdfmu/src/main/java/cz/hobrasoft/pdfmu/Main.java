@@ -99,6 +99,16 @@ public class Main {
             Operation operation = operations.get(operationName);
             assert operation != null;
 
+            String outputFormat = namespace.getString("output_format");
+            switch (outputFormat) {
+                case "json":
+                    break;
+                case "text":
+                    Console.enable();
+                default:
+                    assert false; // Argument has limited choices
+            }
+
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {

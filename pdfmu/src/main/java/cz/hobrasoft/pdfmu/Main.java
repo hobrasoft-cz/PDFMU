@@ -48,7 +48,7 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
-        parser.addArgument("-of", "--output-format")
+        parser.addArgument("-of", "--output_format")
                 .choices("text", "json")
                 .setDefault("text")
                 .type(String.class)

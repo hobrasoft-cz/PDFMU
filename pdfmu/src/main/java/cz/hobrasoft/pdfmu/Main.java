@@ -1,5 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -48,7 +50,7 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
-        parser.addArgument("-of", "--output-format")
+        parser.addArgument("-of", "--output_format")
                 .choices("text", "json")
                 .setDefault("text")
                 .type(String.class)
@@ -98,6 +100,21 @@ public class Main {
 
             Operation operation = operations.get(operationName);
             assert operation != null;
+
+            String outputFormat = namespace.getString("output_format");
+            switch (outputFormat) {
+                case "json":
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(SerializationFeature.INDENT_OUTPUT); // nice formatting
+                    WritingMapper wm = new WritingMapper(mapper, System.err);
+                    operation.setWritingMapper(wm);
+                    break;
+                case "text":
+                    Console.enable();
+                    break;
+                default:
+                    assert false; // Argument has limited choices
+            }
 
             try {
                 operation.execute(namespace);

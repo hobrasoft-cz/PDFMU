@@ -2,11 +2,13 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.Console;
+import cz.hobrasoft.pdfmu.jackson.MetadataGet;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import java.util.Map;
+import java.util.SortedMap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -34,25 +36,31 @@ public class OperationMetadataGet extends OperationCommon {
         in.setFromNamespace(namespace);
 
         in.open();
-        get(in.getPdfReader());
+        SortedMap<String, String> properties = get(in.getPdfReader());
         in.close();
+
+        writeResult(new MetadataGet(properties));
     }
 
-    private static void get(PdfReader pdfReader) {
+    private static SortedMap<String, String> get(PdfReader pdfReader) {
         Map<String, String> properties = pdfReader.getInfo();
 
         MetadataParameters mp = new MetadataParameters();
         mp.setFromInfo(properties);
 
+        SortedMap<String, String> propertiesSorted = mp.getSorted();
+
         {
             Console.indentMore("Properties:");
-            for (Map.Entry<String, String> property : mp.getSorted().entrySet()) {
+            for (Map.Entry<String, String> property : propertiesSorted.entrySet()) {
                 String key = property.getKey();
                 String value = property.getValue();
                 Console.println(String.format("%s: %s", key, value));
             }
             Console.indentLess();
         }
+
+        return propertiesSorted;
     }
 
     private static Operation instance = null;

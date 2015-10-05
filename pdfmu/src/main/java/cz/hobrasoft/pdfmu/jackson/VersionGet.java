@@ -6,9 +6,9 @@ package cz.hobrasoft.pdfmu.jackson;
  */
 public class VersionGet extends Result {
 
+    public String version;
+
     public VersionGet(String version) {
         this.version = version;
     }
-
-    public String version;
 }

@@ -4,7 +4,7 @@ import cz.hobrasoft.pdfmu.JSONWriterEx;
 
 public abstract class OperationCommon implements Operation {
 
-    protected JSONWriterEx json;
+    private JSONWriterEx json;
 
     @Override
     public void setJsonWriter(JSONWriterEx json) {

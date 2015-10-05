@@ -1,7 +1,7 @@
 package cz.hobrasoft.pdfmu.jackson;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import java.util.SortedMap;
+import java.util.List;
 
 /**
  *
@@ -13,5 +13,5 @@ public class SignatureDisplay extends Result {
     public Integer n_revisions = null;
 
     @JsonPropertyDescription("Signatures identified by field names")
-    public SortedMap<String, Signature> signatures = null;
+    public List<Signature> signatures = null;
 }

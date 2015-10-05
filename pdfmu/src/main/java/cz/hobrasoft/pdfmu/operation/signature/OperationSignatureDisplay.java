@@ -87,7 +87,7 @@ public class OperationSignatureDisplay extends OperationCommon {
             Console.println(""); // Precede the first signature with an empty line
         }
 
-        SortedMap<String, Signature> signatures = new TreeMap<>();
+        List<Signature> signatures = new ArrayList<>();
 
         for (String name : names) {
             Console.println(String.format("Signature field name: %s", name));
@@ -100,7 +100,8 @@ public class OperationSignatureDisplay extends OperationCommon {
                 Console.indentLess();
                 Console.println(""); // Follow each signature with an empty line
             }
-            signatures.put(name, signature);
+            signature.name = name;
+            signatures.add(signature);
         }
 
         result.signatures = signatures;

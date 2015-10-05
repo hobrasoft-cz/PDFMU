@@ -1,8 +1,9 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.JSONWriterEx;
+import cz.hobrasoft.pdfmu.JsonWriting;
 
-public abstract class OperationCommon implements Operation {
+public abstract class OperationCommon implements Operation, JsonWriting {
 
     private JSONWriterEx json;
 

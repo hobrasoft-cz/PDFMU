@@ -45,7 +45,6 @@ public class OperationVersionGet extends OperationCommon {
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
         logger.info(String.format("Input PDF document version: %s", inVersion));
-        json.write("version", inVersion);
 
         in.close();
     }

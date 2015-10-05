@@ -6,7 +6,6 @@ import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
-import java.io.IOException;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -94,28 +93,11 @@ public class Main {
             parser.handleError(e);
         }
         if (namespace != null) {
-            String outputFormat = namespace.getString("output_format");
-            assert outputFormat != null; // Has default value
-            JSONWriterEx json;
-            switch (outputFormat) {
-                case "json":
-                    json = new JSONWriterEx(System.err);
-                    break;
-                default:
-                    json = new JSONWriterEx(); // Discarder
-            }
-            json.object();
-
             String operationName = namespace.getString("operation");
             assert operationName != null; // Sub-command -> required
-            json.write("operation", operationName);
-            json.object("result");
 
             Operation operation = operations.get(operationName);
             assert operation != null;
-
-            // Configure JSON writer of the operation
-            operation.setJsonWriter(json);
 
             try {
                 operation.execute(namespace);
@@ -125,14 +107,6 @@ public class Main {
                 if (cause != null && cause.getMessage() != null) {
                     logger.info(cause.getMessage());
                 }
-            }
-
-            json.endObject(); // result
-            json.endObject(); // main
-            try {
-                json.flush();
-            } catch (IOException ex) {
-                logger.severe(String.format("Could not flush the JSON writer: %s", ex.getMessage()));
             }
         }
     }

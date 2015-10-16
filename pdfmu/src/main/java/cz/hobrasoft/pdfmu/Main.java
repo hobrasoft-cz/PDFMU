@@ -119,10 +119,10 @@ public class Main {
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {
-                logger.info(ex.getMessage());
+                logger.severe(ex.getMessage());
                 Throwable cause = ex.getCause();
                 if (cause != null && cause.getMessage() != null) {
-                    logger.info(cause.getMessage());
+                    logger.severe(cause.getMessage());
                 }
             }
         }

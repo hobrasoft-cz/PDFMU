@@ -40,6 +40,13 @@ The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar
 2. Go to "pdfmu/target" in command line
 3. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
+### Generate documentation using Maven and javadoc
+
+1. Go to "pdfmu" in command line
+2. `mvn javadoc:javadoc`
+
+To inspect the resulting documentation open "pdfmu/target/site/apidocs/index.html".
+
 ### Generate documentation using Doxygen
 
 1. Go to "." in command line

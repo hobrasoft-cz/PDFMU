@@ -2,7 +2,6 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -10,10 +9,13 @@ import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
 public class OperationMetadataSet extends OperationCommon {
+
+    private static final Logger logger = Logger.getLogger(OperationMetadataSet.class.getName());
 
     private final MetadataParameters metadataParameters = new MetadataParameters();
 
@@ -68,12 +70,12 @@ public class OperationMetadataSet extends OperationCommon {
         for (String key : ignoredProperties) {
             if (info.containsKey(key)) {
                 String value = info.get(key);
-                Console.println(String.format("Warning: The property %s is set automatically. The value \"%s\" will be ignored.", key, value));
+                logger.warning(String.format("Warning: The property %s is set automatically. The value \"%s\" will be ignored.", key, value));
             }
         }
 
         stp.setMoreInfo(info);
-        Console.println("PDF metadata have been set.");
+        logger.info("PDF metadata have been set.");
     }
 
     private static Operation instance = null;

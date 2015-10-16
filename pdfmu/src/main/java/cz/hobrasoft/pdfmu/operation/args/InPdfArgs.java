@@ -1,13 +1,13 @@
 package cz.hobrasoft.pdfmu.operation.args;
 
 import com.itextpdf.text.pdf.PdfReader;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -17,6 +17,8 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
     private final String name = "in";
     private final String help = "input PDF document";
     private final String metavar;
+
+    private static final Logger logger = Logger.getLogger(InPdfArgs.class.getName());
 
     public InPdfArgs(String metavar) {
         this.metavar = metavar;
@@ -54,7 +56,7 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
         assert is == null;
         assert pdfReader == null;
 
-        Console.println(String.format("Input file: %s", file));
+        logger.info(String.format("Input file: %s", file));
 
         // Open the input stream
         try {

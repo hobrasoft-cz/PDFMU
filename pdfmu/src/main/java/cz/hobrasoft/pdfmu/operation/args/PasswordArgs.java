@@ -1,12 +1,14 @@
 package cz.hobrasoft.pdfmu.operation.args;
 
-import cz.hobrasoft.pdfmu.Console;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.lang3.StringUtils;
 
 public class PasswordArgs implements ArgsConfiguration {
+
+    private static final Logger logger = Logger.getLogger(PasswordArgs.class.getName());
 
     private final String title;
     private final String passArgNameShort;
@@ -62,15 +64,15 @@ public class PasswordArgs implements ArgsConfiguration {
             // Load the password from an environment variable
             String envVar = namespace.getString(envvarArgNameLong);
             assert envVar != null; // The argument has a default value
-            Console.println(String.format("%s environment variable: %s", StringUtils.capitalize(title), envVar));
+            logger.info(String.format("%s environment variable: %s", StringUtils.capitalize(title), envVar));
             passwordString = System.getenv(envVar);
             if (passwordString != null) {
-                Console.println(String.format("%s loaded from the environment variable %s.", StringUtils.capitalize(title), envVar));
+                logger.info(String.format("%s loaded from the environment variable %s.", StringUtils.capitalize(title), envVar));
             } else {
-                Console.println(String.format("%s was not set; using empty password.", StringUtils.capitalize(title)));
+                logger.info(String.format("%s was not set; using empty password.", StringUtils.capitalize(title)));
             }
         } else {
-            Console.println(String.format("%s loaded from the command line option --%s.", StringUtils.capitalize(title), passArgNameLong));
+            logger.info(String.format("%s loaded from the command line option --%s.", StringUtils.capitalize(title), passArgNameLong));
         }
         if (passwordString != null) {
             password = passwordString.toCharArray();

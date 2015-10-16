@@ -3,18 +3,20 @@ package cz.hobrasoft.pdfmu.operation.args;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
+
+    private static final Logger logger = Logger.getLogger(OutPdfArgs.class.getName());
 
     private final String metavarIn;
     private final String metavarOut = "OUT.pdf";
@@ -46,7 +48,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     public void setDefaultFile(File file) {
         if (this.file == null) {
-            Console.println("Output file has not been specified. Assuming in-place operation.");
+            logger.info("Output file has not been specified. Assuming in-place operation.");
             this.file = file;
         }
     }
@@ -60,12 +62,12 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
         assert os == null;
 
-        Console.println(String.format("Output file: %s", file));
+        logger.info(String.format("Output file: %s", file));
 
         if (file.exists()) {
-            Console.println("Output file already exists.");
+            logger.info("Output file already exists.");
             if (overwrite) {
-                Console.println("Overwriting the output file (--force flag is set).");
+                logger.info("Overwriting the output file (--force flag is set).");
             } else {
                 throw new OperationException("Set --force flag to overwrite.");
             }

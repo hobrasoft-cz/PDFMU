@@ -112,7 +112,6 @@ public class Main {
                 case "text":
                     TextOutput to = new TextOutput(System.err);
                     operation.setTextOutput(to);
-                    Console.enable();
                     break;
                 default:
                     assert false; // Argument has limited choices

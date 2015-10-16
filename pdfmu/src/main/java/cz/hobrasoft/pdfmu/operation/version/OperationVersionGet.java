@@ -6,7 +6,6 @@ import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
-import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -16,8 +15,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationVersionGet extends OperationCommon {
-
-    private static final Logger logger = Logger.getLogger(OperationVersionGet.class.getName());
 
     private final InPdfArgs in = new InPdfArgs();
 
@@ -45,7 +42,7 @@ public class OperationVersionGet extends OperationCommon {
 
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-        logger.info(String.format("Input PDF document version: %s", inVersion));
+        to.println(String.format("Input PDF document version: %s", inVersion));
         writeResult(new VersionGet(inVersion.toString()));
 
         in.close();

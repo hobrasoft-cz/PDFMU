@@ -100,7 +100,7 @@ public class OperationSignatureDisplay extends OperationCommon {
                 Console.indentLess();
                 Console.println(""); // Follow each signature with an empty line
             }
-            signature.name = name;
+            signature.id = name;
             signatures.add(signature);
         }
 

@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.operation;
 
+import cz.hobrasoft.pdfmu.TextOutput;
 import cz.hobrasoft.pdfmu.WritingMapper;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -33,4 +34,6 @@ public interface Operation {
     public void execute(Namespace namespace) throws OperationException;
 
     public void setWritingMapper(WritingMapper wm);
+
+    public void setTextOutput(TextOutput to);
 }

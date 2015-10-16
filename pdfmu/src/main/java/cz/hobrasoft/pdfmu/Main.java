@@ -110,6 +110,8 @@ public class Main {
                     operation.setWritingMapper(wm);
                     break;
                 case "text":
+                    TextOutput to = new TextOutput(System.err);
+                    operation.setTextOutput(to);
                     Console.enable();
                     break;
                 default:

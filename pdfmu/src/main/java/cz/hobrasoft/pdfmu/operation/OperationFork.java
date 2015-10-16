@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.operation;
 
+import cz.hobrasoft.pdfmu.TextOutput;
 import cz.hobrasoft.pdfmu.WritingMapper;
 import java.util.Map;
 import java.util.SortedMap;
@@ -69,6 +70,14 @@ public class OperationFork extends OperationCommon {
         super.setWritingMapper(wm);
         for (Operation operation : operations.values()) {
             operation.setWritingMapper(wm);
+        }
+    }
+
+    @Override
+    public void setTextOutput(TextOutput to) {
+        super.setTextOutput(to);
+        for (Operation operation : operations.values()) {
+            operation.setTextOutput(to);
         }
     }
 

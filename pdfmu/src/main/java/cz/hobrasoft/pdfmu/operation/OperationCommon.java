@@ -2,15 +2,16 @@ package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.WritingMapper;
 import cz.hobrasoft.pdfmu.TextOutput;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.jackson.Result;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public abstract class OperationCommon implements Operation {
 
     private WritingMapper wm = null;
     protected TextOutput to = new TextOutput(); // Discard messages by default
+    private static final Logger logger = Logger.getLogger(OperationCommon.class.getName());
 
     @Override
     public void setWritingMapper(WritingMapper wm) {
@@ -24,7 +25,7 @@ public abstract class OperationCommon implements Operation {
             try {
                 wm.writeValue(response);
             } catch (IOException ex) {
-                Console.println(String.format("Error: Cannot write JSON document: %s", ex));
+                logger.severe(String.format("Cannot write JSON document: %s", ex));
             }
         }
     }

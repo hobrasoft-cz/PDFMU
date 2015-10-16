@@ -1,7 +1,6 @@
 package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.jackson.MetadataGet;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
@@ -42,7 +41,7 @@ public class OperationMetadataGet extends OperationCommon {
         writeResult(new MetadataGet(properties));
     }
 
-    private static SortedMap<String, String> get(PdfReader pdfReader) {
+    private SortedMap<String, String> get(PdfReader pdfReader) {
         Map<String, String> properties = pdfReader.getInfo();
 
         MetadataParameters mp = new MetadataParameters();
@@ -51,13 +50,13 @@ public class OperationMetadataGet extends OperationCommon {
         SortedMap<String, String> propertiesSorted = mp.getSorted();
 
         {
-            Console.indentMore("Properties:");
+            to.indentMore("Properties:");
             for (Map.Entry<String, String> property : propertiesSorted.entrySet()) {
                 String key = property.getKey();
                 String value = property.getValue();
-                Console.println(String.format("%s: %s", key, value));
+                to.println(String.format("%s: %s", key, value));
             }
-            Console.indentLess();
+            to.indentLess();
         }
 
         return propertiesSorted;

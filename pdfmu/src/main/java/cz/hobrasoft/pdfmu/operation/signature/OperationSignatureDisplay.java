@@ -5,7 +5,6 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.security.CertificateInfo;
 import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
 import com.itextpdf.text.pdf.security.PdfPKCS7;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.MapSorter;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import cz.hobrasoft.pdfmu.jackson.CertificateResult;
@@ -66,39 +65,39 @@ public class OperationSignatureDisplay extends OperationCommon {
         writeResult(result);
     }
 
-    private static SignatureDisplay display(PdfReader pdfReader) {
+    private SignatureDisplay display(PdfReader pdfReader) {
         // digitalsignatures20130304.pdf : Code sample 5.1
         AcroFields fields = pdfReader.getAcroFields();
         return display(fields);
     }
 
-    private static SignatureDisplay display(AcroFields fields) {
+    private SignatureDisplay display(AcroFields fields) {
         SignatureDisplay result = new SignatureDisplay();
 
         // digitalsignatures20130304.pdf : Code sample 5.1
         ArrayList<String> names = fields.getSignatureNames();
 
         // Print number of signatures
-        Console.println(String.format("Number of signatures: %d", names.size()));
-        Console.println(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
+        to.println(String.format("Number of signatures: %d", names.size()));
+        to.println(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
         result.n_revisions = fields.getTotalRevisions();
 
         if (names.size() > 0) {
-            Console.println(""); // Precede the first signature with an empty line
+            to.println(""); // Precede the first signature with an empty line
         }
 
         List<Signature> signatures = new ArrayList<>();
 
         for (String name : names) {
-            Console.println(String.format("Signature field name: %s", name));
+            to.println(String.format("Signature field name: %s", name));
 
-            Console.indentMore();
+            to.indentMore();
             Signature signature;
             try {
                 signature = display(fields, name); // May throw OperationException
             } finally {
-                Console.indentLess();
-                Console.println(""); // Follow each signature with an empty line
+                to.indentLess();
+                to.println(""); // Follow each signature with an empty line
             }
             signature.id = name;
             signatures.add(signature);
@@ -109,10 +108,10 @@ public class OperationSignatureDisplay extends OperationCommon {
         return result;
     }
 
-    private static Signature display(AcroFields fields, String name) {
+    private Signature display(AcroFields fields, String name) {
         // digitalsignatures20130304.pdf : Code sample 5.2
-        Console.println(String.format("Signature covers the whole document: %s", (fields.signatureCoversWholeDocument(name) ? "Yes" : "No")));
-        Console.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
+        to.println(String.format("Signature covers the whole document: %s", (fields.signatureCoversWholeDocument(name) ? "Yes" : "No")));
+        to.println(String.format("Document revision: %d of %d", fields.getRevision(name), fields.getTotalRevisions()));
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);
         Signature signature = display(pkcs7);
@@ -121,15 +120,15 @@ public class OperationSignatureDisplay extends OperationCommon {
         return signature;
     }
 
-    private static Signature display(PdfPKCS7 pkcs7) {
+    private Signature display(PdfPKCS7 pkcs7) {
         Signature signature = new Signature();
 
         // digitalsignatures20130304.pdf : Code sample 5.3
-        Console.println("Signature metadata:");
+        to.println("Signature metadata:");
         {
             SignatureMetadata metadata = new SignatureMetadata();
 
-            Console.indentMore();
+            to.indentMore();
 
             // Only name may be null.
             // The values are set in {@link PdfPKCS7#verifySignature}.
@@ -139,37 +138,37 @@ public class OperationSignatureDisplay extends OperationCommon {
                 if (name == null) {
                     name = "N/A";
                 }
-                Console.println(String.format("Name: %s", name));
+                to.println(String.format("Name: %s", name));
             }
 
             // TODO?: Print "N/A" if the value is an empty string
             // TODO?: Determine whether the value is set in the signature
-            Console.println(String.format("Reason: %s", pkcs7.getReason()));
+            to.println(String.format("Reason: %s", pkcs7.getReason()));
             metadata.reason = pkcs7.getReason();
-            Console.println(String.format("Location: %s", pkcs7.getLocation()));
+            to.println(String.format("Location: %s", pkcs7.getLocation()));
             metadata.location = pkcs7.getLocation();
 
             { // Date
                 Date date = pkcs7.getSignDate().getTime();
-                Console.println(String.format("Date and time: %s", date));
+                to.println(String.format("Date and time: %s", date));
                 metadata.date = date.toString();
             }
 
-            Console.indentLess();
+            to.indentLess();
 
             signature.metadata = metadata;
         }
         { // Certificate chain
-            Console.indentMore("Certificate chain:");
+            to.indentMore("Certificate chain:");
             Certificate[] certificates = pkcs7.getSignCertificateChain();
-            Console.println(String.format("Number of certificates: %d", certificates.length));
+            to.println(String.format("Number of certificates: %d", certificates.length));
             int i = 0;
             List<CertificateResult> certificatesResult = new ArrayList<>();
             for (Certificate certificate : certificates) {
-                Console.indentMore(String.format("Certificate %d%s:", i, (i == 0 ? " (signing certificate)" : "")));
+                to.indentMore(String.format("Certificate %d%s:", i, (i == 0 ? " (signing certificate)" : "")));
                 CertificateResult certRes;
                 String type = certificate.getType();
-                Console.println(String.format("Type: %s", type));
+                to.println(String.format("Type: %s", type));
                 // http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html#AppA
                 if ("X.509".equals(type)) {
                     X509Certificate certificateX509 = (X509Certificate) certificate;
@@ -178,39 +177,39 @@ public class OperationSignatureDisplay extends OperationCommon {
                     certRes = new CertificateResult();
                 }
                 certRes.type = type;
-                Console.indentLess();
+                to.indentLess();
                 certificatesResult.add(certRes);
                 ++i;
             }
             signature.certificates = certificatesResult;
-            Console.indentLess();
+            to.indentLess();
         }
 
         return signature;
     }
 
-    private static CertificateResult showCertInfo(X509Certificate cert) {
+    private CertificateResult showCertInfo(X509Certificate cert) {
         CertificateResult certRes = new CertificateResult();
 
         { // Self-signed?
             X500Principal principalSubject = cert.getSubjectX500Principal();
             X500Principal principalIssuer = cert.getIssuerX500Principal();
             boolean selfSigned = principalSubject.equals(principalIssuer);
-            Console.println(String.format("Self-signed: %s", (selfSigned ? "Yes" : "No")));
+            to.println(String.format("Self-signed: %s", (selfSigned ? "Yes" : "No")));
             certRes.selfsigned = selfSigned;
         }
 
         // Note: More attributes may be available by more direct processing of `cert`
         // than by using `CertificateInfo.get*Fields`.
         { // Subject
-            Console.indentMore("Subject:");
+            to.indentMore("Subject:");
             certRes.subject = showX500Name(CertificateInfo.getSubjectFields(cert));
-            Console.indentLess();
+            to.indentLess();
         }
         { // Issuer
-            Console.indentMore("Issuer:");
+            to.indentMore("Issuer:");
             certRes.issuer = showX500Name(CertificateInfo.getIssuerFields(cert));
-            Console.indentLess();
+            to.indentLess();
         }
 
         return certRes;
@@ -220,7 +219,7 @@ public class OperationSignatureDisplay extends OperationCommon {
     private static final MapSorter<String> dnTypeSorter = new PreferenceListComparator(new String[]{
         "CN", "E", "OU", "O", "STREET", "L", "ST", "C"});
 
-    private static SortedMap<String, List<String>> showX500Name(X500Name name) {
+    private SortedMap<String, List<String>> showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 
         SortedMap<String, ArrayList<String>> fieldsSorted = dnTypeSorter.sort(fields);
@@ -230,7 +229,7 @@ public class OperationSignatureDisplay extends OperationCommon {
             type = niceX500AttributeType(type);
             ArrayList<String> values = field.getValue();
             String valuesString = StringUtils.join(values, ", ");
-            Console.println(String.format("%s: %s", type, valuesString));
+            to.println(String.format("%s: %s", type, valuesString));
         }
 
         SortedMap<String, List<String>> result = new TreeMap<>();

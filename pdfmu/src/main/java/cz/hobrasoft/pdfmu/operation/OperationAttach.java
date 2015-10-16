@@ -1,10 +1,10 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
-import cz.hobrasoft.pdfmu.Console;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -17,6 +17,8 @@ import net.sourceforge.argparse4j.inf.Subparser;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationAttach extends OperationCommon {
+
+    private static final Logger logger = Logger.getLogger(OperationAttach.class.getName());
 
     private final String metavarIn = "IN.pdf";
     private final InOutPdfArgs inout = new InOutPdfArgs(metavarIn);
@@ -80,29 +82,26 @@ public class OperationAttach extends OperationCommon {
             assert file != null;
             assert fileDisplay != null; // We use the attachment file name by default
 
-            Console.indentMore(String.format("Attached file: %s", file));
-            Console.println(String.format("Description: %s", (description != null ? description : "<none>")));
-            Console.println(String.format("Display name: %s", (fileDisplay != null ? fileDisplay : "<none>")));
+            logger.info(String.format("Attached file: %s", file));
+            logger.info(String.format("Description: %s", (description != null ? description : "<none>")));
+            logger.info(String.format("Display name: %s", (fileDisplay != null ? fileDisplay : "<none>")));
             {
-                Console.indentMore();
                 if (fileDisplay == null) {
-                    Console.println("Warning: Display name has not been set. Adobe Reader XI does not allow opening or saving such attachment.");
+                    logger.warning("Display name has not been set. Adobe Reader XI does not allow opening or saving such attachment.");
                 } else {
                     Matcher m = filenameWithExtension.matcher(fileDisplay);
                     if (!m.matches()) {
-                        Console.println("Warning: Display name does not contain a file extension. Adobe Reader XI does not allow opening or saving such attachment.");
+                        logger.warning("Display name does not contain a file extension. Adobe Reader XI does not allow opening or saving such attachment.");
                     }
                 }
-                Console.indentLess();
             }
-            Console.indentLess();
         }
         try {
             stp.addFileAttachment(description, null, file, fileDisplay);
         } catch (IOException ex) {
             throw new OperationException(String.format("Could not attach the file \"%s\".", file), ex);
         }
-        Console.println(String.format("The file \"%s\" has been attached.", file));
+        logger.info(String.format("The file \"%s\" has been attached.", file));
     }
 
     private static Operation instance = null;

@@ -11,8 +11,6 @@ import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -28,15 +26,9 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  */
 public class Main {
 
-    static {
+    private static void resetLoggers() {
         // http://stackoverflow.com/a/3363747
         LogManager.getLogManager().reset(); // Remove default handler(s)
-
-        Handler handler = new ConsoleHandler(); // Prints to `System.err`
-        handler.setFormatter(new VerbatimFormatter());
-        // http://stackoverflow.com/questions/2533227/how-can-i-disable-the-default-console-handler-while-using-the-java-logging-api/2533250#comment34752130_2533250
-        Logger rootLogger = Logger.getLogger("");
-        rootLogger.addHandler(handler);
     }
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
@@ -108,6 +100,7 @@ public class Main {
                     mapper.enable(SerializationFeature.INDENT_OUTPUT); // nice formatting
                     WritingMapper wm = new WritingMapper(mapper, System.err);
                     operation.setWritingMapper(wm);
+                    resetLoggers();
                     break;
                 case "text":
                     TextOutput to = new TextOutput(System.err);

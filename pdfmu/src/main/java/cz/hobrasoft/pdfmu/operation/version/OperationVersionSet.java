@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.version;
 
 import com.itextpdf.text.pdf.PdfReader;
+import cz.hobrasoft.pdfmu.jackson.VersionSet;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -50,6 +51,8 @@ public class OperationVersionSet extends OperationCommon {
         PdfVersion outVersion = namespace.get("version");
 
         execute(inout, outVersion);
+
+        writeResult(new VersionSet(outVersion.toString()));
     }
 
     private static void execute(InOutPdfArgs inout, PdfVersion outVersion) throws OperationException {

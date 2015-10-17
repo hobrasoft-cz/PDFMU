@@ -42,6 +42,7 @@ public class MetadataParameters implements ArgsConfiguration {
 
     // iText does not let us set the Producer property.
     // The ModDate property also seems to be set automatically.
+    // TODO: Check spelling of "settable"
     private static final List<String> standardSettableProperties = Arrays.asList(new String[]{
         "Title", "Subject", "Author", "Keywords", "Creator", "CreationDate", "Trapped"});
 

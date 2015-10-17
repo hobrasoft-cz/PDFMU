@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.jackson.EmptyResult;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -42,6 +43,7 @@ public class OperationMetadataSet extends OperationCommon {
         inout.setFromNamespace(namespace);
         metadataParameters.setFromNamespace(namespace);
         set(inout, metadataParameters);
+        writeResult(new EmptyResult());
     }
 
     private static void set(InOutPdfArgs inout, MetadataParameters metadataParameters) throws OperationException {

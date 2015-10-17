@@ -57,7 +57,6 @@ public class MetadataParameters implements ArgsConfiguration {
         parser.addArgument("-c", "--clear")
                 .help("clear the property P")
                 .metavar("P")
-                .nargs("?")
                 .type(String.class)
                 .action(Arguments.append());
 

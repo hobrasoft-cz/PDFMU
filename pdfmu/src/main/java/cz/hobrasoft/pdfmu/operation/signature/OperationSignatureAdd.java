@@ -12,6 +12,7 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -83,18 +84,19 @@ public class OperationSignatureAdd extends OperationCommon {
         // Initialize signature parameters
         signatureParameters.setFromNamespace(namespace);
 
-        sign(inout, signatureParameters);
+        writeResult(sign(inout, signatureParameters));
     }
 
-    private static void sign(InOutPdfArgs inout, SignatureParameters signatureParameters) throws OperationException {
+    private static SignatureAdd sign(InOutPdfArgs inout, SignatureParameters signatureParameters) throws OperationException {
         inout.openSignature();
         PdfStamper stp = inout.getPdfStamper();
-        sign(stp, signatureParameters);
+        SignatureAdd sa = sign(stp, signatureParameters);
         inout.close();
+        return sa;
     }
 
     // Initialize the signature appearance
-    private static void sign(PdfStamper stp,
+    private static SignatureAdd sign(PdfStamper stp,
             SignatureParameters signatureParameters) throws OperationException {
         assert signatureParameters != null;
         // Unwrap the signature parameters
@@ -108,11 +110,11 @@ public class OperationSignatureAdd extends OperationCommon {
         PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);
         assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method
 
-        sign(sap, keystoreParameters, keyParameters, digestAlgorithm, sigtype);
+        return sign(sap, keystoreParameters, keyParameters, digestAlgorithm, sigtype);
     }
 
     // Initialize and load the keystore
-    private static void sign(PdfSignatureAppearance sap,
+    private static SignatureAdd sign(PdfSignatureAppearance sap,
             KeystoreParameters keystoreParameters,
             KeyParameters keyParameters,
             String digestAlgorithm,
@@ -122,11 +124,11 @@ public class OperationSignatureAdd extends OperationCommon {
         // Initialize and load keystore
         KeyStore ks = keystoreParameters.loadKeystore();
 
-        sign(sap, ks, keyParameters, digestAlgorithm, sigtype);
+        return sign(sap, ks, keyParameters, digestAlgorithm, sigtype);
     }
 
     // Get the private key and the certificate chain from the keystore
-    private static void sign(PdfSignatureAppearance sap,
+    private static SignatureAdd sign(PdfSignatureAppearance sap,
             KeyStore ks,
             KeyParameters keyParameters,
             String digestAlgorithm,
@@ -134,6 +136,8 @@ public class OperationSignatureAdd extends OperationCommon {
         assert keyParameters != null;
         // Fix the values, especially if they were not set at all
         keyParameters.fix(ks);
+        String alias = keyParameters.alias;
+        SignatureAdd sa = new SignatureAdd(alias);
 
         PrivateKey pk = keyParameters.getPrivateKey(ks);
         Certificate[] chain = keyParameters.getCertificateChain(ks);
@@ -153,6 +157,8 @@ public class OperationSignatureAdd extends OperationCommon {
         }
 
         sign(sap, pk, digestAlgorithm, chain, sigtype, signatureProvider);
+
+        return sa;
     }
 
     // Initialize the signature algorithm

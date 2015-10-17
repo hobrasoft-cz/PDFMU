@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.jackson.EmptyResult;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +73,8 @@ public class OperationAttach extends OperationCommon {
         execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);
 
         inout.close();
+
+        writeResult(new EmptyResult());
     }
 
     private static final Pattern filenameWithExtension = Pattern.compile(".*\\.[^\\.]+");

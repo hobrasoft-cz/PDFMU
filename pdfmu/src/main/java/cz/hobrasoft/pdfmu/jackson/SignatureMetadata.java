@@ -1,7 +1,5 @@
 package cz.hobrasoft.pdfmu.jackson;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.util.Date;
 
 /**
  *

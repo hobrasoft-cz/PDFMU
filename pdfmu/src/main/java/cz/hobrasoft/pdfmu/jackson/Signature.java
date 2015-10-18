@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Signature {
 
-    public String id = null; // name
+    public String id = null;
     public Boolean covers_whole_document = null;
     public Integer revision = null;
     public SignatureMetadata metadata = null;

@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu.jackson;
 
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 /**
  *
@@ -7,8 +8,15 @@ package cz.hobrasoft.pdfmu.jackson;
  */
 public class SignatureMetadata {
 
+    @JsonPropertyDescription("Signature name")
     public String name = null;
+
+    @JsonPropertyDescription("The reason for signing")
     public String reason = null;
+
+    @JsonPropertyDescription("The location of signing")
     public String location = null;
+
+    @JsonPropertyDescription("The date signed")
     public String date = null;
 }

@@ -10,7 +10,7 @@ public class SignatureAdd extends Result {
 
     @JsonPropertyDescription("Keystore entry alias")
     public String alias = null;
-    
+
     public SignatureAdd(String alias) {
         this.alias = alias;
     }

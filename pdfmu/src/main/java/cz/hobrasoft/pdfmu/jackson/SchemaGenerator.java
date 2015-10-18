@@ -27,7 +27,7 @@ public class SchemaGenerator {
         types.put("RpcResponse", RpcResponse.class);
         types.put("result/version get", VersionGet.class);
         types.put("result/signature display", SignatureDisplay.class);
-        types.put("result/metadata get",  MetadataGet.class);
+        types.put("result/metadata get", MetadataGet.class);
 
         for (Map.Entry<String, Type> e : types.entrySet()) {
             String name = e.getKey();

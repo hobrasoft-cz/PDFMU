@@ -39,6 +39,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
+
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);

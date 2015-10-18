@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class SignatureDisplay extends Result {
 
-    @JsonPropertyDescription("Number of revisions of the input PDF document")
+    @JsonPropertyDescription("Number of revisions of the document")
     public Integer n_revisions = null;
 
-    @JsonPropertyDescription("Signatures identified by field names")
+    @JsonPropertyDescription("Signatures")
     public List<Signature> signatures = null;
 }

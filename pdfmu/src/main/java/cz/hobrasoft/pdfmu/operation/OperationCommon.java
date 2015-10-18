@@ -1,7 +1,7 @@
 package cz.hobrasoft.pdfmu.operation;
 
-import cz.hobrasoft.pdfmu.WritingMapper;
 import cz.hobrasoft.pdfmu.TextOutput;
+import cz.hobrasoft.pdfmu.WritingMapper;
 import cz.hobrasoft.pdfmu.jackson.Result;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;
 import java.io.IOException;

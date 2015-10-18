@@ -17,7 +17,7 @@ public interface MapSorter<K> {
      *
      * @param <V> the type of values
      * @param unsorted the map to be sorted
-     * @return `unsorted` with elements ordered by the keys
+     * @return `unsorted` with elements sorted by the keys
      */
     public <V> SortedMap<K, V> sort(Map<K, V> unsorted);
 }

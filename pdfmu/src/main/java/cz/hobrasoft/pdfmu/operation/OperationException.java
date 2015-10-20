@@ -20,7 +20,7 @@ public class OperationException extends Exception {
 
     private static final Logger logger = Logger.getLogger(OperationException.class.getName());
 
-    private static IntProperties errorCodes = new IntProperties(defaultErrorCode);
+    private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
 
     // Load error codes from a properties resource
     private static void loadErrorCodes() {

@@ -107,6 +107,7 @@ public class Main {
             assert operationName != null; // The argument "operation" is a sub-command, thus it is required
 
             // Select the operation from `operations`
+            assert operations.containsKey(operationName); // Only supported operation names are allowed
             Operation operation = operations.get(operationName);
             assert operation != null;
 

@@ -44,6 +44,7 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
+        // TODO: Use an enum
         parser.addArgument("-of", "--output_format")
                 .choices("text", "json")
                 .setDefault("text")
@@ -120,7 +121,9 @@ public class Main {
                 if (cause != null && cause.getMessage() != null) {
                     logger.severe(cause.getMessage());
                 }
+                // TODO: Output a JSON document if "-of=json"
             }
         }
+        // TODO: Return an exit code
     }
 }

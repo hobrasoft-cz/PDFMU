@@ -3,6 +3,7 @@ package cz.hobrasoft.pdfmu.operation;
 import cz.hobrasoft.pdfmu.IntProperties;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -17,10 +18,12 @@ public class OperationException extends Exception {
     // Configuration
     private static final int defaultErrorCode = -1;
     private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/operation/errorCodes.properties";
+    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.operation.ErrorMessages";
 
     private static final Logger logger = Logger.getLogger(OperationException.class.getName());
 
     private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
+    private static final ResourceBundle errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
 
     // Load error codes from a properties resource
     private static void loadErrorCodes() {
@@ -77,5 +80,15 @@ public class OperationException extends Exception {
      */
     public int getCode() {
         return errorCodes.getIntProperty(getMessage());
+    }
+
+    @Override
+    public String getLocalizedMessage() {
+        String key = getMessage();
+        assert errorMessages != null;
+        if (errorMessages.containsKey(key)) {
+            return errorMessages.getString(key);
+        }
+        return key;
     }
 }

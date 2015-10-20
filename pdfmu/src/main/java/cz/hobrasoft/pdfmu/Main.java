@@ -28,7 +28,7 @@ public class Main {
 
     private static void disableLoggers() {
         // http://stackoverflow.com/a/3363747
-        LogManager.getLogManager().reset(); // Remove default handler(s)
+        LogManager.getLogManager().reset(); // Remove the handlers
     }
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
@@ -39,8 +39,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // Configure log message format
+        // Arguments:
+        // http://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#format%28java.util.logging.LogRecord%29
+        // %4$s: level
+        // %5$s: message
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
 
+        // Create a command line argument parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
@@ -60,23 +66,27 @@ public class Main {
 //        parser.addArgument("-v", "--version")
 //                .help("print version of pdfmu")
 //                .action(Arguments.version());
+        // Create a Subparsers instance for operation subparsers
         Subparsers subparsers = parser.addSubparsers()
                 .help("operation to execute")
                 .metavar("OPERATION")
                 .dest("operation");
 
+        // Create a map of operations
         SortedMap<String, Operation> operations = new TreeMap<>();
         operations.put("version", OperationVersion.getInstance());
         operations.put("signature", OperationSignature.getInstance());
         operations.put("attach", OperationAttach.getInstance());
         operations.put("metadata", OperationMetadata.getInstance());
 
+        // Configure operation subparsers
         for (Map.Entry<String, Operation> e : operations.entrySet()) {
             String name = e.getKey();
             Operation operation = e.getValue();
             operation.configureSubparser(subparsers.addParser(name));
         }
 
+        // Parse command line arguments
         Namespace namespace = null;
         try {
             // If help is requested,
@@ -89,33 +99,43 @@ public class Main {
             // Prints information about the parsing error (missing argument etc.)
             parser.handleError(e);
         }
-        if (namespace != null) {
-            String operationName = namespace.getString("operation");
-            assert operationName != null; // Sub-command -> required
 
+        // Handle command line arguments
+        if (namespace != null) {
+            // Extract operation name
+            String operationName = namespace.getString("operation");
+            assert operationName != null; // The argument "operation" is a sub-command, thus it is required
+
+            // Select the operation from `operations`
             Operation operation = operations.get(operationName);
             assert operation != null;
 
+            // Choose the output format
             String outputFormat = namespace.getString("output_format");
             switch (outputFormat) {
                 case "json":
+                    // Initialize the JSON serializer
                     ObjectMapper mapper = new ObjectMapper();
-                    mapper.enable(SerializationFeature.INDENT_OUTPUT); // nice formatting
-                    WritingMapper wm = new WritingMapper(mapper, System.err);
-                    operation.setWritingMapper(wm);
+                    mapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable nice formatting
+                    WritingMapper wm = new WritingMapper(mapper, System.err); // Bind to `System.err`
+                    operation.setWritingMapper(wm); // Configure the operation
+                    // Disable loggers
                     disableLoggers();
                     break;
                 case "text":
-                    TextOutput to = new TextOutput(System.err);
-                    operation.setTextOutput(to);
+                    // Initialize the text output
+                    TextOutput to = new TextOutput(System.err); // Bind to `System.err`
+                    operation.setTextOutput(to); // Configure the operation
                     break;
                 default:
-                    assert false; // Argument has limited choices
+                    assert false; // The option has limited choices
             }
 
+            // Execute the operation
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {
+                // Log the exception
                 logger.severe(ex.getMessage());
                 Throwable cause = ex.getCause();
                 if (cause != null && cause.getMessage() != null) {

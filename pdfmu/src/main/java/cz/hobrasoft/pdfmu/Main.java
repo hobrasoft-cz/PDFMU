@@ -137,10 +137,10 @@ public class Main {
                 operation.execute(namespace);
             } catch (OperationException ex) {
                 // Log the exception
-                logger.severe(ex.getMessage());
+                logger.severe(ex.getLocalizedMessage());
                 Throwable cause = ex.getCause();
                 if (cause != null && cause.getMessage() != null) {
-                    logger.severe(cause.getMessage());
+                    logger.severe(cause.getLocalizedMessage());
                 }
                 // TODO: Output a JSON document if "-of=json"
             }

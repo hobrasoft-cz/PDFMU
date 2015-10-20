@@ -26,7 +26,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  */
 public class Main {
 
-    private static void resetLoggers() {
+    private static void disableLoggers() {
         // http://stackoverflow.com/a/3363747
         LogManager.getLogManager().reset(); // Remove default handler(s)
     }
@@ -102,7 +102,7 @@ public class Main {
                     mapper.enable(SerializationFeature.INDENT_OUTPUT); // nice formatting
                     WritingMapper wm = new WritingMapper(mapper, System.err);
                     operation.setWritingMapper(wm);
-                    resetLoggers();
+                    disableLoggers();
                     break;
                 case "text":
                     TextOutput to = new TextOutput(System.err);

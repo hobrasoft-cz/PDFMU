@@ -58,7 +58,7 @@ public class Main {
                 .setDefault("text")
                 .type(String.class)
                 .nargs("?")
-                .help("format of stdout output");
+                .help("format of stderr output");
 
         // TODO: Set pdfmu version in `parser`. For example:
         // parser.version("1.0");

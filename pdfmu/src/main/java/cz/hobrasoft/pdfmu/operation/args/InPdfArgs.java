@@ -69,7 +69,7 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             pdfReader = new PdfReader(is);
         } catch (IOException ex) {
-            throw new OperationException("Could not open the input PDF document.", ex);
+            throw new OperationException("input.notValidPdf", ex);
         }
 
         return pdfReader;

@@ -15,6 +15,7 @@ public class OperationException extends Exception {
     // Configuration
     private static final int defaultErrorCode = -1;
 
+    // TODO: Remove
     /**
      * Constructs an instance of <code>OperationException</code> with the
      * specified detail message.
@@ -25,6 +26,7 @@ public class OperationException extends Exception {
         super(msg);
     }
 
+    // TODO: Remove
     /**
      * Constructs a chained exception with the specified detail message.
      *

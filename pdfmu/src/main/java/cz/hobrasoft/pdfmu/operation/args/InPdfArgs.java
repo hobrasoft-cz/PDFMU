@@ -1,6 +1,9 @@
 package cz.hobrasoft.pdfmu.operation.args;
 
 import com.itextpdf.text.pdf.PdfReader;
+import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_CLOSE;
+import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_VALID_PDF;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,14 +65,14 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             is = new FileInputStream(file);
         } catch (FileNotFoundException ex) {
-            throw new OperationException("Input file not found.", ex);
+            throw new OperationException(INPUT_NOT_FOUND, ex, file);
         }
 
         // Open the PDF reader
         try {
             pdfReader = new PdfReader(is);
         } catch (IOException ex) {
-            throw new OperationException("input.notValidPdf", ex);
+            throw new OperationException(INPUT_NOT_VALID_PDF, ex, file);
         }
 
         return pdfReader;
@@ -85,7 +88,7 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             is.close(); // May throw IOException
         } catch (IOException ex) {
-            throw new OperationException("Could not close the input stream.", ex);
+            throw new OperationException(INPUT_CLOSE, ex);
         }
         is = null;
     }

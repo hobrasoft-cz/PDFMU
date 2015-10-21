@@ -1,11 +1,7 @@
 package cz.hobrasoft.pdfmu.operation;
 
-import cz.hobrasoft.pdfmu.IntProperties;
-import java.io.IOException;
-import java.io.InputStream;
+import cz.hobrasoft.pdfmu.PdfmuError;
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * This exception is thrown by {@link Operation#execute(Namespace)} to notify
@@ -18,38 +14,6 @@ public class OperationException extends Exception {
 
     // Configuration
     private static final int defaultErrorCode = -1;
-    private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/operation/errorCodes.properties";
-    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.operation.ErrorMessages";
-
-    private static final Logger logger = Logger.getLogger(OperationException.class.getName());
-
-    private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
-    private static final ResourceBundle errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
-
-    // Load error codes from a properties resource
-    private static void loadErrorCodes() {
-        ClassLoader classLoader = OperationException.class.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream(errorCodesResourceName);
-        if (in != null) {
-            try {
-                errorCodes.load(in);
-            } catch (IOException ex) {
-                logger.severe(String.format("Could not load the error codes properties file: %s", ex));
-            }
-            try {
-                in.close();
-            } catch (IOException ex) {
-                logger.severe(String.format("Could not close the error codes properties file: %s", ex));
-            }
-        } else {
-            logger.severe("Could not open the error codes properties file.");
-        }
-    }
-
-    static {
-        // Load error codes before OperationException is instantiated
-        loadErrorCodes();
-    }
 
     /**
      * Constructs an instance of <code>OperationException</code> with the
@@ -72,17 +36,20 @@ public class OperationException extends Exception {
     }
 
     private Object[] messageArguments = null;
+    private PdfmuError e = null;
 
     /**
-     * Creates a chained exception with detail message key and message
+     * Creates a chained operation exception with error identifier and message
      * arguments.
      *
-     * @param msg the message key.
+     * @param e the error identifier.
      * @param cause the original cause.
      * @param messageArguments the arguments of the message.
      */
-    public OperationException(String msg, Throwable cause, Object... messageArguments) {
-        this(msg, cause);
+    public OperationException(PdfmuError e, Throwable cause, Object... messageArguments) {
+        super(e.toString(), cause);
+        assert e != null;
+        this.e = e;
         this.messageArguments = messageArguments;
     }
 
@@ -95,25 +62,24 @@ public class OperationException extends Exception {
      * @return the error code associated with this exception
      */
     public int getCode() {
-        return errorCodes.getIntProperty(getMessage());
+        if (e != null) {
+            return e.getCode();
+        } else {
+            return defaultErrorCode;
+        }
     }
-
-    private String localizedMessage = null;
 
     @Override
     public String getLocalizedMessage() {
-        // Memoize
-        if (localizedMessage == null) {
-            String key = getMessage();
-            assert errorMessages != null;
-            if (errorMessages.containsKey(key)) {
-                String pattern = errorMessages.getString(key);
-                assert pattern != null;
-                localizedMessage = MessageFormat.format(pattern, messageArguments);
+        if (e != null) {
+            String pattern = e.getMessagePattern();
+            if (pattern != null) {
+                return MessageFormat.format(pattern, messageArguments);
             } else {
-                localizedMessage = key;
+                return super.getLocalizedMessage();
             }
+        } else {
+            return super.getLocalizedMessage();
         }
-        return localizedMessage;
     }
 }

@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
+import static cz.hobrasoft.pdfmu.PdfmuError.ATTACH_FAIL;
 import cz.hobrasoft.pdfmu.jackson.EmptyResult;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;
@@ -102,7 +103,7 @@ public class OperationAttach extends OperationCommon {
         try {
             stp.addFileAttachment(description, null, file, fileDisplay);
         } catch (IOException ex) {
-            throw new OperationException("attach.fail", ex, file);
+            throw new OperationException(ATTACH_FAIL, ex, file);
         }
         logger.info(String.format("The file \"%s\" has been attached.", file));
     }

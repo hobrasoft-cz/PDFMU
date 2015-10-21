@@ -39,6 +39,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        int exitStatus = 0; // Default: 0 (normal termination)
+
         // Configure log message format
         // Arguments:
         // http://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#format%28java.util.logging.LogRecord%29
@@ -138,6 +140,7 @@ public class Main {
             } catch (OperationException ex) {
                 // Log the exception
                 logger.severe(ex.getLocalizedMessage());
+                exitStatus = ex.getCode();
                 Throwable cause = ex.getCause();
                 if (cause != null && cause.getMessage() != null) {
                     logger.severe(cause.getLocalizedMessage());
@@ -145,6 +148,6 @@ public class Main {
                 // TODO: Output a JSON document if "-of=json"
             }
         }
-        // TODO: Return an exit code
+        System.exit(exitStatus);
     }
 }

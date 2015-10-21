@@ -102,7 +102,7 @@ public class OperationAttach extends OperationCommon {
         try {
             stp.addFileAttachment(description, null, file, fileDisplay);
         } catch (IOException ex) {
-            throw new OperationException(String.format("Could not attach the file \"%s\".", file), ex);
+            throw new OperationException("attach.fail", ex, file);
         }
         logger.info(String.format("The file \"%s\" has been attached.", file));
     }

@@ -3,6 +3,7 @@ package cz.hobrasoft.pdfmu.operation;
 import cz.hobrasoft.pdfmu.IntProperties;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -70,6 +71,21 @@ public class OperationException extends Exception {
         super(msg, cause);
     }
 
+    private Object[] messageArguments = null;
+
+    /**
+     * Creates a chained exception with detail message key and message
+     * arguments.
+     *
+     * @param msg the message key.
+     * @param cause the original cause.
+     * @param messageArguments the arguments of the message.
+     */
+    public OperationException(String msg, Throwable cause, Object... messageArguments) {
+        this(msg, cause);
+        this.messageArguments = messageArguments;
+    }
+
     /**
      * Returns the error code associated with this exception
      *
@@ -82,13 +98,22 @@ public class OperationException extends Exception {
         return errorCodes.getIntProperty(getMessage());
     }
 
+    private String localizedMessage = null;
+
     @Override
     public String getLocalizedMessage() {
-        String key = getMessage();
-        assert errorMessages != null;
-        if (errorMessages.containsKey(key)) {
-            return errorMessages.getString(key);
+        // Memoize
+        if (localizedMessage == null) {
+            String key = getMessage();
+            assert errorMessages != null;
+            if (errorMessages.containsKey(key)) {
+                String pattern = errorMessages.getString(key);
+                assert pattern != null;
+                localizedMessage = MessageFormat.format(pattern, messageArguments);
+            } else {
+                localizedMessage = key;
+            }
         }
-        return key;
+        return localizedMessage;
     }
 }

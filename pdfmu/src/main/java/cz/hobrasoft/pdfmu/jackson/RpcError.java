@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.util.SortedMap;
 
 /**
  *
@@ -20,11 +21,20 @@ public class RpcError {
     @JsonProperty(required = true)
     public String message;
 
+    public static class Data {
+
+        @JsonInclude(Include.NON_NULL)
+        public String causeMessage = null;
+
+        @JsonInclude(Include.NON_NULL)
+        public SortedMap<String, Object> arguments = null;
+    }
+
     @JsonPropertyDescription("A Primitive or Structured value that contains additional information about the error.\n"
             + "This may be omitted.\n"
             + "The value of this member is defined by the Server (e.g. detailed error information, nested errors etc.).")
     @JsonInclude(Include.NON_NULL)
-    public Object data = null;
+    public Data data = null;
 
     public RpcError(int code, String message) {
         this.code = code;

@@ -33,21 +33,16 @@ public class Main {
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
-    /**
-     * The main entry point of PDFMU
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        int exitStatus = 0; // Default: 0 (normal termination)
-
+    static {
         // Configure log message format
         // Arguments:
         // http://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#format%28java.util.logging.LogRecord%29
         // %4$s: level
         // %5$s: message
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
+    }
 
+    private static ArgumentParser createBasicParser() {
         // Create a command line argument parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
@@ -58,6 +53,12 @@ public class Main {
                 .setDefault("text")
                 .type(String.class)
                 .help("format of stderr output");
+        return parser;
+    }
+
+    private static ArgumentParser createFullParser(SortedMap<String, Operation> operations) {
+        // Create a command line argument parser
+        ArgumentParser parser = createBasicParser();
 
         // TODO: Set pdfmu version in `parser`. For example:
         // parser.version("1.0");
@@ -73,6 +74,23 @@ public class Main {
                 .metavar("OPERATION")
                 .dest("operation");
 
+        // Configure operation subparsers
+        for (Map.Entry<String, Operation> e : operations.entrySet()) {
+            String name = e.getKey();
+            Operation operation = e.getValue();
+            operation.configureSubparser(subparsers.addParser(name));
+        }
+
+        return parser;
+    }
+    /**
+     * The main entry point of PDFMU
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        int exitStatus = 0; // Default: 0 (normal termination)
+
         // Create a map of operations
         SortedMap<String, Operation> operations = new TreeMap<>();
         operations.put("version", OperationVersion.getInstance());
@@ -80,12 +98,8 @@ public class Main {
         operations.put("attach", OperationAttach.getInstance());
         operations.put("metadata", OperationMetadata.getInstance());
 
-        // Configure operation subparsers
-        for (Map.Entry<String, Operation> e : operations.entrySet()) {
-            String name = e.getKey();
-            Operation operation = e.getValue();
-            operation.configureSubparser(subparsers.addParser(name));
-        }
+        // Create a command line argument parser
+        ArgumentParser parser = createFullParser(operations);
 
         // Parse command line arguments
         Namespace namespace = null;

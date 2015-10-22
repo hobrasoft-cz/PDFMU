@@ -89,6 +89,25 @@ public class Main {
         return parser;
     }
 
+    private static String getOutputFormat(String[] args) {
+        String outputFormat = "text";
+        ArgumentParser parserBasic = createBasicParser();
+
+        Namespace namespace = null;
+        try {
+            namespace = parserBasic.parseKnownArgs(args, null);
+        } catch (ArgumentParserException ex) {
+            // Unrecognized "output_format" value can trigger this
+            //logger.severe(ex.getLocalizedMessage());
+            // Ignore
+        }
+        if (namespace != null) {
+            // Determine the output format
+            outputFormat = namespace.getString("output_format");
+        }
+        return outputFormat;
+    }
+
     private static OperationException apeToOe(ArgumentParserException e) {
         Set<ExceptionMessagePattern> patterns = new HashSet<>();
         patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,
@@ -149,8 +168,20 @@ public class Main {
             OperationException oe = apeToOe(ape);
             exitStatus = oe.getCode();
 
+            String outputFormat = getOutputFormat(args);
+            switch (outputFormat) {
+                case "text":
                     // Print the error in human-readable format
                     parser.handleError(ape);
+                    break;
+                case "json":
+                    disableLoggers();
+                    // Write the error as a JSON document
+                    oe.writeInWritingMapper(new WritingMapper());
+                    break;
+                default:
+                    assert false;
+            }
         }
 
         // Handle command line arguments

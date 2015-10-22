@@ -4,9 +4,17 @@
 
 1. Install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 2. Install [NetBeans 8.1 Beta](http://download.netbeans.org/netbeans/8.1/beta/)
-3. Run NetBeans
-4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
-5. Run > Run Project (pdfmu)
+3. Setup Argparse4j 0.6.1-SNAPSHOT (development version)
+  1. Go to a directory where you keep Git repositories, for example "~/git"
+  2. `git clone git@github.com:tatsuhiro-t/argparse4j.git`
+  3. `cd argparse4j`
+  4. `git checkout c986cadacd19bf5325ff0baed5efccaeadd51e9c`
+  5. `mvn install -Dmaven.javadoc.skip=true -Dgpg.skip=true` (this installs
+     Argparse4j 0.6.1-SNAPSHOT in your local Maven repository)
+4. Run NetBeans
+5. File > Open Project > "pdfmu" (the directory (Project Folder) in this
+   repository)
+6. Run > Run Project (pdfmu)
 
 ## Software dependencies
 

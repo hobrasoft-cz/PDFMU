@@ -151,9 +151,10 @@ public class Main {
             try {
                 operation.execute(namespace);
             } catch (OperationException ex) {
+                exitStatus = ex.getCode();
+
                 // Log the exception
                 logger.severe(ex.getLocalizedMessage());
-                exitStatus = ex.getCode();
                 Throwable cause = ex.getCause();
                 if (cause != null && cause.getMessage() != null) {
                     logger.severe(cause.getLocalizedMessage());

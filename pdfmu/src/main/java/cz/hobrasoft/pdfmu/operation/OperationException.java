@@ -1,6 +1,8 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.PdfmuError;
+import cz.hobrasoft.pdfmu.jackson.RpcError;
+import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
 import java.util.SortedMap;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -89,5 +91,18 @@ public class OperationException extends Exception {
         } else {
             return super.getLocalizedMessage();
         }
+    }
+
+    private RpcError getRpcError() {
+        RpcError re = new RpcError(getCode(), getLocalizedMessage());
+        Throwable cause = getCause();
+        if (cause != null || messageArguments != null) {
+            re.data = new Data();
+            if (cause != null) {
+                re.data.causeMessage = cause.getLocalizedMessage();
+            }
+            re.data.arguments = messageArguments;
+        }
+        return re;
     }
 }

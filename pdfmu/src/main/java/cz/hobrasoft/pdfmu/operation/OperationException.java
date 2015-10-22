@@ -1,7 +1,8 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.PdfmuError;
-import java.text.MessageFormat;
+import java.util.SortedMap;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
  * This exception is thrown by {@link Operation#execute(Namespace)} to notify
@@ -37,8 +38,12 @@ public class OperationException extends Exception {
         super(msg, cause);
     }
 
-    private Object[] messageArguments = null;
     private PdfmuError e = null;
+    private SortedMap<String, Object> messageArguments = null;
+
+    public OperationException(PdfmuError e, Throwable cause) {
+        this(e, cause, null);
+    }
 
     /**
      * Creates a chained operation exception with error identifier and message
@@ -48,7 +53,7 @@ public class OperationException extends Exception {
      * @param cause the original cause.
      * @param messageArguments the arguments of the message.
      */
-    public OperationException(PdfmuError e, Throwable cause, Object... messageArguments) {
+    public OperationException(PdfmuError e, Throwable cause, SortedMap<String, Object> messageArguments) {
         super(e.toString(), cause);
         assert e != null;
         this.e = e;
@@ -76,7 +81,8 @@ public class OperationException extends Exception {
         if (e != null) {
             String pattern = e.getMessagePattern();
             if (pattern != null) {
-                return MessageFormat.format(pattern, messageArguments);
+                StrSubstitutor sub = new StrSubstitutor(messageArguments);
+                return sub.replace(pattern);
             } else {
                 return super.getLocalizedMessage();
             }

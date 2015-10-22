@@ -57,7 +57,6 @@ public class Main {
                 .choices("text", "json")
                 .setDefault("text")
                 .type(String.class)
-                .nargs("?")
                 .help("format of stderr output");
 
         // TODO: Set pdfmu version in `parser`. For example:

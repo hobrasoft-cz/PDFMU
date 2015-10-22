@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -27,6 +28,12 @@ public class WritingMapper {
     public WritingMapper(ObjectMapper mapper, OutputStream os) {
         this.mapper = mapper;
         this.os = os;
+    }
+
+    public WritingMapper() {
+        this.mapper = new ObjectMapper(); // Create a new mapper
+        mapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable nice formatting
+        this.os = System.err; // Bind to `System.err`
     }
 
     /**

@@ -1,7 +1,5 @@
 package cz.hobrasoft.pdfmu;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -117,6 +115,8 @@ public class Main {
 
         // Handle command line arguments
         if (namespace != null) {
+            WritingMapper wm = null;
+
             // Extract operation name
             String operationName = namespace.getString("operation");
             assert operationName != null; // The argument "operation" is a sub-command, thus it is required
@@ -130,13 +130,11 @@ public class Main {
             String outputFormat = namespace.getString("output_format");
             switch (outputFormat) {
                 case "json":
-                    // Initialize the JSON serializer
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable nice formatting
-                    WritingMapper wm = new WritingMapper(mapper, System.err); // Bind to `System.err`
-                    operation.setWritingMapper(wm); // Configure the operation
                     // Disable loggers
                     disableLoggers();
+                    // Initialize the JSON serializer
+                    wm = new WritingMapper();
+                    operation.setWritingMapper(wm); // Configure the operation
                     break;
                 case "text":
                     // Initialize the text output
@@ -159,7 +157,11 @@ public class Main {
                 if (cause != null && cause.getMessage() != null) {
                     logger.severe(cause.getLocalizedMessage());
                 }
-                // TODO: Output a JSON document if "-of=json"
+
+                if (wm != null) {
+                    // JSON output is enabled
+                    ex.writeInWritingMapper(wm);
+                }
             }
         }
         System.exit(exitStatus);

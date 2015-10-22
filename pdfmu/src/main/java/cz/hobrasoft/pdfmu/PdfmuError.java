@@ -17,6 +17,8 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  */
 public enum PdfmuError {
     PARSER_UNKNOWN,
+    PARSER_UNRECOGNIZED_ARGUMENTS,
+    PARSER_INVALID_CHOICE,
     INPUT_NOT_VALID_PDF,
     INPUT_NOT_FOUND,
     INPUT_CLOSE,

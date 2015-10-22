@@ -1,13 +1,19 @@
 package cz.hobrasoft.pdfmu;
 
+import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_INVALID_CHOICE;
 import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_UNKNOWN;
+import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENTS;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.LogManager;
@@ -84,7 +90,25 @@ public class Main {
     }
 
     private static OperationException apeToOe(ArgumentParserException e) {
+        Set<ExceptionMessagePattern> patterns = new HashSet<>();
+        patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,
+                "argument (?<argument>.*): Insufficient permissions to read file: \'(?<file>.*)\'",
+                Arrays.asList(new String[]{"argument", "file"})));
+        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENTS,
+                "unrecognized arguments: '(?<argument>.*)'",
+                Arrays.asList(new String[]{"argument"})));
+        patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,
+                "argument (?<argument>.*): invalid choice: '(?<choice>.*)' \\(choose from \\{(?<validChoices>.*)\\}\\)",
+                Arrays.asList(new String[]{"argument", "choice", "validChoices"})));
+
         OperationException oe = null;
+        for (ExceptionMessagePattern p : patterns) {
+            oe = p.getOperationException(e);
+            if (oe != null) {
+                break;
+            }
+        }
+
         if (oe == null) {
             // Unknown parser exception
             oe = new OperationException(PARSER_UNKNOWN, e);

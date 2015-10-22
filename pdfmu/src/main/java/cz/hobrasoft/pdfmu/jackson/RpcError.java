@@ -30,9 +30,4 @@ public class RpcError {
         this.code = code;
         this.message = message;
     }
-
-    public RpcError(int code, String message, Object data) {
-        this(code, message);
-        this.data = data;
-    }
 }

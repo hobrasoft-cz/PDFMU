@@ -1,9 +1,13 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.PdfmuError;
+import cz.hobrasoft.pdfmu.WritingMapper;
 import cz.hobrasoft.pdfmu.jackson.RpcError;
 import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
+import cz.hobrasoft.pdfmu.jackson.RpcResponse;
+import java.io.IOException;
 import java.util.SortedMap;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
@@ -14,6 +18,8 @@ import org.apache.commons.lang3.text.StrSubstitutor;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class OperationException extends Exception {
+
+    private static final Logger logger = Logger.getLogger(OperationException.class.getName());
 
     // Configuration
     private static final int defaultErrorCode = -1;
@@ -104,5 +110,15 @@ public class OperationException extends Exception {
             re.data.arguments = messageArguments;
         }
         return re;
+    }
+
+    public void writeInWritingMapper(WritingMapper wm) {
+        RpcResponse response = new RpcResponse(getRpcError());
+
+        try {
+            wm.writeValue(response);
+        } catch (IOException ex) {
+            logger.severe("Could not write JSON output.");
+        }
     }
 }

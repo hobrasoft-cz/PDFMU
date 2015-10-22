@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class Error {
+public class RpcError {
 
     @JsonPropertyDescription("A Number that indicates the error type that occurred.")
     @JsonProperty(required = true)
@@ -26,12 +26,12 @@ public class Error {
     @JsonInclude(Include.NON_NULL)
     public Object data = null;
 
-    public Error(int code, String message) {
+    public RpcError(int code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public Error(int code, String message, Object data) {
+    public RpcError(int code, String message, Object data) {
         this(code, message);
         this.data = data;
     }

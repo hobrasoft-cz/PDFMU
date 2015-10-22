@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
+import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_UNKNOWN;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -81,6 +82,18 @@ public class Main {
 
         return parser;
     }
+
+    private static OperationException apeToOe(ArgumentParserException e) {
+        OperationException oe = null;
+        if (oe == null) {
+            // Unknown parser exception
+            oe = new OperationException(PARSER_UNKNOWN, e);
+        }
+
+        assert oe != null;
+        return oe;
+    }
+
     /**
      * The main entry point of PDFMU
      *
@@ -108,9 +121,12 @@ public class Main {
             // If insufficient or invalid `args` are given,
             // `parseArgs` throws `ArgumentParserException`.
             namespace = parser.parseArgs(args);
-        } catch (ArgumentParserException e) {
-            // Prints information about the parsing error (missing argument etc.)
-            parser.handleError(e);
+        } catch (ArgumentParserException ape) {
+            OperationException oe = apeToOe(ape);
+            exitStatus = oe.getCode();
+
+                    // Print the error in human-readable format
+                    parser.handleError(ape);
         }
 
         // Handle command line arguments

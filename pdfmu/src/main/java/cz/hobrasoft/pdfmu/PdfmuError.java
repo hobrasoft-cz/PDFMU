@@ -16,6 +16,7 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public enum PdfmuError {
+    PARSER_UNKNOWN,
     INPUT_NOT_VALID_PDF,
     INPUT_NOT_FOUND,
     INPUT_CLOSE,

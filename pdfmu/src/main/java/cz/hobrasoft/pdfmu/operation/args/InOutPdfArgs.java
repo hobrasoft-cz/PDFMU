@@ -31,6 +31,7 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
     public void setFromNamespace(Namespace namespace) {
         in.setFromNamespace(namespace);
         out.setFromNamespace(namespace);
+        out.setDefaultFile(in.getFile());
     }
 
     public void open() throws OperationException {
@@ -51,7 +52,6 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     public void open(boolean signature, char pdfVersion) throws OperationException {
         PdfReader reader = in.open();
-        out.setDefaultFile(in.getFile());
         out.open(reader, signature, pdfVersion);
     }
 

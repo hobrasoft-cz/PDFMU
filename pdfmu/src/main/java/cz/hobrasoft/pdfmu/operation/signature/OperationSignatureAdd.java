@@ -237,8 +237,8 @@ public class OperationSignatureAdd extends OperationCommon {
         return instance;
     }
 
+    // Singleton
     private OperationSignatureAdd() {
-        // Singleton
     }
 
 }

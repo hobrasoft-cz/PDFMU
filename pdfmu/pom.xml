@@ -18,7 +18,7 @@
         <dependency>
             <groupId>net.sourceforge.argparse4j</groupId>
             <artifactId>argparse4j</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
+            <version>0.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>

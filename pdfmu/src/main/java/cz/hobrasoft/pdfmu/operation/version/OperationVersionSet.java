@@ -82,7 +82,6 @@ public class OperationVersionSet extends OperationCommon {
             // TODO: Add --force-lower-version flag that enables lowering the version
         }
 
-        out.setDefaultFile(in.getFile()); // Must set default file before opening
         out.open(pdfReader, false, outVersion.toChar());
 
         out.close();

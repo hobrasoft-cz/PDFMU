@@ -8,6 +8,7 @@ import cz.hobrasoft.pdfmu.jackson.EmptyResult;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +62,16 @@ public class OperationAttach extends OperationCommon {
         inout.setFromNamespace(namespace);
 
         File file = namespace.get("attachment");
+
+        File outFile = inout.getOut().getFile();
+        assert outFile != null;
+        if (outFile.equals(file)) {
+            throw new OperationException(ATTACH_ATTACHMENT_EQUALS_OUTPUT,
+                    PdfmuUtils.sortedMap(
+                            new SimpleEntry<String, Object>("outputFile", outFile),
+                            new SimpleEntry<String, Object>("attachmentFile", file)));
+        }
+
         String description = namespace.getString("description");
         String fileDisplay = namespace.getString("rename");
 
@@ -69,13 +80,6 @@ public class OperationAttach extends OperationCommon {
         }
 
         inout.open();
-
-        if (inout.getOut().getFile().equals(file)) {
-            throw new OperationException(ATTACH_ATTACHMENT_EQUALS_OUTPUT,
-                    PdfmuUtils.sortedMap(
-                            new String[]{"outputFile", "attachmentFile"},
-                            new Object[]{inout.getOut().getFile(), file}));
-        }
 
         execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);
 

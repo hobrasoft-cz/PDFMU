@@ -149,8 +149,8 @@ public class Main {
             OperationException oe = apeToOe(ape);
             exitStatus = oe.getCode();
 
-                    // Print the error in human-readable format
-                    parser.handleError(ape);
+            // Print the error in human-readable format
+            parser.handleError(ape);
         }
 
         // Handle command line arguments

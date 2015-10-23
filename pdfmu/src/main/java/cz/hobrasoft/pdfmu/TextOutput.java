@@ -67,7 +67,6 @@ public class TextOutput implements Flushable {
         if (ps != null) {
             assert indentLevel >= 0;
             String prefix = StringUtils.repeat(indentString, indentLevel);
-            assert ps != null;
             ps.println(String.format("%s%s", prefix, x));
         }
     }

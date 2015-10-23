@@ -31,6 +31,7 @@ public class OperationException extends Exception {
      *
      * @param msg the detail message.
      */
+    @Deprecated
     public OperationException(String msg) {
         super(msg);
     }
@@ -42,6 +43,7 @@ public class OperationException extends Exception {
      * @param msg the detail message.
      * @param cause the original cause.
      */
+    @Deprecated
     public OperationException(String msg, Throwable cause) {
         super(msg, cause);
     }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -49,6 +50,16 @@ public enum PdfmuError {
         return codeKeySet.containsAll(enumKeyStrings) && messageKeySet.containsAll(enumKeyStrings);
     }
 
+    /**
+     * @return true iff the codes stored in `errorCodes` are pairwise different.
+     */
+    private static boolean codesUnique() {
+        Collection<Integer> codes = errorCodes.intPropertyValues();
+        Set<Integer> codesUnique = new HashSet<>(codes);
+        assert codes.size() >= codesUnique.size();
+        return codes.size() == codesUnique.size();
+    }
+
     // Load error codes from a properties resource
     private static void loadErrorCodes() {
         ClassLoader classLoader = PdfmuError.class.getClassLoader();
@@ -75,6 +86,8 @@ public enum PdfmuError {
 
         // Make sure all a code and a message is available for every enum value
         assert codesAndMessagesAvailable();
+
+        assert codesUnique();
     }
 
     /**

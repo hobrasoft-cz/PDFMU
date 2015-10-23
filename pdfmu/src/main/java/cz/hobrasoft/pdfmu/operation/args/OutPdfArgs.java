@@ -9,12 +9,14 @@ import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_NOT_SPECIFIED;
 import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_OPEN;
 import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_STAMPER_CLOSE;
 import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_STAMPER_OPEN;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -75,7 +77,8 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
             if (overwrite) {
                 logger.info("Overwriting the output file (--force flag is set).");
             } else {
-                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET);
+                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET,
+                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
             }
         }
 
@@ -83,7 +86,8 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             os = new FileOutputStream(file);
         } catch (FileNotFoundException ex) {
-            throw new OperationException(OUTPUT_OPEN, ex);
+            throw new OperationException(OUTPUT_OPEN, ex,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
     }
 
@@ -96,7 +100,8 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
             // TODO?: Make sure version is high enough
             stp = PdfStamper.createSignature(pdfReader, os, pdfVersion, null, append);
         } catch (DocumentException | IOException ex) {
-            throw new OperationException(OUTPUT_STAMPER_OPEN, ex);
+            throw new OperationException(OUTPUT_STAMPER_OPEN, ex,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
     }
 
@@ -108,7 +113,8 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             stp = new PdfStamper(pdfReader, os, pdfVersion);
         } catch (DocumentException | IOException ex) {
-            throw new OperationException(OUTPUT_STAMPER_OPEN, ex);
+            throw new OperationException(OUTPUT_STAMPER_OPEN, ex,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
     }
 
@@ -147,14 +153,16 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             stp.close();
         } catch (DocumentException | IOException ex) {
-            throw new OperationException(OUTPUT_STAMPER_CLOSE, ex);
+            throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
         stp = null;
 
         try {
             os.close();
         } catch (IOException ex) {
-            throw new OperationException(OUTPUT_CLOSE, ex);
+            throw new OperationException(OUTPUT_CLOSE, ex,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
         os = null;
     }

@@ -239,6 +239,7 @@ public class OperationSignatureAdd extends OperationCommon {
 
     // Singleton
     private OperationSignatureAdd() {
+        super();
     }
 
 }

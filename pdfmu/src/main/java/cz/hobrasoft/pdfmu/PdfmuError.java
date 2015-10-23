@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ public enum PdfmuError {
     private static final Logger logger = Logger.getLogger(PdfmuError.class.getName());
 
     private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
-    private static final ResourceBundle errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
+    private static ResourceBundle errorMessages = null;
 
     /**
      * Returns true iff each of the values of this enum is a key in both
@@ -45,6 +46,7 @@ public enum PdfmuError {
         Collection<String> enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());
 
         Set<String> codeKeySet = errorCodes.stringPropertyNames();
+        assert errorMessages != null;
         Set<String> messageKeySet = errorMessages.keySet();
 
         return codeKeySet.containsAll(enumKeyStrings) && messageKeySet.containsAll(enumKeyStrings);
@@ -80,9 +82,20 @@ public enum PdfmuError {
         }
     }
 
+    private static void loadErrorMessages() {
+        try {
+            errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
+        } catch (MissingResourceException ex) {
+            logger.severe(String.format("Could not load the error messages resource bundle: %s", ex));
+        }
+    }
+
     static {
         // Load error codes before OperationException is instantiated
         loadErrorCodes();
+
+        loadErrorMessages();
+        assert errorMessages != null;
 
         // Make sure all a code and a message is available for every enum value
         assert codesAndMessagesAvailable();
@@ -107,7 +120,8 @@ public enum PdfmuError {
      */
     public String getMessagePattern() {
         String key = toString();
-        if (errorMessages.containsKey(key)) {
+        assert errorMessages != null;
+        if (errorMessages != null && errorMessages.containsKey(key)) {
             return errorMessages.getString(key);
         } else {
             return null;

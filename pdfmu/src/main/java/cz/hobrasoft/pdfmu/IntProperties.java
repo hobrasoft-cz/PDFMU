@@ -1,6 +1,8 @@
 package cz.hobrasoft.pdfmu;
 
+import java.util.Collection;
 import java.util.Properties;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Properties with integer values
@@ -37,5 +39,21 @@ public class IntProperties extends Properties {
         } else {
             return def;
         }
+    }
+
+    /**
+     * Returns a {@link Collection} of {@link Integer} property values in this
+     * {@link IntProperties}.
+     *
+     * <p>
+     * Ignores the defaults.
+     *
+     * @return a collection of integer values in this instance of
+     * {@link IntProperties}.
+     */
+    public Collection<Integer> intPropertyValues() {
+        Collection<Integer> intValues = CollectionUtils.collect(values(), IntegerValueTransformer.integerValueTransformer());
+        // TODO?: Collect values from `defaults` recursively
+        return intValues;
     }
 }

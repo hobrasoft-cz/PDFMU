@@ -30,7 +30,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         parser.addArgument("-o", "--out")
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)
-                .type(Arguments.fileType().verifyCanCreate());
+                .type(Arguments.fileType());
         parser.addArgument("-f", "--force")
                 .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)

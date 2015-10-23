@@ -42,7 +42,7 @@ public class OperationAttach extends OperationCommon {
         subparser.addArgument("attachment")
                 .help(String.format("file to attach to %s", metavarIn))
                 .metavar(metavarAttachment)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
+                .type(Arguments.fileType().acceptSystemIn());
         subparser.addArgument("-r", "--rename")
                 .help(String.format("attachment filename shown in the output PDF document (default: <%s>)", metavarAttachment))
                 .metavar("FILENAME")

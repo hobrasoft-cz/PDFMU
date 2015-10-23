@@ -37,7 +37,7 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
         parser.addArgument(name)
                 .help(help)
                 .metavar(metavar)
-                .type(Arguments.fileType().acceptSystemIn().verifyCanRead());
+                .type(Arguments.fileType().acceptSystemIn());
     }
 
     private File file = null;

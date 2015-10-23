@@ -12,6 +12,9 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_FAIL;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
@@ -24,6 +27,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.cert.Certificate;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -173,7 +177,8 @@ public class OperationSignatureAdd extends OperationCommon {
         // Initialize the signature algorithm
         logger.info(String.format("Digest algorithm: %s", digestAlgorithm));
         if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {
-            throw new OperationException(String.format("The digest algorithm %s is not supported.", digestAlgorithm));
+            throw new OperationException(SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,
+                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("digestAlgorithm", digestAlgorithm)));
         }
 
         logger.info(String.format("Signature security provider: %s", signatureProvider.getName()));
@@ -221,9 +226,10 @@ public class OperationSignatureAdd extends OperationCommon {
         try {
             MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
-            throw new OperationException("Could not sign the document.", ex);
+            throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         } catch (NullPointerException ex) {
-            throw new OperationException("Could not sign the document. Invalid digest algorithm?", ex);
+            // Invalid digest algorithm?
+            throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         }
         logger.info("Document successfully signed.");
     }

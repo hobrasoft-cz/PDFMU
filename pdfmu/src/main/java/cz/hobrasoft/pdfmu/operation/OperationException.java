@@ -49,6 +49,16 @@ public class OperationException extends Exception {
     private PdfmuError e = null;
     private SortedMap<String, Object> messageArguments = null;
 
+    public OperationException(PdfmuError e) {
+        super(e.toString());
+        init(e, null);
+    }
+
+    public OperationException(PdfmuError e, SortedMap<String, Object> messageArguments) {
+        super(e.toString());
+        init(e, messageArguments);
+    }
+
     public OperationException(PdfmuError e, Throwable cause) {
         this(e, cause, null);
     }

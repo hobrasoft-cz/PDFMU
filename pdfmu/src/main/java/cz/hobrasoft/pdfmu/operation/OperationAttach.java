@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
+import static cz.hobrasoft.pdfmu.PdfmuError.ATTACH_ATTACHMENT_EQUALS_OUTPUT;
 import static cz.hobrasoft.pdfmu.PdfmuError.ATTACH_FAIL;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.jackson.EmptyResult;
@@ -70,7 +71,10 @@ public class OperationAttach extends OperationCommon {
         inout.open();
 
         if (inout.getOut().getFile().equals(file)) {
-            throw new OperationException("Output document and attachment paths must differ.");
+            throw new OperationException(ATTACH_ATTACHMENT_EQUALS_OUTPUT,
+                    PdfmuUtils.sortedMap(
+                            new String[]{"outputFile", "attachmentFile"},
+                            new Object[]{inout.getOut().getFile(), file}));
         }
 
         execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);

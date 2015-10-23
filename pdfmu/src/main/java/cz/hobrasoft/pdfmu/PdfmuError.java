@@ -24,7 +24,8 @@ public enum PdfmuError {
     INPUT_NOT_VALID_PDF,
     INPUT_NOT_FOUND,
     INPUT_CLOSE,
-    ATTACH_FAIL;
+    ATTACH_FAIL,
+    ATTACH_ATTACHMENT_EQUALS_OUTPUT;
 
     // Configuration
     private static final int defaultErrorCode = -1;

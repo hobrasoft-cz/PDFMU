@@ -188,7 +188,7 @@ public class OperationSignatureAdd extends OperationCommon {
             Certificate[] chain,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Use the static BouncyCastleDigest instance
-        sign(sap, OperationSignatureAdd.externalDigest, externalSignature, chain, sigtype);
+        sign(sap, externalDigest, externalSignature, chain, sigtype);
     }
 
     // Sign the document

@@ -28,7 +28,7 @@ public enum PdfmuError {
     // Configuration
     private static final int defaultErrorCode = -1;
     private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/operation/errorCodes.properties";
-    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.operation.ErrorMessages";
+    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.ErrorMessages";
 
     private static final Logger logger = Logger.getLogger(PdfmuError.class.getName());
 

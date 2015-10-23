@@ -3,6 +3,12 @@ package cz.hobrasoft.pdfmu.operation.args;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_CLOSE;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_EXISTS_FORCE_NOT_SET;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_NOT_SPECIFIED;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_OPEN;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_STAMPER_CLOSE;
+import static cz.hobrasoft.pdfmu.PdfmuError.OUTPUT_STAMPER_OPEN;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,7 +64,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     private void openOs() throws OperationException {
         if (file == null) {
-            throw new OperationException("Output file has not been specified.");
+            throw new OperationException(OUTPUT_NOT_SPECIFIED);
         }
         assert os == null;
 
@@ -69,7 +75,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
             if (overwrite) {
                 logger.info("Overwriting the output file (--force flag is set).");
             } else {
-                throw new OperationException("Set --force flag to overwrite.");
+                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET);
             }
         }
 
@@ -77,7 +83,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             os = new FileOutputStream(file);
         } catch (FileNotFoundException ex) {
-            throw new OperationException("Could not open the output stream.", ex);
+            throw new OperationException(OUTPUT_OPEN, ex);
         }
     }
 
@@ -90,7 +96,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
             // TODO?: Make sure version is high enough
             stp = PdfStamper.createSignature(pdfReader, os, pdfVersion, null, append);
         } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not open the PDF stamper.", ex);
+            throw new OperationException(OUTPUT_STAMPER_OPEN, ex);
         }
     }
 
@@ -102,7 +108,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             stp = new PdfStamper(pdfReader, os, pdfVersion);
         } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not open the PDF stamper.", ex);
+            throw new OperationException(OUTPUT_STAMPER_OPEN, ex);
         }
     }
 
@@ -141,14 +147,14 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         try {
             stp.close();
         } catch (DocumentException | IOException ex) {
-            throw new OperationException("Could not close the PDF stamper.", ex);
+            throw new OperationException(OUTPUT_STAMPER_CLOSE, ex);
         }
         stp = null;
 
         try {
             os.close();
         } catch (IOException ex) {
-            throw new OperationException("Could not close the output stream.", ex);
+            throw new OperationException(OUTPUT_CLOSE, ex);
         }
         os = null;
     }

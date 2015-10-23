@@ -43,7 +43,7 @@ public enum PdfmuError {
         List<PdfmuError> enumKeyList = Arrays.asList(enumKeyArray);
         Collection<String> enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());
 
-        Set<Object> codeKeySet = errorCodes.keySet();
+        Set<String> codeKeySet = errorCodes.stringPropertyNames();
         Set<String> messageKeySet = errorMessages.keySet();
 
         return codeKeySet.containsAll(enumKeyStrings) && messageKeySet.containsAll(enumKeyStrings);

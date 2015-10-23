@@ -39,6 +39,7 @@ public class OperationAttach extends OperationCommon {
 
         String metavarAttachment = "ATTACHMENT";
 
+        // TODO: Try to reuse InPdfArgs
         subparser.addArgument("attachment")
                 .help(String.format("file to attach to %s", metavarIn))
                 .metavar(metavarAttachment)

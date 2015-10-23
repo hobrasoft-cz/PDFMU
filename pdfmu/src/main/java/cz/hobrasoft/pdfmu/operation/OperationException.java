@@ -63,6 +63,10 @@ public class OperationException extends Exception {
      */
     public OperationException(PdfmuError e, Throwable cause, SortedMap<String, Object> messageArguments) {
         super(e.toString(), cause);
+        init(e, messageArguments);
+    }
+
+    private void init(PdfmuError e, SortedMap<String, Object> messageArguments) {
         assert e != null;
         this.e = e;
         this.messageArguments = messageArguments;

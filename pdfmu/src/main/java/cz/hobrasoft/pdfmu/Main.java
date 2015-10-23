@@ -148,6 +148,9 @@ public class Main {
         } catch (ArgumentParserException ape) {
             OperationException oe = apeToOe(ape);
             exitStatus = oe.getCode();
+            // We could also write `oe` as a JSON document,
+            // but we do not know whether JSON output was requested,
+            // so we use the text output (default).
 
             // Print the error in human-readable format
             parser.handleError(ape);

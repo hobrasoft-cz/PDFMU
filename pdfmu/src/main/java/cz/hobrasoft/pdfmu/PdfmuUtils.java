@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -29,6 +30,16 @@ public class PdfmuUtils {
         int n = Math.min(keys.length, values.length);
         for (int i = 0; i < n; ++i) {
             result.put(keys[i], values[i]);
+        }
+        return result;
+    }
+
+    public static <K, V> SortedMap<K, V> sortedMap(Map.Entry<K, V>... entries) {
+        SortedMap<K, V> result = new TreeMap<>();
+        for (Map.Entry<K, V> entry : entries) {
+            K key = entry.getKey();
+            V value = entry.getValue();
+            result.put(key, value);
         }
         return result;
     }

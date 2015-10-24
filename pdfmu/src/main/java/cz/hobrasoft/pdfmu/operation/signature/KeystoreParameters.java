@@ -1,5 +1,10 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_CLOSE;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_OPEN;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_LOAD;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
@@ -11,6 +16,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -97,7 +103,8 @@ class KeystoreParameters implements ArgsConfiguration {
         try {
             ks = KeyStore.getInstance(type);
         } catch (KeyStoreException ex) {
-            throw new OperationException(String.format("None of the registered security providers supports the keystore type %s.", type), ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED, ex,
+                    new SimpleEntry<String, Object>("type", type));
         }
         logger.info(String.format("Keystore security provider: %s", ks.getProvider().getName()));
         switch (type) {
@@ -112,7 +119,8 @@ class KeystoreParameters implements ArgsConfiguration {
 
     private void loadFileKeystore(KeyStore ks) throws OperationException {
         if (file == null) {
-            throw new OperationException("Keystore not set but is required. Use --keystore option.");
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED,
+                    new SimpleEntry<String, Object>("type", type));
         }
         logger.info(String.format("Keystore file: %s", file));
         // ksIs
@@ -120,20 +128,27 @@ class KeystoreParameters implements ArgsConfiguration {
         try {
             ksIs = new FileInputStream(file);
         } catch (FileNotFoundException ex) {
-            throw new OperationException("Could not open keystore file.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_OPEN, ex,
+                    new SimpleEntry<String, Object>("file", file));
         }
         fixPassword();
         try {
             ks.load(ksIs, password);
         } catch (IOException ex) {
-            throw new OperationException("Could not load keystore. Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?", ex);
+            // Incorrect keystore password? Incorrect keystore type? Corrupted keystore file?
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_LOAD, ex,
+                    new SimpleEntry<String, Object>("type", type),
+                    new SimpleEntry<String, Object>("file", file));
         } catch (NoSuchAlgorithmException | CertificateException ex) {
-            throw new OperationException("Could not load keystore.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_LOAD, ex,
+                    new SimpleEntry<String, Object>("type", type),
+                    new SimpleEntry<String, Object>("file", file));
         }
         try {
             ksIs.close();
         } catch (IOException ex) {
-            throw new OperationException("Could not close keystore file.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_CLOSE, ex,
+                    new SimpleEntry<String, Object>("file", file));
         }
     }
 
@@ -142,7 +157,8 @@ class KeystoreParameters implements ArgsConfiguration {
         try {
             ks.load(null, null);
         } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
-            throw new OperationException("Could not load keystore.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_LOAD, ex,
+                    new SimpleEntry<String, Object>("type", type));
         }
     }
 

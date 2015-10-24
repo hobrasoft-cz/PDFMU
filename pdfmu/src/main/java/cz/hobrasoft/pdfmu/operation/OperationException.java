@@ -26,30 +26,6 @@ public class OperationException extends Exception {
     // Configuration
     private static final int defaultErrorCode = -1;
 
-    // TODO: Remove
-    /**
-     * Constructs an instance of {@link OperationException} with the specified
-     * detail message.
-     *
-     * @param msg the detail message.
-     */
-    @Deprecated
-    public OperationException(String msg) {
-        super(msg);
-    }
-
-    // TODO: Remove
-    /**
-     * Constructs a chained exception with the specified detail message.
-     *
-     * @param msg the detail message.
-     * @param cause the original cause.
-     */
-    @Deprecated
-    public OperationException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
     private PdfmuError e = null;
     private SortedMap<String, Object> messageArguments = null;
 

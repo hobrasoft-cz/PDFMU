@@ -57,7 +57,7 @@ class KeystoreParameters implements ArgsConfiguration {
         // CLI inspired by `keytool`
         parser.addArgument("-ks", "--keystore")
                 .help("keystore file")
-                .type(Arguments.fileType().verifyCanRead());
+                .type(Arguments.fileType());
 
         passwordArgs.addArguments(parser);
     }

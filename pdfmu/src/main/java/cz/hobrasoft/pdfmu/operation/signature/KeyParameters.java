@@ -1,5 +1,13 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIASES;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_EMPTY;
+import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
@@ -9,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -63,10 +72,10 @@ class KeyParameters implements ArgsConfiguration {
             try {
                 aliases = ks.aliases();
             } catch (KeyStoreException ex) {
-                throw new OperationException("Could not get aliases from keystore.", ex);
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIASES, ex);
             }
             if (!aliases.hasMoreElements()) {
-                throw new OperationException("Keystore is empty (no aliases).");
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_EMPTY);
             }
             alias = aliases.nextElement();
             assert alias != null;
@@ -75,18 +84,22 @@ class KeyParameters implements ArgsConfiguration {
         // Make sure the entry `alias` is present in the keystore
         try {
             if (!ks.containsAlias(alias)) {
-                throw new OperationException(String.format("Keystore does not contain the alias %s.", alias));
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,
+                        new SimpleEntry<String, Object>("alias", alias));
             }
         } catch (KeyStoreException ex) {
-            throw new OperationException(String.format("Could not determine whether the keystore contains the alias %s.", alias), ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         }
         // Make sure `alias` is a key entry
         try {
             if (!ks.isKeyEntry(alias)) {
-                throw new OperationException(String.format("The keystore entry associated with the alias %s is not a key entry.", alias));
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY,
+                        new SimpleEntry<String, Object>("alias", alias));
             }
         } catch (KeyStoreException ex) {
-            throw new OperationException(String.format("Could not determine whether the keystore entry %s is a key.", alias), ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         }
     }
 
@@ -117,14 +130,20 @@ class KeyParameters implements ArgsConfiguration {
         try {
             pk = (PrivateKey) ks.getKey(alias, password);
         } catch (KeyStoreException ex) {
-            throw new OperationException("Could not get key from keystore.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         } catch (NoSuchAlgorithmException ex) {
-            throw new OperationException("Could not get key from keystore.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         } catch (UnrecoverableKeyException ex) {
-            throw new OperationException("Could not get key from keystore. Incorrect key password? Incorrect keystore type?", ex);
+            // Incorrect key password? Incorrect keystore type?
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         }
         if (pk == null) {
-            throw new OperationException("Could not get key from keystore. Incorrect alias?");
+            // Incorrect alias?
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,
+                    new SimpleEntry<String, Object>("alias", alias));
         }
         return pk;
     }
@@ -134,7 +153,8 @@ class KeyParameters implements ArgsConfiguration {
         try {
             chain = ks.getCertificateChain(alias);
         } catch (KeyStoreException ex) {
-            throw new OperationException("Could not get certificate chain from keystore.", ex);
+            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,
+                    new SimpleEntry<String, Object>("alias", alias));
         }
         return chain;
     }

@@ -1,11 +1,13 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.PdfmuError;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.WritingMapper;
 import cz.hobrasoft.pdfmu.jackson.RpcError;
 import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.text.StrSubstitutor;
@@ -56,6 +58,11 @@ public class OperationException extends Exception {
         init(e, null);
     }
 
+    public OperationException(PdfmuError e, Map.Entry<String, Object>... entries) {
+        super(e.toString());
+        init(e, PdfmuUtils.sortedMap(entries));
+    }
+
     public OperationException(PdfmuError e, SortedMap<String, Object> messageArguments) {
         super(e.toString());
         init(e, messageArguments);
@@ -64,6 +71,11 @@ public class OperationException extends Exception {
     public OperationException(PdfmuError e, Throwable cause) {
         super(e.toString(), cause);
         init(e, null);
+    }
+
+    public OperationException(PdfmuError e, Throwable cause, Map.Entry<String, Object>... entries) {
+        super(e.toString(), cause);
+        init(e, PdfmuUtils.sortedMap(entries));
     }
 
     /**

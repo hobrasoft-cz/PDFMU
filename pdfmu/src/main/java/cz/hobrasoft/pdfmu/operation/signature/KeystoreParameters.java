@@ -138,6 +138,7 @@ class KeystoreParameters implements ArgsConfiguration {
     }
 
     private void loadWindowsKeystore(KeyStore ks) throws OperationException {
+        assert "Windows-MY".equals(type);
         try {
             ks.load(null, null);
         } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {

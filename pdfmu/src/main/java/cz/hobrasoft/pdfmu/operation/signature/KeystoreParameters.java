@@ -51,7 +51,7 @@ class KeystoreParameters implements ArgsConfiguration {
                 .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12", "Windows-MY"});
         // TODO?: Guess type from file extension by default
         // TODO?: Default to "pkcs12"
-        // TODO: Only allow "Windows-MY" when running in Windows
+        // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
 
         // Keystore
         // CLI inspired by `keytool`

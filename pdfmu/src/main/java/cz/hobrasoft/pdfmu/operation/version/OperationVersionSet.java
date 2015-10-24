@@ -78,8 +78,8 @@ public class OperationVersionSet extends OperationCommon {
 
         if (outVersion.compareTo(inVersion) < 0) {
             // The desired version is lower than the current version.
-            throw new OperationException("Cannot lower the PDF version.");
-            // TODO: Add --force-lower-version flag that enables lowering the version
+            // TODO?: Add --force-lower-version flag that enables lowering the version
+            logger.warning("Setting the PDF version to a lower value.");
         }
 
         out.open(pdfReader, false, outVersion.toChar());

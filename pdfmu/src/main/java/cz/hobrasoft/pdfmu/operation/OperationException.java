@@ -62,7 +62,8 @@ public class OperationException extends Exception {
     }
 
     public OperationException(PdfmuError e, Throwable cause) {
-        this(e, cause, null);
+        super(e.toString(), cause);
+        init(e, null);
     }
 
     /**

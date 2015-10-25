@@ -15,13 +15,19 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.functors.StringValueTransformer;
 
 /**
- * Lists all the types of errors (failing conditions) that can happen in PDFMU.
- * Every error type has a code and a message associated. The codes are loaded
- * from the properties file {@link #CODES_RESOURCE_NAME} and the messages are
- * loaded from the resource bundle {@link #MESSAGES_RESOURCE_BUNDLE_BASE_NAME}.
- * The messages are templated. The keys in the {@code .properties} files must
- * match the strings returned by {@link ErrorType#toString()} (which returns the
- * enum constant name by default).
+ * Contains all the types of errors (failing conditions) that can happen in
+ * PDFMU. Every error type has a code and a message template associated. The
+ * codes are loaded from the resource {@value #CODES_RESOURCE_NAME} and the
+ * messages are loaded from the resource bundle
+ * {@value #MESSAGES_RESOURCE_BUNDLE_BASE_NAME}. The keys in both of the
+ * resource files must match the strings returned by
+ * {@link ErrorType#toString()} (which returns the enum constant name by
+ * default).
+ *
+ * <p>
+ * Assertions are in place that ensure that every error type has a code and a
+ * message associated, and that the codes are unique. If assertions are disabled
+ * and a resource is missing or incompatible, default values are provided.
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
@@ -56,13 +62,34 @@ public enum ErrorType {
     ATTACH_FAIL,
     ATTACH_ATTACHMENT_EQUALS_OUTPUT;
 
-    // Configuration
     /**
      * The default error code. It is used for error types that have no code
-     * associated in {@link #CODES_RESOURCE_NAME}.
+     * associated.
+     *
+     * <p>
+     * Value: {@value #DEFAULT_ERROR_CODE}
      */
-    public static final int DEFAULT_ERROR_CODE = -1; // Used if no matching code is found in `errorCodes`
+    public static final int DEFAULT_ERROR_CODE = -1;
+
+    /**
+     * The name of the resource that contains the error codes. The resource must
+     * be a properties file. It is located using
+     * {@link ClassLoader#getResourceAsStream(String)} and loaded using
+     * {@link IntProperties#load(InputStream)}.
+     *
+     * <p>
+     * Value: {@value #CODES_RESOURCE_NAME}
+     */
     public static final String CODES_RESOURCE_NAME = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
+
+    /**
+     * The base name of the resource bundle that contains the error messages.
+     * The resource bundle is loaded using
+     * {@link ResourceBundle#getBundle(String)}.
+     *
+     * <p>
+     * Value: {@value #MESSAGES_RESOURCE_BUNDLE_BASE_NAME}
+     */
     public static final String MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
     private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());
@@ -148,14 +175,13 @@ public enum ErrorType {
 
     /**
      * Returns the error code associated with this error type. The code should
-     * uniquely identify the error. The default value
-     * {@link #DEFAULT_ERROR_CODE} is returned in case no code is associated
-     * with this error type. The error codes are loaded from
-     * {@code ErrorCodes.properties} when the first {@link ErrorType} is
-     * instantiated.
+     * uniquely identify the error. The value of {@link #DEFAULT_ERROR_CODE} is
+     * returned if no code is associated with this error type. The error codes
+     * are loaded from the resource {@value #CODES_RESOURCE_NAME} when the first
+     * {@link ErrorType} is instantiated.
      *
-     * @return the error code associated with this error type, or -1 if none is
-     * associated
+     * @return the error code associated with this error type, or
+     * {@value #DEFAULT_ERROR_CODE} if none is associated
      */
     public int getCode() {
         return CODES.getIntProperty(toString());
@@ -163,7 +189,8 @@ public enum ErrorType {
 
     /**
      * Returns the message pattern associated with this error type. The message
-     * patterns are loaded from {@code ErrorMessages.properties} when the first
+     * patterns are loaded from the resource bundle
+     * {@value #MESSAGES_RESOURCE_BUNDLE_BASE_NAME} when the first
      * {@link ErrorType} is instantiated.
      *
      * @return the message pattern associated with this error type, or null if

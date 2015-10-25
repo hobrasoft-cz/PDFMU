@@ -15,6 +15,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.functors.StringValueTransformer;
 
 /**
+ * Lists all the types of errors (failing conditions) that can happen in PDFMU.
+ * Every error type has a code and a message associated. The codes are loaded
+ * from the properties file {@link #errorCodesResourceName} and the messages are
+ * loaded from the resource bundle {@link #errorMessagesResourceBundleBaseName}.
+ * The messages are templated. The keys in the {@code .properties} files must
+ * match the strings returned by {@link ErrorType#toString()} (which returns the
+ * enum constant name by default).
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
@@ -50,6 +57,10 @@ public enum ErrorType {
     ATTACH_ATTACHMENT_EQUALS_OUTPUT;
 
     // Configuration
+    /**
+     * The default error code. It is used for error types that have no code
+     * associated in {@link #errorCodesResourceName}.
+     */
     public static final int defaultErrorCode = -1; // Used if no matching code is found in `errorCodes`
     public static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
     public static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
@@ -60,7 +71,7 @@ public enum ErrorType {
     private static ResourceBundle errorMessages = null;
 
     /**
-     * Returns true iff each of the values of this enum is a key in both
+     * @return true iff each of the constants of this enum is a key in both
      * {@link #errorCodes} and {@link #errorMessages}.
      */
     private static boolean codesAndMessagesAvailable() {
@@ -76,7 +87,8 @@ public enum ErrorType {
     }
 
     /**
-     * @return true iff the codes stored in `errorCodes` are pairwise different.
+     * @return true iff the codes stored in {@link #errorCodes} are pairwise
+     * different.
      */
     private static boolean codesUnique() {
         Collection<Integer> codes = errorCodes.intPropertyValues();
@@ -85,7 +97,10 @@ public enum ErrorType {
         return codes.size() == codesUnique.size();
     }
 
-    // Load error codes from a properties resource
+    /**
+     * Loads error codes from the properties resource
+     * {@link #errorCodesResourceName} and stores them in {@link #errorCodes}.
+     */
     private static void loadErrorCodes() {
         ClassLoader classLoader = ErrorType.class.getClassLoader();
         InputStream in = classLoader.getResourceAsStream(errorCodesResourceName);
@@ -105,6 +120,11 @@ public enum ErrorType {
         }
     }
 
+    /**
+     * Loads error messages from the resource bundle
+     * {@link #errorMessagesResourceBundleBaseName} and stores them in
+     * {@link #errorMessages}.
+     */
     private static void loadErrorMessages() {
         try {
             errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
@@ -127,19 +147,26 @@ public enum ErrorType {
     }
 
     /**
-     * Returns the error code associated with this error. The code should
-     * uniquely identify the error.
+     * Returns the error code associated with this error type. The code should
+     * uniquely identify the error. The default value {@link #defaultErrorCode}
+     * is returned in case no code is associated with this error type. The error
+     * codes are loaded from {@code ErrorCodes.properties} when the first
+     * {@link ErrorType} is instantiated.
      *
-     * @return the error code associated with this error.
+     * @return the error code associated with this error type, or -1 if none is
+     * associated
      */
     public int getCode() {
         return errorCodes.getIntProperty(toString());
     }
 
     /**
-     * Returns the message pattern associated with this error.
+     * Returns the message pattern associated with this error type. The message
+     * patterns are loaded from {@code ErrorMessages.properties} when the first
+     * {@link ErrorType} is instantiated.
      *
-     * @return the message pattern associated with this error.
+     * @return the message pattern associated with this error type, or null if
+     * none is associated
      */
     public String getMessagePattern() {
         String key = toString();

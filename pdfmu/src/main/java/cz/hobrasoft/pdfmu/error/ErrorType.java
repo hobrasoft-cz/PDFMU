@@ -67,31 +67,31 @@ public enum ErrorType {
 
     private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());
 
-    private static final IntProperties ERROR_CODES = new IntProperties(DEFAULT_ERROR_CODE);
-    private static ResourceBundle errorMessages = null;
+    private static final IntProperties CODES = new IntProperties(DEFAULT_ERROR_CODE);
+    private static ResourceBundle messages = null;
 
     /**
      * @return true iff each of the constants of this enum is a key in both
-     * {@link #ERROR_CODES} and {@link #errorMessages}.
+     * {@link #CODES} and {@link #messages}.
      */
     private static boolean codesAndMessagesAvailable() {
         ErrorType[] enumKeyArray = ErrorType.values();
         List<ErrorType> enumKeyList = Arrays.asList(enumKeyArray);
         Collection<String> enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());
 
-        Set<String> codeKeySet = ERROR_CODES.stringPropertyNames();
-        assert errorMessages != null;
-        Set<String> messageKeySet = errorMessages.keySet();
+        Set<String> codeKeySet = CODES.stringPropertyNames();
+        assert messages != null;
+        Set<String> messageKeySet = messages.keySet();
 
         return codeKeySet.containsAll(enumKeyStrings) && messageKeySet.containsAll(enumKeyStrings);
     }
 
     /**
-     * @return true iff the codes stored in {@link #ERROR_CODES} are pairwise
+     * @return true iff the codes stored in {@link #CODES} are pairwise
      * different.
      */
     private static boolean codesUnique() {
-        Collection<Integer> codes = ERROR_CODES.intPropertyValues();
+        Collection<Integer> codes = CODES.intPropertyValues();
         Set<Integer> codesUnique = new HashSet<>(codes);
         assert codes.size() >= codesUnique.size();
         return codes.size() == codesUnique.size();
@@ -99,14 +99,14 @@ public enum ErrorType {
 
     /**
      * Loads error codes from the properties resource
-     * {@link #CODES_RESOURCE_NAME} and stores them in {@link #ERROR_CODES}.
+     * {@link #CODES_RESOURCE_NAME} and stores them in {@link #CODES}.
      */
     private static void loadErrorCodes() {
         ClassLoader classLoader = ErrorType.class.getClassLoader();
         InputStream in = classLoader.getResourceAsStream(CODES_RESOURCE_NAME);
         if (in != null) {
             try {
-                ERROR_CODES.load(in);
+                CODES.load(in);
             } catch (IOException ex) {
                 LOGGER.severe(String.format("Could not load the error codes properties file: %s", ex));
             }
@@ -123,11 +123,11 @@ public enum ErrorType {
     /**
      * Loads error messages from the resource bundle
      * {@link #MESSAGES_RESOURCE_BUNDLE_BASE_NAME} and stores them in
-     * {@link #errorMessages}.
+     * {@link #messages}.
      */
     private static void loadErrorMessages() {
         try {
-            errorMessages = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME);
+            messages = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME);
         } catch (MissingResourceException ex) {
             LOGGER.severe(String.format("Could not load the error messages resource bundle: %s", ex));
         }
@@ -137,7 +137,7 @@ public enum ErrorType {
         // Load error codes and messages before OperationException is instantiated
         loadErrorCodes();
         loadErrorMessages();
-        assert errorMessages != null;
+        assert messages != null;
 
         // Assert that a code and a message is available for every enum constant
         assert codesAndMessagesAvailable();
@@ -158,7 +158,7 @@ public enum ErrorType {
      * associated
      */
     public int getCode() {
-        return ERROR_CODES.getIntProperty(toString());
+        return CODES.getIntProperty(toString());
     }
 
     /**
@@ -171,9 +171,9 @@ public enum ErrorType {
      */
     public String getMessagePattern() {
         String key = toString();
-        assert errorMessages != null;
-        if (errorMessages != null && errorMessages.containsKey(key)) {
-            return errorMessages.getString(key);
+        assert messages != null;
+        if (messages != null && messages.containsKey(key)) {
+            return messages.getString(key);
         } else {
             return null;
         }

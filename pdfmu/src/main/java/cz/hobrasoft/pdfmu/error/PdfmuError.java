@@ -1,5 +1,6 @@
-package cz.hobrasoft.pdfmu;
+package cz.hobrasoft.pdfmu.error;
 
+import cz.hobrasoft.pdfmu.IntProperties;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -50,8 +51,8 @@ public enum PdfmuError {
 
     // Configuration
     private static final int defaultErrorCode = -1;
-    private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/errorCodes.properties";
-    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.ErrorMessages";
+    private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/errorCodes.properties";
+    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
     private static final Logger logger = Logger.getLogger(PdfmuError.class.getName());
 

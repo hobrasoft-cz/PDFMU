@@ -1,8 +1,8 @@
 package cz.hobrasoft.pdfmu.operation;
 
-import cz.hobrasoft.pdfmu.PdfmuError;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.WritingMapper;
+import cz.hobrasoft.pdfmu.error.PdfmuError;
 import cz.hobrasoft.pdfmu.jackson.RpcError;
 import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;

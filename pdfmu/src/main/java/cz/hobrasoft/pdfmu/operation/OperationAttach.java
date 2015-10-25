@@ -1,9 +1,9 @@
 package cz.hobrasoft.pdfmu.operation;
 
 import com.itextpdf.text.pdf.PdfStamper;
-import static cz.hobrasoft.pdfmu.PdfmuError.ATTACH_ATTACHMENT_EQUALS_OUTPUT;
-import static cz.hobrasoft.pdfmu.PdfmuError.ATTACH_FAIL;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.ATTACH_ATTACHMENT_EQUALS_OUTPUT;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.ATTACH_FAIL;
 import cz.hobrasoft.pdfmu.jackson.EmptyResult;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.File;

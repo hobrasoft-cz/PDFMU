@@ -1,5 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
+import cz.hobrasoft.pdfmu.error.PdfmuError;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.util.List;
 import java.util.SortedMap;

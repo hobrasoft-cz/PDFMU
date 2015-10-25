@@ -1,13 +1,13 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIASES;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_EMPTY;
-import static cz.hobrasoft.pdfmu.PdfmuError.SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIASES;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_EMPTY;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;

@@ -1,10 +1,10 @@
 package cz.hobrasoft.pdfmu.operation.args;
 
 import com.itextpdf.text.pdf.PdfReader;
-import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_CLOSE;
-import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_FOUND;
-import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_VALID_PDF;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_CLOSE;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_NOT_VALID_PDF;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.io.File;
 import java.io.FileInputStream;

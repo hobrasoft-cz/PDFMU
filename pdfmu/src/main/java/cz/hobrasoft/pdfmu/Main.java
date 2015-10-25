@@ -1,9 +1,9 @@
 package cz.hobrasoft.pdfmu;
 
-import static cz.hobrasoft.pdfmu.PdfmuError.INPUT_NOT_FOUND;
-import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_INVALID_CHOICE;
-import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_UNKNOWN;
-import static cz.hobrasoft.pdfmu.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENTS;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_INVALID_CHOICE;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNKNOWN;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENTS;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;

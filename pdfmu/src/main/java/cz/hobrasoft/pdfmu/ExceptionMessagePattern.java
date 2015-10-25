@@ -1,6 +1,6 @@
 package cz.hobrasoft.pdfmu;
 
-import cz.hobrasoft.pdfmu.error.PdfmuError;
+import cz.hobrasoft.pdfmu.error.ErrorType;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import java.util.List;
 import java.util.SortedMap;
@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
  */
 public class ExceptionMessagePattern {
 
-    private final PdfmuError pe;
+    private final ErrorType errorType;
     private final String regex;
     private final List<String> groupNames;
 
-    public ExceptionMessagePattern(PdfmuError pe, String regex, List<String> groupNames) {
-        this.pe = pe;
+    public ExceptionMessagePattern(ErrorType errorType, String regex, List<String> groupNames) {
+        this.errorType = errorType;
         this.regex = regex;
         this.groupNames = groupNames;
     }
@@ -32,7 +32,7 @@ public class ExceptionMessagePattern {
             SortedMap<String, String> arguments = PdfmuUtils.getMatcherGroups(m, groupNames);
             SortedMap<String, Object> argumentsObjects = new TreeMap<>();
             argumentsObjects.putAll(arguments);
-            return new OperationException(pe, e, argumentsObjects);
+            return new OperationException(errorType, e, argumentsObjects);
         }
         return null;
     }

@@ -1,8 +1,9 @@
 package cz.hobrasoft.pdfmu;
 
-import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_NOT_FOUND;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_INVALID_CHOICE;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNKNOWN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_INVALID_CHOICE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNKNOWN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNRECOGNIZED_ARGUMENT;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -22,7 +23,6 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparsers;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENT;
 
 /**
  * The main class of PDFMU

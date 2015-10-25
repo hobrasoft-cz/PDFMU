@@ -1,10 +1,10 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
-import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_CLOSE;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_FILE_OPEN;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_LOAD;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_FILE_CLOSE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_FILE_OPEN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_LOAD;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;

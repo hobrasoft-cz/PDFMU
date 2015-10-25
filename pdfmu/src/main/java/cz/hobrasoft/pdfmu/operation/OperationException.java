@@ -2,7 +2,7 @@ package cz.hobrasoft.pdfmu.operation;
 
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.WritingMapper;
-import cz.hobrasoft.pdfmu.error.PdfmuError;
+import cz.hobrasoft.pdfmu.error.ErrorType;
 import cz.hobrasoft.pdfmu.jackson.RpcError;
 import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;
@@ -26,50 +26,50 @@ public class OperationException extends Exception {
     // Configuration
     private static final int defaultErrorCode = -1;
 
-    private PdfmuError e = null;
+    private ErrorType errorType = null;
     private SortedMap<String, Object> messageArguments = null;
 
-    public OperationException(PdfmuError e) {
-        super(e.toString());
-        init(e, null);
+    public OperationException(ErrorType errorType) {
+        super(errorType.toString());
+        init(errorType, null);
     }
 
-    public OperationException(PdfmuError e, Map.Entry<String, Object>... entries) {
-        super(e.toString());
-        init(e, PdfmuUtils.sortedMap(entries));
+    public OperationException(ErrorType errorType, Map.Entry<String, Object>... entries) {
+        super(errorType.toString());
+        init(errorType, PdfmuUtils.sortedMap(entries));
     }
 
-    public OperationException(PdfmuError e, SortedMap<String, Object> messageArguments) {
-        super(e.toString());
-        init(e, messageArguments);
+    public OperationException(ErrorType errorType, SortedMap<String, Object> messageArguments) {
+        super(errorType.toString());
+        init(errorType, messageArguments);
     }
 
-    public OperationException(PdfmuError e, Throwable cause) {
-        super(e.toString(), cause);
-        init(e, null);
+    public OperationException(ErrorType errorType, Throwable cause) {
+        super(errorType.toString(), cause);
+        init(errorType, null);
     }
 
-    public OperationException(PdfmuError e, Throwable cause, Map.Entry<String, Object>... entries) {
-        super(e.toString(), cause);
-        init(e, PdfmuUtils.sortedMap(entries));
+    public OperationException(ErrorType errorType, Throwable cause, Map.Entry<String, Object>... entries) {
+        super(errorType.toString(), cause);
+        init(errorType, PdfmuUtils.sortedMap(entries));
     }
 
     /**
      * Creates a chained operation exception with error identifier and message
      * arguments.
      *
-     * @param e the error identifier.
+     * @param errorType the error identifier.
      * @param cause the original cause.
      * @param messageArguments the arguments of the message.
      */
-    public OperationException(PdfmuError e, Throwable cause, SortedMap<String, Object> messageArguments) {
-        super(e.toString(), cause);
-        init(e, messageArguments);
+    public OperationException(ErrorType errorType, Throwable cause, SortedMap<String, Object> messageArguments) {
+        super(errorType.toString(), cause);
+        init(errorType, messageArguments);
     }
 
-    private void init(PdfmuError e, SortedMap<String, Object> messageArguments) {
-        assert e != null;
-        this.e = e;
+    private void init(ErrorType errorType, SortedMap<String, Object> messageArguments) {
+        assert errorType != null;
+        this.errorType = errorType;
         this.messageArguments = messageArguments;
     }
 
@@ -82,8 +82,8 @@ public class OperationException extends Exception {
      * @return the error code associated with this exception
      */
     public int getCode() {
-        if (e != null) {
-            return e.getCode();
+        if (errorType != null) {
+            return errorType.getCode();
         } else {
             return defaultErrorCode;
         }
@@ -91,8 +91,8 @@ public class OperationException extends Exception {
 
     @Override
     public String getLocalizedMessage() {
-        if (e != null) {
-            String pattern = e.getMessagePattern();
+        if (errorType != null) {
+            String pattern = errorType.getMessagePattern();
             if (pattern != null) {
                 StrSubstitutor sub = new StrSubstitutor(messageArguments);
                 return sub.replace(pattern);

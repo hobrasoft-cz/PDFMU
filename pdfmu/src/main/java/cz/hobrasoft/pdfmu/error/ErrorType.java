@@ -18,7 +18,7 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public enum PdfmuError {
+public enum ErrorType {
     PARSER_UNKNOWN,
     PARSER_UNRECOGNIZED_ARGUMENT,
     PARSER_INVALID_CHOICE,
@@ -54,7 +54,7 @@ public enum PdfmuError {
     private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
     private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
-    private static final Logger logger = Logger.getLogger(PdfmuError.class.getName());
+    private static final Logger logger = Logger.getLogger(ErrorType.class.getName());
 
     private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
     private static ResourceBundle errorMessages = null;
@@ -64,8 +64,8 @@ public enum PdfmuError {
      * {@link #errorCodes} and {@link #errorMessages}.
      */
     private static boolean codesAndMessagesAvailable() {
-        PdfmuError[] enumKeyArray = PdfmuError.values();
-        List<PdfmuError> enumKeyList = Arrays.asList(enumKeyArray);
+        ErrorType[] enumKeyArray = ErrorType.values();
+        List<ErrorType> enumKeyList = Arrays.asList(enumKeyArray);
         Collection<String> enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());
 
         Set<String> codeKeySet = errorCodes.stringPropertyNames();
@@ -87,7 +87,7 @@ public enum PdfmuError {
 
     // Load error codes from a properties resource
     private static void loadErrorCodes() {
-        ClassLoader classLoader = PdfmuError.class.getClassLoader();
+        ClassLoader classLoader = ErrorType.class.getClassLoader();
         InputStream in = classLoader.getResourceAsStream(errorCodesResourceName);
         if (in != null) {
             try {

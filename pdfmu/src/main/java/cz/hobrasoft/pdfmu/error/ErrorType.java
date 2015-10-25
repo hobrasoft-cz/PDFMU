@@ -17,11 +17,12 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
 /**
  * Lists all the types of errors (failing conditions) that can happen in PDFMU.
  * Every error type has a code and a message associated. The codes are loaded
- * from the properties file {@link #errorCodesResourceName} and the messages are
- * loaded from the resource bundle {@link #errorMessagesResourceBundleBaseName}.
- * The messages are templated. The keys in the {@code .properties} files must
- * match the strings returned by {@link ErrorType#toString()} (which returns the
- * enum constant name by default).
+ * from the properties file {@link #ERROR_CODES_RESOURCE_NAME} and the messages
+ * are loaded from the resource bundle
+ * {@link #ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME}. The messages are
+ * templated. The keys in the {@code .properties} files must match the strings
+ * returned by {@link ErrorType#toString()} (which returns the enum constant
+ * name by default).
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
@@ -59,27 +60,27 @@ public enum ErrorType {
     // Configuration
     /**
      * The default error code. It is used for error types that have no code
-     * associated in {@link #errorCodesResourceName}.
+     * associated in {@link #ERROR_CODES_RESOURCE_NAME}.
      */
-    public static final int defaultErrorCode = -1; // Used if no matching code is found in `errorCodes`
-    public static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
-    public static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
+    public static final int DEFAULT_ERROR_CODE = -1; // Used if no matching code is found in `errorCodes`
+    public static final String ERROR_CODES_RESOURCE_NAME = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
+    public static final String ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
-    private static final Logger logger = Logger.getLogger(ErrorType.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());
 
-    private static final IntProperties errorCodes = new IntProperties(defaultErrorCode);
+    private static final IntProperties ERROR_CODES = new IntProperties(DEFAULT_ERROR_CODE);
     private static ResourceBundle errorMessages = null;
 
     /**
      * @return true iff each of the constants of this enum is a key in both
-     * {@link #errorCodes} and {@link #errorMessages}.
+     * {@link #ERROR_CODES} and {@link #errorMessages}.
      */
     private static boolean codesAndMessagesAvailable() {
         ErrorType[] enumKeyArray = ErrorType.values();
         List<ErrorType> enumKeyList = Arrays.asList(enumKeyArray);
         Collection<String> enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());
 
-        Set<String> codeKeySet = errorCodes.stringPropertyNames();
+        Set<String> codeKeySet = ERROR_CODES.stringPropertyNames();
         assert errorMessages != null;
         Set<String> messageKeySet = errorMessages.keySet();
 
@@ -87,11 +88,11 @@ public enum ErrorType {
     }
 
     /**
-     * @return true iff the codes stored in {@link #errorCodes} are pairwise
+     * @return true iff the codes stored in {@link #ERROR_CODES} are pairwise
      * different.
      */
     private static boolean codesUnique() {
-        Collection<Integer> codes = errorCodes.intPropertyValues();
+        Collection<Integer> codes = ERROR_CODES.intPropertyValues();
         Set<Integer> codesUnique = new HashSet<>(codes);
         assert codes.size() >= codesUnique.size();
         return codes.size() == codesUnique.size();
@@ -99,37 +100,38 @@ public enum ErrorType {
 
     /**
      * Loads error codes from the properties resource
-     * {@link #errorCodesResourceName} and stores them in {@link #errorCodes}.
+     * {@link #ERROR_CODES_RESOURCE_NAME} and stores them in
+     * {@link #ERROR_CODES}.
      */
     private static void loadErrorCodes() {
         ClassLoader classLoader = ErrorType.class.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream(errorCodesResourceName);
+        InputStream in = classLoader.getResourceAsStream(ERROR_CODES_RESOURCE_NAME);
         if (in != null) {
             try {
-                errorCodes.load(in);
+                ERROR_CODES.load(in);
             } catch (IOException ex) {
-                logger.severe(String.format("Could not load the error codes properties file: %s", ex));
+                LOGGER.severe(String.format("Could not load the error codes properties file: %s", ex));
             }
             try {
                 in.close();
             } catch (IOException ex) {
-                logger.severe(String.format("Could not close the error codes properties file: %s", ex));
+                LOGGER.severe(String.format("Could not close the error codes properties file: %s", ex));
             }
         } else {
-            logger.severe("Could not open the error codes properties file.");
+            LOGGER.severe("Could not open the error codes properties file.");
         }
     }
 
     /**
      * Loads error messages from the resource bundle
-     * {@link #errorMessagesResourceBundleBaseName} and stores them in
+     * {@link #ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME} and stores them in
      * {@link #errorMessages}.
      */
     private static void loadErrorMessages() {
         try {
-            errorMessages = ResourceBundle.getBundle(errorMessagesResourceBundleBaseName);
+            errorMessages = ResourceBundle.getBundle(ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME);
         } catch (MissingResourceException ex) {
-            logger.severe(String.format("Could not load the error messages resource bundle: %s", ex));
+            LOGGER.severe(String.format("Could not load the error messages resource bundle: %s", ex));
         }
     }
 
@@ -148,16 +150,17 @@ public enum ErrorType {
 
     /**
      * Returns the error code associated with this error type. The code should
-     * uniquely identify the error. The default value {@link #defaultErrorCode}
-     * is returned in case no code is associated with this error type. The error
-     * codes are loaded from {@code ErrorCodes.properties} when the first
-     * {@link ErrorType} is instantiated.
+     * uniquely identify the error. The default value
+     * {@link #DEFAULT_ERROR_CODE} is returned in case no code is associated
+     * with this error type. The error codes are loaded from
+     * {@code ErrorCodes.properties} when the first {@link ErrorType} is
+     * instantiated.
      *
      * @return the error code associated with this error type, or -1 if none is
      * associated
      */
     public int getCode() {
-        return errorCodes.getIntProperty(toString());
+        return ERROR_CODES.getIntProperty(toString());
     }
 
     /**

@@ -50,9 +50,9 @@ public enum ErrorType {
     ATTACH_ATTACHMENT_EQUALS_OUTPUT;
 
     // Configuration
-    private static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
-    private static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
-    private static final int defaultErrorCode = -1; // Used if no matching code is found in `errorCodes`
+    public static final int defaultErrorCode = -1; // Used if no matching code is found in `errorCodes`
+    public static final String errorCodesResourceName = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
+    public static final String errorMessagesResourceBundleBaseName = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
     private static final Logger logger = Logger.getLogger(ErrorType.class.getName());
 

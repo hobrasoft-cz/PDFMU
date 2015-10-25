@@ -134,15 +134,15 @@ public enum ErrorType {
     }
 
     static {
-        // Load error codes before OperationException is instantiated
+        // Load error codes and messages before OperationException is instantiated
         loadErrorCodes();
-
         loadErrorMessages();
         assert errorMessages != null;
 
-        // Make sure all a code and a message is available for every enum value
+        // Assert that a code and a message is available for every enum constant
         assert codesAndMessagesAvailable();
 
+        // Assert that the codes are pairwise different
         assert codesUnique();
     }
 

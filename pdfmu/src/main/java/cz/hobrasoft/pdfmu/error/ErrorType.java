@@ -17,12 +17,11 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
 /**
  * Lists all the types of errors (failing conditions) that can happen in PDFMU.
  * Every error type has a code and a message associated. The codes are loaded
- * from the properties file {@link #ERROR_CODES_RESOURCE_NAME} and the messages
- * are loaded from the resource bundle
- * {@link #ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME}. The messages are
- * templated. The keys in the {@code .properties} files must match the strings
- * returned by {@link ErrorType#toString()} (which returns the enum constant
- * name by default).
+ * from the properties file {@link #CODES_RESOURCE_NAME} and the messages are
+ * loaded from the resource bundle {@link #MESSAGES_RESOURCE_BUNDLE_BASE_NAME}.
+ * The messages are templated. The keys in the {@code .properties} files must
+ * match the strings returned by {@link ErrorType#toString()} (which returns the
+ * enum constant name by default).
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
@@ -60,11 +59,11 @@ public enum ErrorType {
     // Configuration
     /**
      * The default error code. It is used for error types that have no code
-     * associated in {@link #ERROR_CODES_RESOURCE_NAME}.
+     * associated in {@link #CODES_RESOURCE_NAME}.
      */
     public static final int DEFAULT_ERROR_CODE = -1; // Used if no matching code is found in `errorCodes`
-    public static final String ERROR_CODES_RESOURCE_NAME = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
-    public static final String ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "cz.hobrasoft.pdfmu.error.ErrorMessages";
+    public static final String CODES_RESOURCE_NAME = "cz/hobrasoft/pdfmu/error/ErrorCodes.properties";
+    public static final String MESSAGES_RESOURCE_BUNDLE_BASE_NAME = "cz.hobrasoft.pdfmu.error.ErrorMessages";
 
     private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());
 
@@ -100,12 +99,11 @@ public enum ErrorType {
 
     /**
      * Loads error codes from the properties resource
-     * {@link #ERROR_CODES_RESOURCE_NAME} and stores them in
-     * {@link #ERROR_CODES}.
+     * {@link #CODES_RESOURCE_NAME} and stores them in {@link #ERROR_CODES}.
      */
     private static void loadErrorCodes() {
         ClassLoader classLoader = ErrorType.class.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream(ERROR_CODES_RESOURCE_NAME);
+        InputStream in = classLoader.getResourceAsStream(CODES_RESOURCE_NAME);
         if (in != null) {
             try {
                 ERROR_CODES.load(in);
@@ -124,12 +122,12 @@ public enum ErrorType {
 
     /**
      * Loads error messages from the resource bundle
-     * {@link #ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME} and stores them in
+     * {@link #MESSAGES_RESOURCE_BUNDLE_BASE_NAME} and stores them in
      * {@link #errorMessages}.
      */
     private static void loadErrorMessages() {
         try {
-            errorMessages = ResourceBundle.getBundle(ERROR_MESSAGES_RESOURCE_BUNDLE_BASE_NAME);
+            errorMessages = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME);
         } catch (MissingResourceException ex) {
             LOGGER.severe(String.format("Could not load the error messages resource bundle: %s", ex));
         }

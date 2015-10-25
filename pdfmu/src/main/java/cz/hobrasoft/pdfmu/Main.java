@@ -3,7 +3,6 @@ package cz.hobrasoft.pdfmu;
 import static cz.hobrasoft.pdfmu.error.PdfmuError.INPUT_NOT_FOUND;
 import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_INVALID_CHOICE;
 import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNKNOWN;
-import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENTS;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -23,6 +22,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparsers;
+import static cz.hobrasoft.pdfmu.error.PdfmuError.PARSER_UNRECOGNIZED_ARGUMENT;
 
 /**
  * The main class of PDFMU
@@ -94,7 +94,7 @@ public class Main {
         patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,
                 "argument (?<argument>.*): Insufficient permissions to read file: \'(?<file>.*)\'",
                 Arrays.asList(new String[]{"argument", "file"})));
-        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENTS,
+        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENT,
                 "unrecognized arguments: '(?<argument>.*)'",
                 Arrays.asList(new String[]{"argument"})));
         patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,

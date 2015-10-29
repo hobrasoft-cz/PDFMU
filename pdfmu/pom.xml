@@ -36,6 +36,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>cz.hobrasoft.pdfmu.Main</mainClass>
+        <exeFilename>${project.artifactId}</exeFilename>
+        <!-- exeVersion must be four dot-separated digits. -->
+        <exeVersion>1.0.0.0</exeVersion>
     </properties>
     
     <dependencies>
@@ -142,6 +145,51 @@
                         <link>https://commons.apache.org/proper/commons-collections/apidocs/</link>
                     </links>
                 </configuration>
+            </plugin>
+            
+            <plugin>
+                <!-- Inspiration: https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc#single-module-project -->
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.8</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <outfile>target/${exeFilename}.exe</outfile>
+                            <jar>target/pdfmu-${project.version}-jar-with-dependencies.jar</jar>
+                            <dontWrapJar>false</dontWrapJar>
+                            <errTitle>${project.name}</errTitle>
+                            <!--<icon></icon>-->
+                            <classPath>
+                                <mainClass>${mainClass}</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <!--<path></path>-->
+                                <minVersion>1.5.0</minVersion>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>${exeVersion}</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${project.description}</fileDescription>
+                                <!-- TODO: Update `copyright` -->
+                                <copyright>none</copyright>
+                                <productVersion>${exeVersion}</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${project.name}</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>${exeFilename}.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             
         </plugins>

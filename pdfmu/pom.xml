@@ -166,6 +166,7 @@
                             <jar>${project.build.finalName}-jar-with-dependencies.jar</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
+                            <downloadUrl>http://java.com/download</downloadUrl>
                             <!--<icon></icon>-->
                             <classPath>
                                 <mainClass>${mainClass}</mainClass>

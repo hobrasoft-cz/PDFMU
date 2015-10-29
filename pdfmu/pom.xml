@@ -162,8 +162,9 @@
                         <configuration>
                             <headerType>console</headerType>
                             <outfile>${project.build.directory}/${exeFilename}.exe</outfile>
-                            <jar>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</jar>
-                            <dontWrapJar>false</dontWrapJar>
+                            <!-- `jar`: Relative to the executable, since `dontWrapJar` is enabled -->
+                            <jar>${project.build.finalName}-jar-with-dependencies.jar</jar>
+                            <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <!--<icon></icon>-->
                             <classPath>

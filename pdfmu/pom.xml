@@ -161,8 +161,8 @@
                         </goals>
                         <configuration>
                             <headerType>console</headerType>
-                            <outfile>target/${exeFilename}.exe</outfile>
-                            <jar>target/pdfmu-${project.version}-jar-with-dependencies.jar</jar>
+                            <outfile>${project.build.directory}/${exeFilename}.exe</outfile>
+                            <jar>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</jar>
                             <dontWrapJar>false</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <!--<icon></icon>-->

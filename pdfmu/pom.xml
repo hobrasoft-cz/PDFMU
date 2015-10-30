@@ -182,7 +182,7 @@
                             <headerType>console</headerType>
                             <outfile>${project.build.directory}/${exeFilename}.exe</outfile>
                             <!-- `jar`: Relative to the executable, since `dontWrapJar` is enabled -->
-                            <jar>${project.build.finalName}.jar</jar>
+                            <jar>${project.build.finalName}.${project.packaging}</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <downloadUrl>http://java.com/download</downloadUrl>

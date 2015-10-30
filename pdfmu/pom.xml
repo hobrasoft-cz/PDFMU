@@ -38,6 +38,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>cz.hobrasoft.pdfmu.Main</mainClass>
+        <exeLocation>exe</exeLocation>
         <exeFilename>${project.artifactId}</exeFilename>
         <!-- exeVersion must be four dot-separated digits. -->
         <exeVersion>1.0.0.0</exeVersion>
@@ -143,15 +144,16 @@
                         </goals>
                         <configuration>
                             <includeScope>runtime</includeScope>
-                            <outputDirectory>${project.build.directory}/${exeJarLocation}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${exeLocation}/${exeJarLocation}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             
             <!--
-                1. Copy the resources (process-resources)
-                2. Copy the JRE (package)
+                * Copy the resources [process-resources]
+                * Copy the JAR [package]
+                * Copy the JRE [package]
             -->
             <!-- process-resources, process-test-resources, package -->
             <plugin>
@@ -163,13 +165,31 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>copy-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${exeLocation}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.build.finalName}.${project.packaging}</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-jre</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/${exeJreLocation}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${exeLocation}/${exeJreLocation}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${java.home}</directory>
@@ -196,7 +216,7 @@
                         </goals>
                         <configuration>
                             <headerType>console</headerType>
-                            <outfile>${project.build.directory}/${exeFilename}.exe</outfile>
+                            <outfile>${project.build.directory}/${exeLocation}/${exeFilename}.exe</outfile>
                             <!-- `jar`: Relative to the executable, since `dontWrapJar` is enabled -->
                             <jar>${project.build.finalName}.${project.packaging}</jar>
                             <dontWrapJar>true</dontWrapJar>

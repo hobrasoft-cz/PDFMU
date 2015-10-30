@@ -40,6 +40,7 @@
         <!-- exeVersion must be four dot-separated digits. -->
         <exeVersion>1.0.0.0</exeVersion>
         <exeJarLocation>lib</exeJarLocation>
+        <exeJreLocation>jre</exeJreLocation>
     </properties>
     
     <dependencies>
@@ -106,6 +107,23 @@
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-jre</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${exeJreLocation}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${java.home}</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             
             <plugin>
@@ -195,7 +213,7 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <!--<path></path>-->
+                                <path>${exeJreLocation}</path>
                                 <minVersion>1.7.0</minVersion>
                             </jre>
                             <versionInfo>

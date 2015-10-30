@@ -101,6 +101,7 @@
                 </configuration>
             </plugin>
             
+            <!-- Assemble the JAR -->
             <!-- package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -125,6 +126,7 @@
                 </executions>
             </plugin>
             
+            <!-- Copy the dependencies -->
             <!-- package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -145,6 +147,10 @@
                 </executions>
             </plugin>
             
+            <!--
+                1. Copy the resources (process-resources)
+                2. Copy the JRE (package)
+            -->
             <!-- process-resources, process-test-resources, package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -172,6 +178,7 @@
                 </executions>
             </plugin>
             
+            <!-- Generate the executable -->
             <!-- package -->
             <plugin>
                 <!-- Inspiration: https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc#single-module-project -->
@@ -224,6 +231,7 @@
                 </executions>
             </plugin>
             
+            <!-- Generate the documentation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

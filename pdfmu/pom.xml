@@ -39,6 +39,7 @@
         <exeFilename>${project.artifactId}</exeFilename>
         <!-- exeVersion must be four dot-separated digits. -->
         <exeVersion>1.0.0.0</exeVersion>
+        <exeJarLocation>lib</exeJarLocation>
     </properties>
     
     <dependencies>
@@ -148,6 +149,24 @@
             </plugin>
             
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${exeJarLocation}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
                 <!-- Inspiration: https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc#single-module-project -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
@@ -163,14 +182,15 @@
                             <headerType>console</headerType>
                             <outfile>${project.build.directory}/${exeFilename}.exe</outfile>
                             <!-- `jar`: Relative to the executable, since `dontWrapJar` is enabled -->
-                            <jar>${project.build.finalName}-jar-with-dependencies.jar</jar>
+                            <jar>${project.build.finalName}.jar</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <!--<icon></icon>-->
                             <classPath>
                                 <mainClass>${mainClass}</mainClass>
-                                <addDependencies>false</addDependencies>
+                                <addDependencies>true</addDependencies>
+                                <jarLocation>${exeJarLocation}/</jarLocation>
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>

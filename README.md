@@ -30,7 +30,7 @@ The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar
 ### Build using Maven
 
 1. Go to "pdfmu" in command line
-2. `mvn install`
+2. `mvn package`
 
 The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
 

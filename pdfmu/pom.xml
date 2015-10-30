@@ -188,7 +188,7 @@
                 <executions>
                     <execution>
                         <id>l4j-clui</id>
-                        <phase>package</phase>
+                        <phase>package</phase> <!-- Default: package -->
                         <goals>
                             <goal>launch4j</goal>
                         </goals>

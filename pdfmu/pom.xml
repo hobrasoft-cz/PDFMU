@@ -104,7 +104,7 @@
                 </configuration>
             </plugin>
             
-            <!-- Assemble the JAR -->
+            <!-- Assemble a JAR that contains PDFMU and all its dependencies -->
             <!-- package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

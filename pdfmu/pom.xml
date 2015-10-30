@@ -89,6 +89,7 @@
     <build>
         <plugins>
             
+            <!-- compile, testCompile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -100,6 +101,7 @@
                 </configuration>
             </plugin>
             
+            <!-- process-resources, process-test-resources, package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -126,6 +128,7 @@
                 </executions>
             </plugin>
             
+            <!-- package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -166,6 +169,7 @@
                 </configuration>
             </plugin>
             
+            <!-- package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -185,6 +189,7 @@
                 </executions>
             </plugin>
             
+            <!-- package -->
             <plugin>
                 <!-- Inspiration: https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc#single-module-project -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>

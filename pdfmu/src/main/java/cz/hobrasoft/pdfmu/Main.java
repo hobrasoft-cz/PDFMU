@@ -53,7 +53,7 @@ public class Main {
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
         // TODO: Use an enum
-        parser.addArgument("-of", "--output_format")
+        parser.addArgument("--output_format")
                 .choices("text", "json")
                 .setDefault("text")
                 .type(String.class)

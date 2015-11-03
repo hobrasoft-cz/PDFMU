@@ -40,7 +40,7 @@ class KeystoreParameters implements ArgsConfiguration {
             "storepass",
             "keystore password (default: <empty>)",
             null,
-            "storepassenvvar",
+            "storepass-envvar",
             "keystore password environment variable",
             "PDFMU_STOREPASS");
 

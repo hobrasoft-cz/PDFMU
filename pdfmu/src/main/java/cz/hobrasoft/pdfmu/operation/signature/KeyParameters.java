@@ -40,7 +40,7 @@ class KeyParameters implements ArgsConfiguration {
             "keypass",
             "key password (default: <empty>)",
             null,
-            "keypassenvvar",
+            "keypass-envvar",
             "key password environment variable",
             "PDFMU_KEYPASS");
 

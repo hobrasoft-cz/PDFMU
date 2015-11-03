@@ -51,7 +51,7 @@ class KeystoreParameters implements ArgsConfiguration {
         // Type "pkcs12" file extensions: P12, PFX
         // Source: https://en.wikipedia.org/wiki/PKCS_12
         // Another type: "Windows-MY" - Windows Certificate Store
-        parser.addArgument("-t", "--type")
+        parser.addArgument("-t", "--storetype")
                 .help("keystore type")
                 .type(String.class)
                 .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12", "Windows-MY"});
@@ -71,7 +71,7 @@ class KeystoreParameters implements ArgsConfiguration {
     @Override
     public void setFromNamespace(Namespace namespace) {
         file = namespace.get("keystore");
-        type = namespace.getString("type");
+        type = namespace.getString("storetype");
 
         // Set password
         passwordArgs.setFromNamespace(namespace);

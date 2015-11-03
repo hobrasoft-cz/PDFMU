@@ -49,7 +49,7 @@ public class MetadataParameters implements ArgsConfiguration {
     @Override
     public void addArguments(ArgumentParser parser) {
         // Remove all properties
-        parser.addArgument("-ca", "--clearall")
+        parser.addArgument("--clear-all")
                 .help("clear all properties")
                 .type(boolean.class)
                 .action(Arguments.storeTrue());
@@ -79,7 +79,7 @@ public class MetadataParameters implements ArgsConfiguration {
 
     @Override
     public void setFromNamespace(Namespace namespace) {
-        clearall = namespace.getBoolean("clearall");
+        clearall = namespace.getBoolean("clear_all");
 
         // Clear the selected properties
         { // clearedProperties

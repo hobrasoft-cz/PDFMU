@@ -46,6 +46,8 @@ class KeystoreParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
+        // CLI inspired by `keytool`
+
         // Valid types:
         // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
         // Type "pkcs12" file extensions: P12, PFX
@@ -60,7 +62,6 @@ class KeystoreParameters implements ArgsConfiguration {
         // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
 
         // Keystore
-        // CLI inspired by `keytool`
         parser.addArgument("-s", "--keystore")
                 .help("keystore file")
                 .type(Arguments.fileType());

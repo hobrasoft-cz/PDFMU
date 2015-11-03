@@ -80,7 +80,7 @@ public class OperationSignatureDisplay extends OperationCommon {
         // Print number of signatures
         to.println(String.format("Number of signatures: %d", names.size()));
         to.println(String.format("Number of document revisions: %d", fields.getTotalRevisions()));
-        result.n_revisions = fields.getTotalRevisions();
+        result.nRevisions = fields.getTotalRevisions();
 
         if (names.size() > 0) {
             to.println(""); // Precede the first signature with an empty line
@@ -115,7 +115,7 @@ public class OperationSignatureDisplay extends OperationCommon {
 
         PdfPKCS7 pkcs7 = fields.verifySignature(name);
         Signature signature = display(pkcs7);
-        signature.covers_whole_document = fields.signatureCoversWholeDocument(name);
+        signature.coversWholeDocument = fields.signatureCoversWholeDocument(name);
         signature.revision = fields.getRevision(name);
         return signature;
     }
@@ -196,7 +196,7 @@ public class OperationSignatureDisplay extends OperationCommon {
             X500Principal principalIssuer = cert.getIssuerX500Principal();
             boolean selfSigned = principalSubject.equals(principalIssuer);
             to.println(String.format("Self-signed: %s", (selfSigned ? "Yes" : "No")));
-            certRes.selfsigned = selfSigned;
+            certRes.selfSigned = selfSigned;
         }
 
         // Note: More attributes may be available by more direct processing of `cert`

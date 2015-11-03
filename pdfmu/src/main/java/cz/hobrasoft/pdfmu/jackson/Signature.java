@@ -13,7 +13,7 @@ public class Signature {
     public String id = null;
 
     @JsonPropertyDescription("Does the signature cover the whole document?")
-    public Boolean covers_whole_document = null;
+    public Boolean coversWholeDocument = null;
 
     @JsonPropertyDescription("Document revision associated with this signature")
     public Integer revision = null;

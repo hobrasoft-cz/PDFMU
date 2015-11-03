@@ -10,7 +10,7 @@ import java.util.List;
 public class SignatureDisplay extends Result {
 
     @JsonPropertyDescription("Number of revisions of the document")
-    public Integer n_revisions = null;
+    public Integer nRevisions = null;
 
     @JsonPropertyDescription("Signatures")
     public List<Signature> signatures = null;

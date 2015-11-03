@@ -14,7 +14,7 @@ public class CertificateResult {
     public String type;
 
     @JsonPropertyDescription("Is this certificate self-signed? In other words, is the subject identical to the issuer?")
-    public boolean selfsigned;
+    public boolean selfSigned;
 
     // Maps types to values.
     // Common types: CN, E, OU, O, L, ST, C

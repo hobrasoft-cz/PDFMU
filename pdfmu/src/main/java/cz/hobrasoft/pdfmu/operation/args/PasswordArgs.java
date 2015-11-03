@@ -69,10 +69,10 @@ public class PasswordArgs implements ArgsConfiguration {
 
     @Override
     public void setFromNamespace(Namespace namespace) {
-        String passwordString = namespace.getString(passArgNameLong);
+        String passwordString = namespace.getString(passArgNameLong.replace('-', '_'));
         if (passwordString == null) {
             // Load the password from an environment variable
-            String envVar = namespace.getString(envvarArgNameLong);
+            String envVar = namespace.getString(envvarArgNameLong.replace('-', '_'));
             assert envVar != null; // The argument has a default value
             logger.info(String.format("%s environment variable: %s", StringUtils.capitalize(title), envVar));
             passwordString = System.getenv(envVar);

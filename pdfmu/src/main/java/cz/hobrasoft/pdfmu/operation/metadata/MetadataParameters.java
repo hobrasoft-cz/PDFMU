@@ -92,7 +92,7 @@ public class MetadataParameters implements ArgsConfiguration {
         }
 
         // Generic properties
-        List<List<String>> elements = namespace.getList("keyvalue");
+        List<List<String>> elements = namespace.getList("set");
         if (elements != null) {
             for (List<String> element : elements) {
                 String key = element.get(0);

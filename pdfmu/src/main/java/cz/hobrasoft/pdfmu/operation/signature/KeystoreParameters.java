@@ -61,7 +61,7 @@ class KeystoreParameters implements ArgsConfiguration {
         // TODO?: Default to "pkcs12"
         // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
 
-        // Keystore
+        // Keystore file
         parser.addArgument("-s", "--keystore")
                 .help("keystore file")
                 .type(Arguments.fileType());

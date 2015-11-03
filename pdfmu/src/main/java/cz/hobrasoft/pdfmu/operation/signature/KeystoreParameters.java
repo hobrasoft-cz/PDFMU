@@ -36,10 +36,10 @@ class KeystoreParameters implements ArgsConfiguration {
     private static final Logger logger = Logger.getLogger(KeystoreParameters.class.getName());
 
     private final PasswordArgs passwordArgs = new PasswordArgs("keystore password",
-            "sp",
+            null,
             "storepass",
             "keystore password (default: <empty>)",
-            "spev",
+            null,
             "storepassenvvar",
             "keystore password environment variable",
             "PDFMU_STOREPASS");

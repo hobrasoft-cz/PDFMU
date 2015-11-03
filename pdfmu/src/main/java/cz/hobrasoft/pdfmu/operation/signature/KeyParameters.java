@@ -36,10 +36,10 @@ class KeyParameters implements ArgsConfiguration {
     private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());
 
     private final PasswordArgs passwordArgs = new PasswordArgs("key password",
-            "kp",
+            null,
             "keypass",
             "key password (default: <empty>)",
-            "kpev",
+            null,
             "keypassenvvar",
             "key password environment variable",
             "PDFMU_KEYPASS");

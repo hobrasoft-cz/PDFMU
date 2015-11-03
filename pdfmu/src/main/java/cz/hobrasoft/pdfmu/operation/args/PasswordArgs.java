@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.args;
 
 import java.util.logging.Logger;
+import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -43,15 +44,24 @@ public class PasswordArgs implements ArgsConfiguration {
         this.envvarArgDefault = envvarArgDefault;
     }
 
+    private static Argument addArgument(MutuallyExclusiveGroup group, String nameShort, String nameLong) {
+        assert nameLong != null;
+        if (nameShort != null) {
+            return group.addArgument("-" + nameShort, "--" + nameLong);
+        } else {
+            return group.addArgument("--" + nameLong);
+        }
+    }
+
     @Override
     public void addArguments(ArgumentParser parser) {
         MutuallyExclusiveGroup keypassGroup = parser.addMutuallyExclusiveGroup(title);
         // TODO?: Add description that states that the arguments are mutually exclusive
         // and that `passArg` takes precedence to `envvarArg`.
-        keypassGroup.addArgument("-" + passArgNameShort, "--" + passArgNameLong)
+        addArgument(keypassGroup, passArgNameShort, passArgNameLong)
                 .help(passArgHelp)
                 .type(String.class);
-        keypassGroup.addArgument("-" + envvarArgNameShort, "--" + envvarArgNameLong)
+        addArgument(keypassGroup, envvarArgNameShort, envvarArgNameLong)
                 .help(envvarArgHelp)
                 .type(String.class)
                 .setDefault(envvarArgDefault);

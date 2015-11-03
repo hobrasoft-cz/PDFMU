@@ -52,7 +52,7 @@ class SignatureParameters implements ArgsConfiguration {
         // - sigtype
         // - CryptoStandard
         // - SubFilter
-        parser.addArgument("-st", "--sigtype")
+        parser.addArgument("--sigtype")
                 .help("cryptographic standard (signature format)")
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())
@@ -62,7 +62,7 @@ class SignatureParameters implements ArgsConfiguration {
         // - digest algorithm
         // - Hash Algorithm
         // - hash algorithm for making the signature
-        parser.addArgument("-da", "--digest-algorithm")
+        parser.addArgument("--digest-algorithm")
                 .help("hash algorithm for making the signature")
                 // Java 8 (using `String.join`):
                 //.metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))

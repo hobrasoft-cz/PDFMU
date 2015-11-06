@@ -197,6 +197,7 @@
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <downloadUrl>http://java.com/download</downloadUrl>
+                            <chdir>.</chdir>
                             <!--<icon></icon>-->
                             <classPath>
                                 <mainClass>${mainClass}</mainClass>

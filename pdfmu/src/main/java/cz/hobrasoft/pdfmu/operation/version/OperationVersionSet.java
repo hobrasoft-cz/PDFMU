@@ -9,6 +9,7 @@ import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import cz.hobrasoft.pdfmu.operation.args.OutPdfArgs;
 import java.util.logging.Logger;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -42,6 +43,11 @@ public class OperationVersionSet extends OperationCommon {
                 .type(PdfVersion.class)
                 .setDefault(new PdfVersion("1.6"));
 
+        subparser.addArgument("--only-if-lower")
+                .help(String.format("only set version if the current version is lower than %s", metavarVersion))
+                .type(boolean.class)
+                .action(Arguments.storeTrue());
+
         return subparser;
     }
 
@@ -49,20 +55,21 @@ public class OperationVersionSet extends OperationCommon {
     public void execute(Namespace namespace) throws OperationException {
         inout.setFromNamespace(namespace);
         PdfVersion outVersion = namespace.get("version");
+        boolean onlyIfLower = namespace.get("only_if_lower");
 
-        execute(inout, outVersion);
+        VersionSet result = execute(inout, outVersion, onlyIfLower);
 
-        writeResult(new VersionSet(outVersion.toString()));
+        writeResult(result);
     }
 
-    private static void execute(InOutPdfArgs inout, PdfVersion outVersion) throws OperationException {
+    private static VersionSet execute(InOutPdfArgs inout, PdfVersion outVersion, boolean onlyIfLower) throws OperationException {
         InPdfArgs in = inout.getIn();
         OutPdfArgs out = inout.getOut();
 
-        execute(in, out, outVersion);
+        return execute(in, out, outVersion, onlyIfLower);
     }
 
-    private static void execute(InPdfArgs in, OutPdfArgs out, PdfVersion outVersion) throws OperationException {
+    private static VersionSet execute(InPdfArgs in, OutPdfArgs out, PdfVersion outVersion, boolean onlyIfLower) throws OperationException {
         in.open();
 
         PdfReader pdfReader = in.getPdfReader();
@@ -76,16 +83,24 @@ public class OperationVersionSet extends OperationCommon {
         assert outVersion != null; // The argument "version" has a default value
         logger.info(String.format("Desired output PDF version: %s", outVersion));
 
-        if (outVersion.compareTo(inVersion) < 0) {
+        boolean set = true;
+        if (outVersion.compareTo(inVersion) <= 0) {
             // The desired version is lower than the current version.
-            // TODO?: Add --force-lower-version flag that enables lowering the version
-            logger.warning("Setting the PDF version to a lower value.");
+            if (onlyIfLower) {
+                set = false;
+                logger.info("The input PDF version is not lower than the desired version. No modification will be performed.");
+            } else {
+                logger.warning("Setting the PDF version to a lower value.");
+            }
         }
 
-        out.open(pdfReader, false, outVersion.toChar());
-
-        out.close();
+        if (set) {
+            out.open(pdfReader, false, outVersion.toChar());
+            out.close();
+        }
         in.close();
+
+        return new VersionSet(inVersion.toString(), outVersion.toString(), set);
     }
 
     private static Operation instance = null;

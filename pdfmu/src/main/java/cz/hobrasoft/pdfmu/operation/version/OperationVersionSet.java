@@ -22,7 +22,7 @@ public class OperationVersionSet extends OperationCommon {
 
     private static final Logger logger = Logger.getLogger(OperationVersionSet.class.getName());
 
-    private final InOutPdfArgs inout = new InOutPdfArgs();
+    private final InOutPdfArgs inout = new InOutPdfArgs(false);
 
     @Override
     public Subparser configureSubparser(Subparser subparser) {

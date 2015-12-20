@@ -28,9 +28,11 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     private final String metavarIn;
     private final String metavarOut = "OUT.pdf";
+    private final boolean allowAppend;
 
-    public OutPdfArgs(String metavarIn) {
+    public OutPdfArgs(String metavarIn, boolean allowAppend) {
         this.metavarIn = metavarIn;
+        this.allowAppend = allowAppend;
     }
 
     @Override
@@ -39,6 +41,14 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
                 .help(String.format("output PDF document (default: <%s>)", metavarIn))
                 .metavar(metavarOut)
                 .type(Arguments.fileType());
+
+        if (allowAppend) {
+            parser.addArgument("--append")
+                    .help("append to the document, creating a new revision")
+                    .type(boolean.class)
+                    .setDefault(true);
+        }
+
         parser.addArgument("-f", "--force")
                 .help(String.format("overwrite %s if it exists", metavarOut))
                 .type(boolean.class)
@@ -47,11 +57,18 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     private File file = null;
     private boolean overwrite = false;
+    private boolean append = false;
 
     @Override
     public void setFromNamespace(Namespace namespace) {
         file = namespace.get("out");
         overwrite = namespace.getBoolean("force");
+
+        if (allowAppend) {
+            append = namespace.getBoolean("append");
+        } else {
+            append = false;
+        }
     }
 
     public void setDefaultFile(File file) {
@@ -91,7 +108,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
     }
 
-    private void openStpSignature(PdfReader pdfReader, char pdfVersion, boolean append) throws OperationException {
+    private void openStpSignature(PdfReader pdfReader, char pdfVersion) throws OperationException {
         assert os != null;
         assert stp == null;
 
@@ -111,29 +128,25 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
         // Open the PDF stamper
         try {
-            stp = new PdfStamper(pdfReader, os, pdfVersion);
+            stp = new PdfStamper(pdfReader, os, pdfVersion, append);
         } catch (DocumentException | IOException ex) {
             throw new OperationException(OUTPUT_STAMPER_OPEN, ex,
                     PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
         }
     }
 
-    public PdfStamper open(PdfReader pdfReader, boolean signature, char pdfVersion, boolean append) throws OperationException {
+    public PdfStamper open(PdfReader pdfReader, boolean signature, char pdfVersion) throws OperationException {
         assert file != null;
 
         openOs();
 
         if (signature) {
-            openStpSignature(pdfReader, pdfVersion, append);
+            openStpSignature(pdfReader, pdfVersion);
         } else {
             openStpNew(pdfReader, pdfVersion);
         }
 
         return stp;
-    }
-
-    public PdfStamper open(PdfReader pdfReader, boolean signature, char pdfVersion) throws OperationException {
-        return open(pdfReader, signature, pdfVersion, true);
     }
 
     public PdfStamper open(PdfReader pdfReader, boolean signature) throws OperationException {

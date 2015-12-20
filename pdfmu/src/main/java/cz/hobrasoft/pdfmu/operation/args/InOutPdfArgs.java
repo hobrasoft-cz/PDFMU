@@ -13,12 +13,22 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
     private OutPdfArgs out;
 
     public InOutPdfArgs() {
-        this("IN.pdf");
+        // Allow append by default
+        this(true);
+    }
+
+    public InOutPdfArgs(boolean allowAppend) {
+        this("IN.pdf", allowAppend);
     }
 
     public InOutPdfArgs(String metavarIn) {
+        // Allow append by default
+        this(metavarIn, true);
+    }
+
+    public InOutPdfArgs(String metavarIn, boolean allowAppend) {
         in = new InPdfArgs(metavarIn);
-        out = new OutPdfArgs(metavarIn);
+        out = new OutPdfArgs(metavarIn, allowAppend);
     }
 
     @Override

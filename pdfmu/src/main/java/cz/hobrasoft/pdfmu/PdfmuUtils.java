@@ -56,6 +56,8 @@ public class PdfmuUtils {
      * @return a sorted map that assigns group values to the names.
      */
     public static SortedMap<String, String> getMatcherGroups(Matcher m, List<String> names) {
+        assert m != null;
+        assert names != null;
         SortedMap<String, String> result = new TreeMap<>();
         for (String name : names) {
             result.put(name, m.group(name));

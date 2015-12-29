@@ -24,6 +24,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import net.sourceforge.argparse4j.internal.HelpScreenException;
+import net.sourceforge.argparse4j.internal.UnrecognizedArgumentException;
 
 /**
  * The main class of PDFMU
@@ -148,6 +149,9 @@ public class Main {
             namespace = parser.parseArgs(args);
         } catch (HelpScreenException e) {
             parser.handleError(e); // Do nothing
+        } catch (UnrecognizedArgumentException e) {
+            exitStatus = PARSER_UNRECOGNIZED_ARGUMENT.getCode();
+            parser.handleError(e); // Print the error in human-readable format
         } catch (ArgumentParserException ape) {
             OperationException oe = apeToOe(ape);
             exitStatus = oe.getCode();

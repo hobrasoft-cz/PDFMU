@@ -26,6 +26,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import net.sourceforge.argparse4j.internal.HelpScreenException;
 import net.sourceforge.argparse4j.internal.UnrecognizedArgumentException;
+import net.sourceforge.argparse4j.internal.UnrecognizedCommandException;
 
 /**
  * The main class of PDFMU
@@ -160,6 +161,9 @@ public class Main {
             namespace = parser.parseArgs(args);
         } catch (HelpScreenException e) {
             parser.handleError(e); // Do nothing
+        } catch (UnrecognizedCommandException e) {
+            exitStatus = PARSER_UNRECOGNIZED_COMMAND.getCode();
+            parser.handleError(e); // Print the error in human-readable format
         } catch (UnrecognizedArgumentException e) {
             exitStatus = PARSER_UNRECOGNIZED_ARGUMENT.getCode();
             parser.handleError(e); // Print the error in human-readable format

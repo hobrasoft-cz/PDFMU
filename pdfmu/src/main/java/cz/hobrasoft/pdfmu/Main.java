@@ -93,12 +93,17 @@ public class Main {
 
     private static OperationException apeToOe(ArgumentParserException e) {
         Set<ExceptionMessagePattern> patterns = new HashSet<>();
+
         patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,
                 "argument (?<argument>.*): Insufficient permissions to read file: \'(?<file>.*)\'",
                 Arrays.asList(new String[]{"argument", "file"})));
+
+        // UnrecognizedArgumentException
         patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENT,
                 "unrecognized arguments: '(?<argument>.*)'",
                 Arrays.asList(new String[]{"argument"})));
+
+        // ArgumentParserException
         patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,
                 "argument (?<argument>.*): invalid choice: '(?<choice>.*)' \\(choose from \\{(?<validChoices>.*)\\}\\)",
                 Arrays.asList(new String[]{"argument", "choice", "validChoices"})));

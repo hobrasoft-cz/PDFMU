@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.ExceptionConverter;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.BouncyCastleDigest;
@@ -12,8 +13,13 @@ import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.OcspClient;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.ExceptionMessagePattern;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
@@ -28,8 +34,14 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -108,13 +120,21 @@ public class OperationSignatureAdd extends OperationCommon {
         KeystoreParameters keystoreParameters = signatureParameters.keystore;
         KeyParameters keyParameters = signatureParameters.key;
         String digestAlgorithm = signatureParameters.digestAlgorithm;
+
+        TSAClient tsaClient = signatureParameters.timestamp.getTSAClient();
+        if (tsaClient != null) {
+            logger.info("Using a timestamp authority to attach a timestamp.");
+        } else {
+            logger.info("No timestamp authority was specified.");
+        }
+
         MakeSignature.CryptoStandard sigtype = signatureParameters.sigtype;
 
         // Initialize the signature appearance
         PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);
         assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method
 
-        return sign(sap, keystoreParameters, keyParameters, digestAlgorithm, sigtype);
+        return sign(sap, keystoreParameters, keyParameters, digestAlgorithm, tsaClient, sigtype);
     }
 
     // Initialize and load the keystore
@@ -122,13 +142,14 @@ public class OperationSignatureAdd extends OperationCommon {
             KeystoreParameters keystoreParameters,
             KeyParameters keyParameters,
             String digestAlgorithm,
+            TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         assert keystoreParameters != null;
 
         // Initialize and load keystore
         KeyStore ks = keystoreParameters.loadKeystore();
 
-        return sign(sap, ks, keyParameters, digestAlgorithm, sigtype);
+        return sign(sap, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);
     }
 
     // Get the private key and the certificate chain from the keystore
@@ -136,6 +157,7 @@ public class OperationSignatureAdd extends OperationCommon {
             KeyStore ks,
             KeyParameters keyParameters,
             String digestAlgorithm,
+            TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         assert keyParameters != null;
         // Fix the values, especially if they were not set at all
@@ -160,7 +182,7 @@ public class OperationSignatureAdd extends OperationCommon {
             }
         }
 
-        sign(sap, pk, digestAlgorithm, chain, sigtype, signatureProvider);
+        sign(sap, pk, digestAlgorithm, chain, tsaClient, sigtype, signatureProvider);
 
         return sa;
     }
@@ -170,6 +192,7 @@ public class OperationSignatureAdd extends OperationCommon {
             PrivateKey pk,
             String digestAlgorithm,
             Certificate[] chain,
+            TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype,
             Provider signatureProvider) throws OperationException {
         assert digestAlgorithm != null;
@@ -184,16 +207,17 @@ public class OperationSignatureAdd extends OperationCommon {
         logger.info(String.format("Signature security provider: %s", signatureProvider.getName()));
         ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, signatureProvider.getName());
 
-        sign(sap, externalSignature, chain, sigtype);
+        sign(sap, externalSignature, chain, tsaClient, sigtype);
     }
 
     // Set the "external digest" algorithm
     private static void sign(PdfSignatureAppearance sap,
             ExternalSignature externalSignature,
             Certificate[] chain,
+            TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Use the static BouncyCastleDigest instance
-        sign(sap, externalDigest, externalSignature, chain, sigtype);
+        sign(sap, externalDigest, externalSignature, chain, tsaClient, sigtype);
     }
 
     // Sign the document
@@ -201,6 +225,7 @@ public class OperationSignatureAdd extends OperationCommon {
             ExternalDigest externalDigest,
             ExternalSignature externalSignature,
             Certificate[] chain,
+            TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // TODO?: Set some of the following parameters more sensibly
 
@@ -212,10 +237,6 @@ public class OperationSignatureAdd extends OperationCommon {
         // digitalsignatures20130304.pdf : Section 3.2.4
         OcspClient ocspClient = null;
 
-        // Time Stamp Authority
-        // digitalsignatures20130304.pdf : Section 3.3
-        TSAClient tsaClient = null;
-
         // digitalsignatures20130304.pdf : Section 3.5
         // The value of 0 means "try a generous educated guess".
         // We need not change this unless we want to optimize the resulting PDF document size.
@@ -225,6 +246,62 @@ public class OperationSignatureAdd extends OperationCommon {
 
         try {
             MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);
+        } catch (ExceptionConverter ex) {
+            Exception exInner = ex.getException();
+            if (exInner instanceof IOException) {
+                if (exInner instanceof SSLHandshakeException) {
+                    ExceptionMessagePattern emp = new ExceptionMessagePattern(
+                            SIGNATURE_ADD_TSA_UNTRUSTED,
+                            "sun\\.security\\.validator\\.ValidatorException: PKIX path building failed: sun\\.security\\.provider\\.certpath\\.SunCertPathBuilderException: unable to find valid certification path to requested target",
+                            new ArrayList<String>());
+                    OperationException oe = emp.getOperationException(exInner);
+                    if (oe != null) {
+                        throw oe;
+                    }
+                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                }
+
+                if (exInner instanceof SSLException) {
+                    ExceptionMessagePattern emp = new ExceptionMessagePattern(
+                            SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY,
+                            "java\\.lang\\.RuntimeException: Unexpected error: java\\.security\\.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty",
+                            new ArrayList<String>());
+                    OperationException oe = emp.getOperationException(exInner);
+                    if (oe != null) {
+                        throw oe;
+                    }
+                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                }
+
+                Set<ExceptionMessagePattern> patterns = new HashSet<>();
+
+                // No username
+                patterns.add(new ExceptionMessagePattern(
+                        SIGNATURE_ADD_TSA_UNAUTHORIZED,
+                        "Server returned HTTP response code: 401 for URL: (?<url>.*)",
+                        Arrays.asList(new String[]{"url"})));
+
+                // Incorrect username or incorrect password
+                patterns.add(new ExceptionMessagePattern(
+                        SIGNATURE_ADD_TSA_LOGIN_FAIL,
+                        "Invalid TSA '(?<url>.*)' response, code 32",
+                        Arrays.asList(new String[]{"url"})));
+
+                OperationException oe = null;
+                for (ExceptionMessagePattern p : patterns) {
+                    oe = p.getOperationException(exInner);
+                    if (oe != null) {
+                        break;
+                    }
+                }
+                if (oe == null) {
+                    // Unknown exception
+                    oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);
+                }
+                assert oe != null;
+                throw oe;
+            }
+            throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
             throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         } catch (NullPointerException ex) {

@@ -76,7 +76,7 @@ class KeystoreParameters implements ArgsConfiguration {
 
         // Set password
         passwordArgs.setFromNamespace(namespace);
-        password = passwordArgs.getPassword();
+        password = passwordArgs.getPasswordCharArray();
     }
 
     public void fixType() {

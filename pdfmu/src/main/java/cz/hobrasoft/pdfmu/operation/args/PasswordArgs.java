@@ -20,10 +20,17 @@ public class PasswordArgs implements ArgsConfiguration {
     private final String envvarArgHelp;
     private final String envvarArgDefault;
 
-    private char[] password = null;
+    private String password = null;
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
+    }
+
+    public char[] getPasswordCharArray() {
+        if (password == null) {
+            return null;
+        }
+        return password.toCharArray();
     }
 
     public PasswordArgs(String title,
@@ -69,25 +76,20 @@ public class PasswordArgs implements ArgsConfiguration {
 
     @Override
     public void setFromNamespace(Namespace namespace) {
-        String passwordString = namespace.getString(passArgNameLong.replace('-', '_'));
-        if (passwordString == null) {
+        password = namespace.getString(passArgNameLong.replace('-', '_'));
+        if (password == null) {
             // Load the password from an environment variable
             String envVar = namespace.getString(envvarArgNameLong.replace('-', '_'));
             assert envVar != null; // The argument has a default value
             logger.info(String.format("%s environment variable: %s", StringUtils.capitalize(title), envVar));
-            passwordString = System.getenv(envVar);
-            if (passwordString != null) {
+            password = System.getenv(envVar);
+            if (password != null) {
                 logger.info(String.format("%s loaded from the environment variable %s.", StringUtils.capitalize(title), envVar));
             } else {
                 logger.info(String.format("%s was not set; using empty password.", StringUtils.capitalize(title)));
             }
         } else {
             logger.info(String.format("%s loaded from the command line option --%s.", StringUtils.capitalize(title), passArgNameLong));
-        }
-        if (passwordString != null) {
-            password = passwordString.toCharArray();
-        } else {
-            password = null;
         }
     }
 

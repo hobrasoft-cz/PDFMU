@@ -48,6 +48,13 @@ public class PdfmuUtils {
         return getMatcherGroups(m, Arrays.asList(names));
     }
 
+    /**
+     * Extracts named groups from a matcher.
+     *
+     * @param m the matcher.
+     * @param names the names of the groups.
+     * @return a sorted map that assigns group values to the names.
+     */
     public static SortedMap<String, String> getMatcherGroups(Matcher m, List<String> names) {
         SortedMap<String, String> result = new TreeMap<>();
         for (String name : names) {

@@ -265,7 +265,7 @@
                         See option "-link" of the command "javadoc".
                         http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#bottom
                         -->
-                        <link>http://argparse4j.sourceforge.net/apidocs/</link>
+                        <link>http://argparse4j.github.io/apidocs/</link>
                         <link>http://api.itextpdf.com/itext/</link>
                         <link>https://commons.apache.org/proper/commons-collections/apidocs/</link>
                     </links>

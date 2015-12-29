@@ -23,6 +23,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparsers;
+import net.sourceforge.argparse4j.internal.HelpScreenException;
 
 /**
  * The main class of PDFMU
@@ -145,6 +146,8 @@ public class Main {
             // If insufficient or invalid `args` are given,
             // `parseArgs` throws `ArgumentParserException`.
             namespace = parser.parseArgs(args);
+        } catch (HelpScreenException e) {
+            parser.handleError(e); // Do nothing
         } catch (ArgumentParserException ape) {
             OperationException oe = apeToOe(ape);
             exitStatus = oe.getCode();

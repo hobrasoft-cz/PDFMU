@@ -33,6 +33,7 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  */
 public enum ErrorType {
     PARSER_UNKNOWN,
+    PARSER_UNRECOGNIZED_COMMAND,
     PARSER_UNRECOGNIZED_ARGUMENT,
     PARSER_INVALID_CHOICE,
     INPUT_NOT_VALID_PDF,

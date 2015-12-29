@@ -24,6 +24,13 @@ public class ExceptionMessagePattern {
         this.groupNames = groupNames;
     }
 
+    /**
+     * Tries to convert an exception to an {@link OperationException}.
+     *
+     * @param e the exception to parse
+     * @return an instance of {@link OperationException} if the pattern matches
+     * the message of e, or null otherwise.
+     */
     public OperationException getOperationException(Exception e) {
         String message = e.getMessage();
         Pattern p = Pattern.compile(regex);

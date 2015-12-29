@@ -4,6 +4,7 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_FOUND;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_INVALID_CHOICE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNKNOWN;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNRECOGNIZED_ARGUMENT;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNRECOGNIZED_COMMAND;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -107,6 +108,11 @@ public class Main {
         patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,
                 "argument (?<argument>.*): invalid choice: '(?<choice>.*)' \\(choose from \\{(?<validChoices>.*)\\}\\)",
                 Arrays.asList(new String[]{"argument", "choice", "validChoices"})));
+
+        // UnrecognizedCommandException
+        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_COMMAND,
+                "invalid choice: '(?<command>.*)' \\(choose from (?<validCommands>.*)\\)",
+                Arrays.asList(new String[]{"command", "validCommands"})));
 
         OperationException oe = null;
         for (ExceptionMessagePattern p : patterns) {

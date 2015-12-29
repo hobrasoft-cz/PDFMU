@@ -155,8 +155,7 @@ public class Main {
             // but we do not know whether JSON output was requested,
             // so we use the text output (default).
 
-            // Print the error in human-readable format
-            parser.handleError(ape);
+            parser.handleError(ape); // Print the error in human-readable format
         }
 
         // Handle command line arguments

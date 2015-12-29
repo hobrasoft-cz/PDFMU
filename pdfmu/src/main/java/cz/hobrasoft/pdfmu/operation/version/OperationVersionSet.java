@@ -27,10 +27,11 @@ public class OperationVersionSet extends OperationCommon {
     @Override
     public Subparser configureSubparser(Subparser subparser) {
         String help = "Set PDF version of a PDF document";
+        String description = help + "\nIf there are signatures in the document, this operation invalidates them.";
 
         // Configure the subparser
         subparser.help(help)
-                .description(help)
+                .description(description)
                 .defaultHelp(true)
                 .setDefault("command", OperationVersionSet.class);
 

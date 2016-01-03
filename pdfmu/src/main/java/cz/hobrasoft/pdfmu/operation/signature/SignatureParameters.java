@@ -1,6 +1,7 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.security.MakeSignature;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -75,7 +76,7 @@ class SignatureParameters implements ArgsConfiguration {
     }
 
     @Override
-    public void setFromNamespace(Namespace namespace) {
+    public void setFromNamespace(Namespace namespace) throws OperationException {
         for (ArgsConfiguration configuration : configurations) {
             configuration.setFromNamespace(namespace);
         }

@@ -2,6 +2,7 @@ package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.security.TSAClient;
 import com.itextpdf.text.pdf.security.TSAClientBouncyCastle;
+import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
@@ -30,6 +31,8 @@ public class TimestampParameters implements ArgsConfiguration {
      */
     public String password;
 
+    private final TruststoreParameters truststore = new TruststoreParameters();
+
     private final PasswordArgs passwordArgs = new PasswordArgs("timestamp authority password",
             null,
             "tsa-password",
@@ -54,16 +57,20 @@ public class TimestampParameters implements ArgsConfiguration {
 
         // TODO: Include the password options in `group`
         passwordArgs.addArguments(parser);
+
+        truststore.addArguments(parser);
     }
 
     @Override
-    public void setFromNamespace(Namespace namespace) {
+    public void setFromNamespace(Namespace namespace) throws OperationException {
         url = namespace.get("tsa_url");
         username = namespace.getString("tsa_username");
 
         // Set password
         passwordArgs.setFromNamespace(namespace);
         password = passwordArgs.getPassword();
+
+        truststore.setFromNamespace(namespace);
     }
 
     /**

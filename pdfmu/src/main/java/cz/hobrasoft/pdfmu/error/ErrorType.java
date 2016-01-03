@@ -29,6 +29,14 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  * message associated, and that the codes are unique. If assertions are disabled
  * and a resource is missing or incompatible, default values are provided.
  *
+ * <p>
+ * How to add a new error type:
+ * <ul>
+ * <li>Add an enum constant in {@link ErrorType}
+ * <li>Add a corresponding code in <tt>ErrorCodes.properties</tt>
+ * <li>Add a corresponding message in <tt>ErrorMessages.properties</tt>
+ * </ul>
+ *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public enum ErrorType {

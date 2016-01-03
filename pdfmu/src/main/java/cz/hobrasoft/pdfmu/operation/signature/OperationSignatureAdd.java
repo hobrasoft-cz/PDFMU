@@ -19,6 +19,7 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
@@ -27,6 +28,7 @@ import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -271,6 +273,13 @@ public class OperationSignatureAdd extends OperationCommon {
                         throw oe;
                     }
                     throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                }
+
+                if (exInner instanceof UnknownHostException) {
+                    String host = exInner.getMessage();
+                    throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,
+                            exInner,
+                            new SimpleEntry<String, Object>("host", host));
                 }
 
                 Set<ExceptionMessagePattern> patterns = new HashSet<>();

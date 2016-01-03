@@ -49,14 +49,14 @@ class KeystoreParameters implements ArgsConfiguration {
         // CLI inspired by `keytool`
 
         // Valid types:
-        // https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore
+        // https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore
         // Type "pkcs12" file extensions: P12, PFX
         // Source: https://en.wikipedia.org/wiki/PKCS_12
         // Another type: "Windows-MY" - Windows Certificate Store
         parser.addArgument("-t", "--storetype")
                 .help("keystore type")
                 .type(String.class)
-                .choices(new String[]{"jceks", "jks", "dks", "pkcs11", "pkcs12", "Windows-MY"});
+                .choices(new String[]{"jceks", "jks", "pkcs12", "Windows-MY"});
         // TODO?: Guess type from file extension by default
         // TODO?: Default to "pkcs12"
         // TODO: Do not allow "Windows-MY" when running in a different OS than Windows

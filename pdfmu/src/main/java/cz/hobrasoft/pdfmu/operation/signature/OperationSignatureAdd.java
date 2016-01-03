@@ -22,12 +22,14 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
+import static cz.hobrasoft.pdfmu.error.ErrorType.TRUSTSTORE_INCORRECT_TYPE;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -280,6 +282,18 @@ public class OperationSignatureAdd extends OperationCommon {
                     throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,
                             exInner,
                             new SimpleEntry<String, Object>("host", host));
+                }
+
+                if (exInner instanceof SocketException) {
+                    ExceptionMessagePattern emp = new ExceptionMessagePattern(
+                            TRUSTSTORE_INCORRECT_TYPE,
+                            "java\\.security\\.NoSuchAlgorithmException: Error constructing implementation \\(algorithm: (?<algorithm>.*), provider: (?<provider>.*), class: (?<class>.*)\\)",
+                            Arrays.asList(new String[]{"algorithm", "provider", "class"}));
+                    OperationException oe = emp.getOperationException(exInner);
+                    if (oe != null) {
+                        throw oe;
+                    }
+                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
                 }
 
                 Set<ExceptionMessagePattern> patterns = new HashSet<>();

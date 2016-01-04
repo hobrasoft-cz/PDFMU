@@ -12,10 +12,13 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
- * https://access.redhat.com/documentation/en-US/Fuse_MQ_Enterprise/7.1/html/Security_Guide/files/SSL-SysProps.html
- * https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore
- *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
+ * @see
+ * <a href="https://access.redhat.com/documentation/en-US/Fuse_MQ_Enterprise/7.1/html/Security_Guide/files/SSL-SysProps.html">Configuring
+ * JSSE System Properties</a>
+ * @see
+ * <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore">KeyStore
+ * Types</a>
  */
 public class TruststoreParameters implements ArgsConfiguration {
 

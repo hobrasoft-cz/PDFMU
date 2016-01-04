@@ -19,6 +19,9 @@ import net.sourceforge.argparse4j.inf.Namespace;
  * @see
  * <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore">KeyStore
  * Types</a>
+ * @see
+ * <a href="http://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/index.html">Generating
+ * a KeyStore and TrustStore</a>
  */
 public class TruststoreParameters implements ArgsConfiguration {
 

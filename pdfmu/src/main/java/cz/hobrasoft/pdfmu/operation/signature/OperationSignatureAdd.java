@@ -16,6 +16,8 @@ import com.itextpdf.text.pdf.security.TSAClient;
 import cz.hobrasoft.pdfmu.ExceptionMessagePattern;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_BAD_CERTIFICATE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
@@ -254,15 +256,39 @@ public class OperationSignatureAdd extends OperationCommon {
             Exception exInner = ex.getException();
             if (exInner instanceof IOException) {
                 if (exInner instanceof SSLHandshakeException) {
-                    ExceptionMessagePattern emp = new ExceptionMessagePattern(
+                    Set<ExceptionMessagePattern> patterns = new HashSet<>();
+
+                    // Untrusted
+                    patterns.add(new ExceptionMessagePattern(
                             SIGNATURE_ADD_TSA_UNTRUSTED,
                             "sun\\.security\\.validator\\.ValidatorException: PKIX path building failed: sun\\.security\\.provider\\.certpath\\.SunCertPathBuilderException: unable to find valid certification path to requested target",
-                            new ArrayList<String>());
-                    OperationException oe = emp.getOperationException(exInner);
-                    if (oe != null) {
-                        throw oe;
+                            new ArrayList<String>()));
+
+                    // Bad certificate
+                    patterns.add(new ExceptionMessagePattern(
+                            SIGNATURE_ADD_TSA_BAD_CERTIFICATE,
+                            "Received fatal alert: bad_certificate",
+                            new ArrayList<String>()));
+
+                    // Handshake failure
+                    patterns.add(new ExceptionMessagePattern(
+                            SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE,
+                            "Received fatal alert: handshake_failure",
+                            new ArrayList<String>()));
+
+                    OperationException oe = null;
+                    for (ExceptionMessagePattern p : patterns) {
+                        oe = p.getOperationException(exInner);
+                        if (oe != null) {
+                            break;
+                        }
                     }
-                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                    if (oe == null) {
+                        // Unknown exception
+                        oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);
+                    }
+                    assert oe != null;
+                    throw oe;
                 }
 
                 if (exInner instanceof SSLException) {

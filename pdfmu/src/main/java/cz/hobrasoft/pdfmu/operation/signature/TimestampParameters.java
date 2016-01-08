@@ -51,7 +51,7 @@ public class TimestampParameters implements ArgsConfiguration {
         passwordArgs.finalizeArguments();
 
         sslTruststore.fileArgument = group.addArgument("--ssl-truststore")
-                .help("Location of the keystore file containing the trusted certificates. Always uses forward slashes.");
+                .help("The keystore file that contains the certificates of the trusted certificate authorities.");
         sslTruststore.typeArgument = group.addArgument("--ssl-truststore-type")
                 .help("SSL TrustStore type")
                 .choices(new String[]{"jceks", "jks", "pkcs12"});

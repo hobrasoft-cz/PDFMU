@@ -59,7 +59,7 @@ public class TimestampParameters implements ArgsConfiguration {
                 .help("SSL TrustStore password (default: <none>)");
         sslTruststore.passwordArgs.environmentVariableArgument = group.addArgument("--ssl-truststore-password-envvar")
                 .help("SSL TrustStore password environment variable")
-                .setDefault("PDFMU_TRUSTSTORE_PASSWORD");
+                .setDefault("PDFMU_SSL_TRUSTSTORE_PASSWORD");
         sslTruststore.finalizeArguments();
     }
 

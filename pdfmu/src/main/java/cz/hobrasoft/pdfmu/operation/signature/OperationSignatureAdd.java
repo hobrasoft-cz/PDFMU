@@ -22,7 +22,6 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
-import static cz.hobrasoft.pdfmu.error.ErrorType.TRUSTSTORE_INCORRECT_TYPE;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationCommon;
@@ -49,6 +48,7 @@ import javax.net.ssl.SSLHandshakeException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_INCORRECT_TYPE;
 
 /**
  * Adds a digital signature to a PDF document
@@ -286,7 +286,7 @@ public class OperationSignatureAdd extends OperationCommon {
 
                 if (exInner instanceof SocketException) {
                     ExceptionMessagePattern emp = new ExceptionMessagePattern(
-                            TRUSTSTORE_INCORRECT_TYPE,
+                            SSL_TRUSTSTORE_INCORRECT_TYPE,
                             "java\\.security\\.NoSuchAlgorithmException: Error constructing implementation \\(algorithm: (?<algorithm>.*), provider: (?<provider>.*), class: (?<class>.*)\\)",
                             Arrays.asList(new String[]{"algorithm", "provider", "class"}));
                     OperationException oe = emp.getOperationException(exInner);

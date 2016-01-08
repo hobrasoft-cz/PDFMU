@@ -75,8 +75,8 @@ public enum ErrorType {
     SIGNATURE_ADD_TSA_UNREACHABLE,
     ATTACH_FAIL,
     ATTACH_ATTACHMENT_EQUALS_OUTPUT,
-    TRUSTSTORE_NOT_FOUND,
-    TRUSTSTORE_INCORRECT_TYPE;
+    SSL_TRUSTSTORE_NOT_FOUND,
+    SSL_TRUSTSTORE_INCORRECT_TYPE;
 
     /**
      * The default error code. It is used for error types that have no code

@@ -1,6 +1,5 @@
 package cz.hobrasoft.pdfmu.operation.signature;
 
-import static cz.hobrasoft.pdfmu.error.ErrorType.TRUSTSTORE_NOT_FOUND;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import java.io.File;
@@ -9,6 +8,7 @@ import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_NOT_FOUND;
 
 /**
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
@@ -80,7 +80,7 @@ public class TruststoreParameters implements ArgsConfiguration {
         if (location != null) {
             File trustStoreFile = new File(location);
             if (!trustStoreFile.exists()) {
-                throw new OperationException(TRUSTSTORE_NOT_FOUND,
+                throw new OperationException(SSL_TRUSTSTORE_NOT_FOUND,
                         new AbstractMap.SimpleEntry<String, Object>("trustStore", location));
             }
             // TODO: Check that `location` is forward-slash-separated

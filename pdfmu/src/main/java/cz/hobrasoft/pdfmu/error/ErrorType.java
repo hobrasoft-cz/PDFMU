@@ -76,7 +76,8 @@ public enum ErrorType {
     ATTACH_FAIL,
     ATTACH_ATTACHMENT_EQUALS_OUTPUT,
     SSL_TRUSTSTORE_NOT_FOUND,
-    SSL_TRUSTSTORE_INCORRECT_TYPE;
+    SSL_TRUSTSTORE_INCORRECT_TYPE,
+    SSL_KEYSTORE_NOT_FOUND;
 
     /**
      * The default error code. It is used for error types that have no code

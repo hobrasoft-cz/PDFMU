@@ -68,13 +68,13 @@ class KeystoreParameters implements ArgsConfiguration {
         passwordArgs.setFromNamespace(namespace);
     }
 
-    public void fixType() {
-        // Set keystore type if not set from command line
+    private String getNonnullType() {
         if (type == null) {
             // TODO: Guess type from `ksFile` file extension
             logger.info("Keystore type not specified. Using the default type.");
-            type = KeyStore.getDefaultType();
+            return KeyStore.getDefaultType();
         }
+        return type;
     }
 
     private String getPassword() {
@@ -91,7 +91,7 @@ class KeystoreParameters implements ArgsConfiguration {
     }
 
     public KeyStore loadKeystore() throws OperationException {
-        fixType();
+        String type = getNonnullType();
         logger.info(String.format("Keystore type: %s", type));
         // digitalsignatures20130304.pdf : Code sample 2.2
         // Initialize keystore
@@ -108,12 +108,12 @@ class KeystoreParameters implements ArgsConfiguration {
                 loadWindowsKeystore(ks);
                 break;
             default:
-                loadFileKeystore(ks);
+                loadFileKeystore(ks, type);
         }
         return ks;
     }
 
-    private void loadFileKeystore(KeyStore ks) throws OperationException {
+    private void loadFileKeystore(KeyStore ks, String type) throws OperationException {
         if (file == null) {
             throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED,
                     new SimpleEntry<String, Object>("type", type));

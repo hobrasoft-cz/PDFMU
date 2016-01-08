@@ -81,7 +81,7 @@ public class TruststoreParameters implements ArgsConfiguration {
             File trustStoreFile = new File(location);
             if (!trustStoreFile.exists()) {
                 throw new OperationException(SSL_TRUSTSTORE_NOT_FOUND,
-                        new AbstractMap.SimpleEntry<String, Object>("trustStore", location));
+                        new AbstractMap.SimpleEntry<String, Object>("location", location));
             }
             // TODO: Check that `location` is forward-slash-separated
             LOGGER.info(String.format("Using TrustStore: %s", location));

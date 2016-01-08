@@ -3,7 +3,6 @@ package cz.hobrasoft.pdfmu.operation.signature;
 import static cz.hobrasoft.pdfmu.error.ErrorType.TRUSTSTORE_NOT_FOUND;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
-import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
 import java.io.File;
 import java.util.AbstractMap;
 import java.util.logging.Logger;

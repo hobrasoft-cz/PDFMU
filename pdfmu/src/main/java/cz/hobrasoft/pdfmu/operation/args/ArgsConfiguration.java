@@ -22,7 +22,8 @@ public interface ArgsConfiguration {
      * Sets configuration values from parsed argument namespace
      *
      * @param namespace namespace with the argument values
-     * @throws cz.hobrasoft.pdfmu.operation.OperationException when an exception occurs
+     * @throws cz.hobrasoft.pdfmu.operation.OperationException when an exception
+     * occurs
      */
     public void setFromNamespace(Namespace namespace) throws OperationException;
 }

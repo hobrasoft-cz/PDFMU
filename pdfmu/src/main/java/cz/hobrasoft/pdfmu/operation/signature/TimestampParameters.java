@@ -28,6 +28,7 @@ public class TimestampParameters implements ArgsConfiguration {
 
     private PasswordArgs passwordArgs = new PasswordArgs("TSA password");
 
+    private final KeystoreParameters sslKeystore = new KeystoreParameters(SslKeystore.PRIVATE.getName());
     private final KeystoreParameters sslTruststore = new KeystoreParameters(SslKeystore.TRUSTSTORE.getName());
 
     @Override
@@ -50,6 +51,18 @@ public class TimestampParameters implements ArgsConfiguration {
                 .setDefault("PDFMU_TSA_PASSWORD");
         passwordArgs.finalizeArguments();
 
+        sslKeystore.fileArgument = group.addArgument("--ssl-keystore")
+                .help("The keystore file containing the private keys.");
+        sslKeystore.typeArgument = group.addArgument("--ssl-keystore-type")
+                .help("SSL KeyStore type")
+                .choices(new String[]{"jceks", "jks", "pkcs12"});
+        sslKeystore.passwordArgs.passwordArgument = group.addArgument("--ssl-keystore-password")
+                .help("SSL KeyStore password (default: <none>)");
+        sslKeystore.passwordArgs.environmentVariableArgument = group.addArgument("--ssl-keystore-password-envvar")
+                .help("SSL KeyStore password environment variable")
+                .setDefault("PDFMU_SSL_KEYSTORE_PASSWORD");
+        sslKeystore.finalizeArguments();
+
         sslTruststore.fileArgument = group.addArgument("--ssl-truststore")
                 .help("The keystore file that contains the certificates of the trusted certificate authorities.");
         sslTruststore.typeArgument = group.addArgument("--ssl-truststore-type")
@@ -69,6 +82,9 @@ public class TimestampParameters implements ArgsConfiguration {
         username = namespace.getString("tsa_username");
 
         passwordArgs.setFromNamespace(namespace);
+
+        sslKeystore.setFromNamespace(namespace);
+        sslKeystore.setSystemProperties(SslKeystore.PRIVATE);
 
         sslTruststore.setFromNamespace(namespace);
         sslTruststore.setSystemProperties(SslKeystore.TRUSTSTORE);

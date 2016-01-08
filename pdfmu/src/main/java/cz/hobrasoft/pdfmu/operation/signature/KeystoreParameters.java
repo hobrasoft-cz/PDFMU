@@ -32,7 +32,7 @@ class KeystoreParameters implements ArgsConfiguration {
     public String type = null;
     public char[] password = null;
 
-    // TODO: Replace with Console
+    // TODO?: Replace with Console
     private static final Logger logger = Logger.getLogger(KeystoreParameters.class.getName());
 
     private final PasswordArgs passwordArgs = new PasswordArgs("keystore password",

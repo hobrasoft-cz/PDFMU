@@ -19,6 +19,7 @@ import java.security.cert.CertificateException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -38,41 +39,31 @@ class KeystoreParameters implements ArgsConfiguration {
         passwordArgs = new PasswordArgs(String.format("%s password", title));
     }
 
+    public Argument typeArgument;
+    public Argument fileArgument;
     public PasswordArgs passwordArgs;
+
+    @Deprecated
     @Override
     public void addArguments(ArgumentParser parser) {
-        // CLI inspired by `keytool`
-
-        // Valid types:
-        // https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore
-        // Type "pkcs12" file extensions: P12, PFX
-        // Source: https://en.wikipedia.org/wiki/PKCS_12
-        // Another type: "Windows-MY" - Windows Certificate Store
-        parser.addArgument("-t", "--storetype")
-                .help("keystore type")
-                .type(String.class)
-                .choices(new String[]{"jceks", "jks", "pkcs12", "Windows-MY"});
-        // TODO?: Guess type from file extension by default
-        // TODO?: Default to "pkcs12"
-        // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
-
-        // Keystore file
-        parser.addArgument("-s", "--keystore")
-                .help("keystore file")
-                .type(Arguments.fileType());
-
         finalizeArguments();
     }
 
     public void finalizeArguments() {
+        assert typeArgument != null;
+        typeArgument.type(String.class);
+
+        assert fileArgument != null;
+        fileArgument.type(Arguments.fileType());
+
         assert passwordArgs != null;
         passwordArgs.finalizeArguments();
     }
 
     @Override
     public void setFromNamespace(Namespace namespace) {
-        file = namespace.get("keystore");
-        type = namespace.getString("storetype");
+        file = namespace.get(fileArgument.getDest());
+        type = namespace.getString(typeArgument.getDest());
 
         passwordArgs.setFromNamespace(namespace);
     }

@@ -28,8 +28,7 @@ public class TimestampParameters implements ArgsConfiguration {
 
     private PasswordArgs passwordArgs = new PasswordArgs("TSA password");
 
-    private final TruststoreParameters truststore = new TruststoreParameters();
-
+    private final KeystoreParameters sslTruststore = new KeystoreParameters(SslKeystore.TRUSTSTORE.getName());
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -51,7 +50,17 @@ public class TimestampParameters implements ArgsConfiguration {
                 .setDefault("PDFMU_TSA_PASSWORD");
         passwordArgs.finalizeArguments();
 
-        truststore.addArguments(parser);
+        sslTruststore.fileArgument = group.addArgument("--ssl-truststore")
+                .help("Location of the keystore file containing the trusted certificates. Always uses forward slashes.");
+        sslTruststore.typeArgument = group.addArgument("--ssl-truststore-type")
+                .help("SSL TrustStore type")
+                .choices(new String[]{"jceks", "jks", "pkcs12"});
+        sslTruststore.passwordArgs.passwordArgument = group.addArgument("--ssl-truststore-password")
+                .help("SSL TrustStore password (default: <none>)");
+        sslTruststore.passwordArgs.environmentVariableArgument = group.addArgument("--ssl-truststore-password-envvar")
+                .help("SSL TrustStore password environment variable")
+                .setDefault("PDFMU_TRUSTSTORE_PASSWORD");
+        sslTruststore.finalizeArguments();
     }
 
     @Override
@@ -61,7 +70,7 @@ public class TimestampParameters implements ArgsConfiguration {
 
         passwordArgs.setFromNamespace(namespace);
 
-        truststore.setFromNamespace(namespace);
+        sslTruststore.setFromNamespace(namespace);
     }
 
     /**

@@ -71,6 +71,7 @@ public class TimestampParameters implements ArgsConfiguration {
         passwordArgs.setFromNamespace(namespace);
 
         sslTruststore.setFromNamespace(namespace);
+        sslTruststore.setSystemProperties(SslKeystore.TRUSTSTORE);
     }
 
     /**

@@ -26,21 +26,10 @@ public class TimestampParameters implements ArgsConfiguration {
      */
     public String username;
 
-    /**
-     * Timestamp authority login password.
-     */
-    public String password;
+    private PasswordArgs passwordArgs = new PasswordArgs("TSA password");
 
     private final TruststoreParameters truststore = new TruststoreParameters();
 
-    private final PasswordArgs passwordArgs = new PasswordArgs("timestamp authority password",
-            null,
-            "tsa-password",
-            "timestamp authority password (default: <none>)",
-            null,
-            "tsa-password-envvar",
-            "timestamp authority password environment variable",
-            "PDFMU_TSA_PASSWORD");
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -55,8 +44,12 @@ public class TimestampParameters implements ArgsConfiguration {
                 .help("timestamp authority username (set to enable TSA authorization)")
                 .type(String.class);
 
-        // TODO: Include the password options in `group`
-        passwordArgs.addArguments(parser);
+        passwordArgs.passwordArgument = group.addArgument("--tsa-password")
+                .help("timestamp authority password (default: <none>)");
+        passwordArgs.environmentVariableArgument = group.addArgument("--tsa-password-envvar")
+                .help("timestamp authority password environment variable")
+                .setDefault("PDFMU_TSA_PASSWORD");
+        passwordArgs.finalizeArguments();
 
         truststore.addArguments(parser);
     }
@@ -66,9 +59,7 @@ public class TimestampParameters implements ArgsConfiguration {
         url = namespace.get("tsa_url");
         username = namespace.getString("tsa_username");
 
-        // Set password
         passwordArgs.setFromNamespace(namespace);
-        password = passwordArgs.getPassword();
 
         truststore.setFromNamespace(namespace);
     }
@@ -82,7 +73,12 @@ public class TimestampParameters implements ArgsConfiguration {
         if (url == null) {
             return null;
         }
-        return new TSAClientBouncyCastle(url, username, password);
+        return new TSAClientBouncyCastle(url, username, getPassword());
+    }
+
+    private String getPassword() {
+        assert passwordArgs != null;
+        return passwordArgs.getPassword();
     }
 
 }

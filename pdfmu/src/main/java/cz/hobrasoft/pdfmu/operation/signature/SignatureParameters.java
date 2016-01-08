@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 class SignatureParameters implements ArgsConfiguration {
 
     public SignatureAppearanceParameters appearance = new SignatureAppearanceParameters();
-    public KeystoreParameters keystore = new KeystoreParameters();
+    public KeystoreParameters keystore = new KeystoreParameters("signing keystore");
     public KeyParameters key = new KeyParameters();
     public TimestampParameters timestamp = new TimestampParameters();
 
@@ -45,6 +45,12 @@ class SignatureParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
+        keystore.passwordArgs.passwordArgument = parser.addArgument("--storepass")
+                .help("signing keystore password (default: <empty>)");
+        keystore.passwordArgs.environmentVariableArgument = parser.addArgument("--storepass-envvar")
+                .help("signing keystore password environment variable")
+                .setDefault("PDFMU_STOREPASS");
+
         for (ArgsConfiguration configuration : configurations) {
             configuration.addArguments(parser);
         }

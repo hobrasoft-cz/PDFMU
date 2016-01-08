@@ -30,20 +30,15 @@ class KeystoreParameters implements ArgsConfiguration {
 
     public File file = null;
     public String type = null;
-    public char[] password = null;
 
     // TODO?: Replace with Console
     private static final Logger logger = Logger.getLogger(KeystoreParameters.class.getName());
 
-    private final PasswordArgs passwordArgs = new PasswordArgs("keystore password",
-            null,
-            "storepass",
-            "keystore password (default: <empty>)",
-            null,
-            "storepass-envvar",
-            "keystore password environment variable",
-            "PDFMU_STOREPASS");
+    public KeystoreParameters(String title) {
+        passwordArgs = new PasswordArgs(String.format("%s password", title));
+    }
 
+    public PasswordArgs passwordArgs;
     @Override
     public void addArguments(ArgumentParser parser) {
         // CLI inspired by `keytool`
@@ -66,7 +61,12 @@ class KeystoreParameters implements ArgsConfiguration {
                 .help("keystore file")
                 .type(Arguments.fileType());
 
-        passwordArgs.addArguments(parser);
+        finalizeArguments();
+    }
+
+    public void finalizeArguments() {
+        assert passwordArgs != null;
+        passwordArgs.finalizeArguments();
     }
 
     @Override
@@ -74,9 +74,7 @@ class KeystoreParameters implements ArgsConfiguration {
         file = namespace.get("keystore");
         type = namespace.getString("storetype");
 
-        // Set password
         passwordArgs.setFromNamespace(namespace);
-        password = passwordArgs.getPasswordCharArray();
     }
 
     public void fixType() {
@@ -88,11 +86,17 @@ class KeystoreParameters implements ArgsConfiguration {
         }
     }
 
-    public void fixPassword() {
+    private String getPassword() {
+        return passwordArgs.getPassword();
+    }
+
+    private String getNonnullPassword() {
+        String password = getPassword();
         if (password == null) {
             logger.info("Keystore password not set. Using empty password.");
-            password = "".toCharArray();
+            return "";
         }
+        return password;
     }
 
     public KeyStore loadKeystore() throws OperationException {
@@ -132,7 +136,7 @@ class KeystoreParameters implements ArgsConfiguration {
             throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_OPEN, ex,
                     new SimpleEntry<String, Object>("file", file));
         }
-        fixPassword();
+        char[] password = getNonnullPassword().toCharArray();
         try {
             ks.load(ksIs, password);
         } catch (IOException ex) {

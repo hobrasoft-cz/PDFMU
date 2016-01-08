@@ -35,14 +35,7 @@ class KeyParameters implements ArgsConfiguration {
     // TODO: Replace with Console
     private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());
 
-    private final PasswordArgs passwordArgs = new PasswordArgs("key password",
-            null,
-            "keypass",
-            "key password (default: <empty>)",
-            null,
-            "keypass-envvar",
-            "key password environment variable",
-            "PDFMU_KEYPASS");
+    public PasswordArgs passwordArgs = new PasswordArgs("key password");
 
     @Override
     public void addArguments(ArgumentParser parser) {
@@ -50,7 +43,12 @@ class KeyParameters implements ArgsConfiguration {
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
 
-        passwordArgs.addArguments(parser);
+        passwordArgs.passwordArgument = parser.addArgument("--keypass")
+                .help("key password (default: <empty>)");
+        passwordArgs.environmentVariableArgument = parser.addArgument("--keypass-envvar")
+                .help("key password environment variable")
+                .setDefault("PDFMU_KEYPASS");
+        passwordArgs.finalizeArguments();
     }
 
     @Override
@@ -58,6 +56,7 @@ class KeyParameters implements ArgsConfiguration {
         alias = namespace.getString("alias");
 
         // Set password
+        assert passwordArgs != null;
         passwordArgs.setFromNamespace(namespace);
         password = passwordArgs.getPasswordCharArray();
         // TODO?: Use keystore password by default

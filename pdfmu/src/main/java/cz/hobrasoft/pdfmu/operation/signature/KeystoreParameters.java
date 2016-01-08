@@ -158,4 +158,7 @@ class KeystoreParameters implements ArgsConfiguration {
         }
     }
 
+    public void setSystemProperties(SslKeystore sslKeystore) throws OperationException {
+        sslKeystore.setSystemProperties(file, type, getPassword());
+    }
 }

@@ -55,7 +55,7 @@ public class TimestampParameters implements ArgsConfiguration {
                 .help("The keystore file that contains the private keys used for SSL authorization");
         sslKeystore.typeArgument = group.addArgument("--ssl-keystore-type")
                 .help("SSL KeyStore type")
-                .choices(new String[]{"jceks", "jks", "pkcs12"});
+                .choices(new String[]{"jks", "jceks", "pkcs12"});
         sslKeystore.passwordArgs.passwordArgument = group.addArgument("--ssl-keystore-password")
                 .help("SSL KeyStore password (default: <none>)");
         sslKeystore.passwordArgs.environmentVariableArgument = group.addArgument("--ssl-keystore-password-envvar")

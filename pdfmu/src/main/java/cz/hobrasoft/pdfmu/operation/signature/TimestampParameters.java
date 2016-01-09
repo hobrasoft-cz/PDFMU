@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.security.TSAClientBouncyCastle;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
+import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -15,6 +16,8 @@ import net.sourceforge.argparse4j.inf.Namespace;
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
 public class TimestampParameters implements ArgsConfiguration {
+
+    private static final Logger LOGGER = Logger.getLogger(TimestampParameters.class.getName());
 
     /**
      * Timestamp authority URL.

@@ -65,9 +65,10 @@ public class TimestampParameters implements ArgsConfiguration {
 
         sslTruststore.fileArgument = group.addArgument("--ssl-truststore")
                 .help("The keystore file that contains the certificates of the trusted certificate authorities");
+        // TODO: Add support for type "pkcs12"
         sslTruststore.typeArgument = group.addArgument("--ssl-truststore-type")
                 .help("SSL TrustStore type")
-                .choices(new String[]{"jceks", "jks", "pkcs12"});
+                .choices(new String[]{"jks", "jceks"});
         sslTruststore.passwordArgs.passwordArgument = group.addArgument("--ssl-truststore-password")
                 .help("SSL TrustStore password (default: <none>)");
         sslTruststore.passwordArgs.environmentVariableArgument = group.addArgument("--ssl-truststore-password-envvar")

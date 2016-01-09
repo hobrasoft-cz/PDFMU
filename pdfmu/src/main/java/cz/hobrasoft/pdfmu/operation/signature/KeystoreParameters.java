@@ -77,7 +77,7 @@ class KeystoreParameters implements ArgsConfiguration {
         return type;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return passwordArgs.getPassword();
     }
 

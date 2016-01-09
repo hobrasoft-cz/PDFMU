@@ -19,6 +19,8 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_BAD_CERTIFICATE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_FATAL_ALERT;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
@@ -284,8 +286,16 @@ public class OperationSignatureAdd extends OperationCommon {
                         }
                     }
                     if (oe == null) {
-                        // Unknown exception
-                        oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);
+                        ExceptionMessagePattern emp = new ExceptionMessagePattern(
+                                SIGNATURE_ADD_TSA_SSL_FATAL_ALERT,
+                                "Received fatal alert: (?<alert>.*)",
+                                Arrays.asList(new String[]{"alert"}));
+                        oe = emp.getOperationException(exInner);
+
+                        if (oe == null) {
+                            // Unknown exception
+                            oe = new OperationException(SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION, exInner);
+                        }
                     }
                     assert oe != null;
                     throw oe;

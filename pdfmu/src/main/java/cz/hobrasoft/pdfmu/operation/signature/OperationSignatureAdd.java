@@ -325,6 +325,7 @@ public class OperationSignatureAdd extends OperationCommon {
                 Set<ExceptionMessagePattern> patterns = new HashSet<>();
 
                 // No username
+                // May also be returned if the username and password are incorrect.
                 patterns.add(new ExceptionMessagePattern(
                         SIGNATURE_ADD_TSA_UNAUTHORIZED,
                         "Server returned HTTP response code: 401 for URL: (?<url>.*)",

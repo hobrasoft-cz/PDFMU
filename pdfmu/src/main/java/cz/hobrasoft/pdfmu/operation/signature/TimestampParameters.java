@@ -109,7 +109,15 @@ public class TimestampParameters implements ArgsConfiguration {
         if (url == null) {
             return null;
         }
-        return new TSAClientBouncyCastle(url, username, getPassword());
+        LOGGER.info("TSA URL has been set. Will attempt to attach a timestamp to the signature.");
+        String password = getPassword();
+        if (username != null && password == null) {
+            LOGGER.warning("TSA username has been set but password has not.");
+        }
+        if (password != null && username == null) {
+            LOGGER.warning("TSA password has been set but username has not.");
+        }
+        return new TSAClientBouncyCastle(url, username, password);
     }
 
     private String getPassword() {

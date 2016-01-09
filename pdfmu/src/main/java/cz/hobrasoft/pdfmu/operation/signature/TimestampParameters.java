@@ -88,6 +88,12 @@ public class TimestampParameters implements ArgsConfiguration {
         passwordArgs.setFromNamespace(namespace);
 
         sslKeystore.setFromNamespace(namespace);
+        if (sslKeystore.file != null) {
+            String password = sslKeystore.getPassword();
+            if (password == null || password.isEmpty()) {
+                LOGGER.warning("SSL KeyStore: Location has been set but password has not. Only KeyStores protected by a non-empty password are supported.");
+            }
+        }
         sslKeystore.setSystemProperties(SslKeystore.PRIVATE);
 
         sslTruststore.setFromNamespace(namespace);

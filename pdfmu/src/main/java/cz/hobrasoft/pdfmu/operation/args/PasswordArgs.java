@@ -62,7 +62,7 @@ public class PasswordArgs implements ArgsConfiguration {
             if (password != null) {
                 logger.info(String.format("%s loaded from the environment variable %s.", StringUtils.capitalize(title), envVar));
             } else {
-                logger.info(String.format("%s was not set; using empty password.", StringUtils.capitalize(title)));
+                logger.info(String.format("%s was not set.", StringUtils.capitalize(title)));
             }
         } else {
             logger.info(String.format("%s loaded from the command line.", StringUtils.capitalize(title)));

@@ -12,18 +12,18 @@ import net.sourceforge.argparse4j.inf.Namespace;
 public interface ArgsConfiguration {
 
     /**
-     * Add arguments that configure this configuration to a parser
+     * Adds arguments that configure this {@link ArgsConfiguration} to an
+     * {@link ArgumentParser}
      *
      * @param parser argument parser to add arguments to
      */
     public void addArguments(ArgumentParser parser);
 
     /**
-     * Sets configuration values from parsed argument namespace
+     * Sets configuration values from a parsed {@link Namespace}
      *
-     * @param namespace namespace with the argument values
-     * @throws cz.hobrasoft.pdfmu.operation.OperationException when an exception
-     * occurs
+     * @param namespace the namespace with the argument values
+     * @throws OperationException when an exception occurs
      */
     public void setFromNamespace(Namespace namespace) throws OperationException;
 }

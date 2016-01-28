@@ -24,6 +24,18 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
+/**
+ * The methods must be called in the following order:
+ * <ol>
+ * <li>{@link #addArguments(ArgumentParser)}
+ * <li>{@link #setFromNamespace(Namespace)}
+ * <li>{@link #setDefaultFile(File)} (optional)
+ * <li>{@link #open(PdfReader, boolean, char)}
+ * <li>{@link #close()}
+ * </ol>
+ *
+ * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
+ */
 public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     private static final Logger logger = Logger.getLogger(OutPdfArgs.class.getName());
@@ -73,6 +85,10 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
     }
 
+    /**
+     * Set the target file if it has not been set by
+     * {@link #setFromNamespace(Namespace)}.
+     */
     public void setDefaultFile(File file) {
         if (this.file == null) {
             logger.info("Output file has not been specified. Assuming in-place operation.");

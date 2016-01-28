@@ -10,7 +10,9 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_NOT_SPECIFIED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_OPEN;
 import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_STAMPER_CLOSE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_STAMPER_OPEN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_WRITE;
 import cz.hobrasoft.pdfmu.operation.OperationException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -78,34 +80,15 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
     }
 
-    private OutputStream os;
+    private ByteArrayOutputStream os;
     private PdfStamper stp;
 
     private void openOs() throws OperationException {
-        if (file == null) {
-            throw new OperationException(OUTPUT_NOT_SPECIFIED);
-        }
         assert os == null;
 
-        logger.info(String.format("Output file: %s", file));
-
-        if (file.exists()) {
-            logger.info("Output file already exists.");
-            if (overwrite) {
-                logger.info("Overwriting the output file (--force flag is set).");
-            } else {
-                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET,
-                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-            }
-        }
-
-        // Open the output stream
-        try {
-            os = new FileOutputStream(file);
-        } catch (FileNotFoundException ex) {
-            throw new OperationException(OUTPUT_OPEN, ex,
-                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-        }
+        // Initialize the array length to the file size
+        // because the whole file will have to fit in the array anyway.
+        os = new ByteArrayOutputStream((int) file.length());
     }
 
     private void openStpSignature(PdfReader pdfReader, char pdfVersion) throws OperationException {
@@ -135,8 +118,35 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
     }
 
+    /**
+     * Returns a {@link PdfStamper} associated with the internal buffer. Using a
+     * buffer instead of an actual file means that the operation can be rolled
+     * back completely, leaving the output file untouched. Call {@link #close}
+     * to save the content of the buffer to the output file.
+     *
+     * @param pdfReader the input {@link PdfReader} to operate on
+     * @param signature shall we be signing the document?
+     * @param pdfVersion the last character of the PDF version number ('2' to
+     * '7'), or '\0' to keep the original version
+     *
+     * @throws OperationException if an error occurs
+     */
     public PdfStamper open(PdfReader pdfReader, boolean signature, char pdfVersion) throws OperationException {
+        if (file == null) {
+            throw new OperationException(OUTPUT_NOT_SPECIFIED);
+        }
         assert file != null;
+
+        logger.info(String.format("Output file: %s", file));
+        if (file.exists()) {
+            logger.info("Output file already exists.");
+            if (overwrite) {
+                logger.info("Will overwrite the output file (--force flag is set).");
+            } else {
+                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET,
+                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+            }
+        }
 
         openOs();
 
@@ -161,6 +171,12 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         return open(pdfReader, true);
     }
 
+    /**
+     * Writes the content of the internal buffer to the output file.
+     *
+     * @throws OperationException if an error occurs when closing the
+     * {@link PdfStamper} or when writing to the output file
+     */
     @Override
     public void close() throws OperationException {
         try {
@@ -171,12 +187,35 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         }
         stp = null;
 
-        try {
-            os.close();
-        } catch (IOException ex) {
-            throw new OperationException(OUTPUT_CLOSE, ex,
-                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+        assert file != null;
+        logger.info(String.format("Writing the output of the operation to the output file: %s", file));
+
+        // Save the content of `os` to `file`.
+        { // fileOs
+            OutputStream fileOs = null;
+            try {
+                fileOs = new FileOutputStream(file);
+            } catch (FileNotFoundException ex) {
+                throw new OperationException(OUTPUT_OPEN, ex,
+                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+
+            }
+            assert fileOs != null;
+            try {
+                assert os != null;
+                os.writeTo(fileOs);
+            } catch (IOException ex) {
+                throw new OperationException(OUTPUT_WRITE, ex,
+                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+            }
+            try {
+                fileOs.close();
+            } catch (IOException ex) {
+                throw new OperationException(OUTPUT_CLOSE, ex,
+                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+            }
         }
+
         os = null;
     }
 

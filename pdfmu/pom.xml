@@ -98,7 +98,7 @@
     <build>
         <plugins>
             
-            <!-- compile, testCompile -->
+            <!-- Phases: compile, testCompile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -111,7 +111,7 @@
             </plugin>
             
             <!-- Copy the dependencies -->
-            <!-- package -->
+            <!-- Phase: package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -136,7 +136,7 @@
                 * Copy the JAR [package]
                 * Copy the JRE [package]
             -->
-            <!-- process-resources, process-test-resources, package -->
+            <!-- Phases: process-resources, process-test-resources, package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -182,7 +182,7 @@
             </plugin>
             
             <!-- Generate the executable -->
-            <!-- package -->
+            <!-- Phase: package -->
             <plugin>
                 <!-- Inspiration: https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc#single-module-project -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -236,7 +236,7 @@
             </plugin>
             
             <!-- Assemble a JAR that contains PDFMU and all its dependencies -->
-            <!-- package -->
+            <!-- Phase: package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

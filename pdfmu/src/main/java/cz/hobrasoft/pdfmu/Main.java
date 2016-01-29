@@ -11,15 +11,19 @@ import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -65,18 +69,36 @@ public class Main {
         return parser;
     }
 
+    private static String getProjectVersion() {
+        ClassLoader classLoader = Main.class.getClassLoader();
+        InputStream in = classLoader.getResourceAsStream("pom.properties");
+        Properties pomProperties = new Properties();
+        if (in != null) {
+            try {
+                pomProperties.load(in);
+            } catch (IOException ex) {
+                logger.severe(String.format("Could not load the POM properties file: %s", ex));
+            }
+            try {
+                in.close();
+            } catch (IOException ex) {
+                logger.severe(String.format("Could not close the POM properties file: %s", ex));
+            }
+        } else {
+            logger.severe("Could not open the POM properties file.");
+        }
+        return pomProperties.getProperty("projectVersion");
+    }
+
     private static ArgumentParser createFullParser(SortedMap<String, Operation> operations) {
         // Create a command line argument parser
         ArgumentParser parser = createBasicParser();
 
-        // TODO: Set pdfmu version in `parser`. For example:
-        // parser.version("1.0");
-        // http://argparse4j.sourceforge.net/usage.html#argumentparser-version
-        // Try to extract the version from `pom.xml`.
-        // Once the version has been set, enable a CL argument:
-//        parser.addArgument("-v", "--version")
-//                .help("print version of pdfmu")
-//                .action(Arguments.version());
+        parser.version(getProjectVersion());
+        parser.addArgument("-v", "--version")
+                .help("print version of pdfmu")
+                .action(Arguments.version());
+
         // Create a Subparsers instance for operation subparsers
         Subparsers subparsers = parser.addSubparsers()
                 .help("operation to execute")

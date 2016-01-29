@@ -44,6 +44,7 @@
         <exeVersion>1.0.0.0</exeVersion>
         <exeJarLocation>lib</exeJarLocation>
         <exeJreLocation>jre</exeJreLocation>
+        <projectVersion>${project.version}</projectVersion>
     </properties>
     
     <dependencies>

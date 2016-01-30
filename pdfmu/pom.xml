@@ -8,7 +8,6 @@
     
     <name>PDF Manipulation Utility</name>
     <description>Manipulates PDF documents from command line</description>
-    <!--TODO: Set correct URL-->
     <url>http://www.hobrasoft.cz/</url>
     <organization>
         <name>Hobrasoft s.r.o.</name>
@@ -29,7 +28,6 @@
             <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
         </license>
     </licenses>
-    <!--Add element "scm"-->
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

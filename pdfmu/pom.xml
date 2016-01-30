@@ -247,11 +247,7 @@
                                 <fileVersion>${exeVersion}</fileVersion>
                                 <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>${project.description}</fileDescription>
-                                <!--
-                                    TODO: Update `copyright`
-                                    Example: "Copyright (C) 2015 Hobrasoft s.r.o."
-                                -->
-                                <copyright>none</copyright>
+                                <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
                                 <productVersion>${exeVersion}</productVersion>
                                 <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>${project.name}</productName>

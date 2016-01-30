@@ -19,11 +19,7 @@
             <id>filip.bartek</id>
             <name>Filip Bártek</name>
             <email>filip.bartek@hobrasoft.cz</email>
-            <roles>
-                <role>Java developer</role>
-            </roles>
             <timezone>1</timezone>
-            <url>http://filipbartek.github.io/</url>
         </developer>
     </developers>
     <inceptionYear>2015</inceptionYear>

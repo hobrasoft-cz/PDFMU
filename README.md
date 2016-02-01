@@ -72,3 +72,11 @@ You do not need to specify the password (`--ssl-truststore-password`) – it see
 
 The KeyStore must be protected by a non-empty password (`--ssl-keystore-password`).
 All the private keys in a JKS or JCEKS KeyStore must be protected by the same password as the KeyStore.
+
+## Development
+
+How do I change the version of PDFMU?
+Update the following values in `pom.xml`:
+
+* `project.version`
+* `project.properties.exeVersion`

@@ -80,3 +80,16 @@ Update the following values in `pom.xml`:
 
 * `project.version`
 * `project.properties.exeVersion`
+
+### How do I change the license header?
+Use the NetBeans plugin [License Changer](http://plugins.netbeans.org/plugin/17960/license-changer) to update the license header including the copyright in the source files.
+Version 1.9.2 of the plugin contains a bug that makes it generate CRLF instead of LF line endings.
+To fix the line endings,
+use the utility `dox2unix`.
+To run it on all files, execute the following in "pdfmu/src":
+`find -type f -exec dos2unix {} \;`
+
+### How do I change the copyright?
+Update the value `project.properties.copyright` in `pom.xml`.
+Update the license header according to the instructions in the previous section,
+since the license header includes the copyright.

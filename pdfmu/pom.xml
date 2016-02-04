@@ -39,6 +39,7 @@
         <exeJarLocation>lib</exeJarLocation>
         <exeJreLocation>jre</exeJreLocation>
         <projectVersion>${project.version}</projectVersion>
+        <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
     </properties>
     
     <dependencies>
@@ -247,7 +248,7 @@
                                 <fileVersion>${exeVersion}</fileVersion>
                                 <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>${project.description}</fileDescription>
-                                <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
+                                <copyright>${copyright}</copyright>
                                 <productVersion>${exeVersion}</productVersion>
                                 <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>${project.name}</productName>

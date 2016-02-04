@@ -360,8 +360,8 @@ public class OperationSignatureAdd extends OperationCommon {
                 // Incorrect username or incorrect password
                 patterns.add(new ExceptionMessagePattern(
                         SIGNATURE_ADD_TSA_LOGIN_FAIL,
-                        "Invalid TSA '(?<url>.*)' response, code 32",
-                        Arrays.asList(new String[]{"url"})));
+                        "Invalid TSA '(?<url>.*)' response, code (?<code>\\d+)",
+                        Arrays.asList(new String[]{"url", "code"})));
 
                 OperationException oe = null;
                 for (ExceptionMessagePattern p : patterns) {

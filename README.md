@@ -75,7 +75,7 @@ All the private keys in a JKS or JCEKS KeyStore must be protected by the same pa
 
 ## Development
 
-How do I change the version of PDFMU?
+### How do I change the version of PDFMU?
 Update the following values in `pom.xml`:
 
 * `project.version`

@@ -37,11 +37,11 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_HANDSHAKE_FAI
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_FATAL_ALERT;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION;
-import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_EMPTY;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_INCORRECT_TYPE;
 import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
 import cz.hobrasoft.pdfmu.operation.Operation;
@@ -320,7 +320,7 @@ public class OperationSignatureAdd extends OperationCommon {
 
                 if (exInner instanceof SSLException) {
                     ExceptionMessagePattern emp = new ExceptionMessagePattern(
-                            SIGNATURE_ADD_TSA_TRUSTSTORE_EMPTY,
+                            SSL_TRUSTSTORE_EMPTY,
                             "java\\.lang\\.RuntimeException: Unexpected error: java\\.security\\.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty",
                             new ArrayList<String>());
                     OperationException oe = emp.getOperationException(exInner);

@@ -69,6 +69,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_INCORRECT_TYPE;
+import java.io.FileNotFoundException;
 
 /**
  * Adds a digital signature to a PDF document
@@ -329,7 +330,8 @@ public class OperationSignatureAdd extends OperationCommon {
                     throw new OperationException(SIGNATURE_ADD_FAIL, exInner);
                 }
 
-                if (exInner instanceof UnknownHostException) {
+                if (exInner instanceof UnknownHostException
+                        || exInner instanceof FileNotFoundException) {
                     String host = exInner.getMessage();
                     throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,
                             exInner,

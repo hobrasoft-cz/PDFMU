@@ -18,6 +18,7 @@ package cz.hobrasoft.pdfmu.operation.signature;
 
 import com.itextpdf.text.pdf.security.TSAClient;
 import com.itextpdf.text.pdf.security.TSAClientBouncyCastle;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_INVALID_URL;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
@@ -26,7 +27,6 @@ import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.validator.routines.UrlValidator;
-import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_INVALID_URL;
 
 /**
  * Parameters of timestamping process.

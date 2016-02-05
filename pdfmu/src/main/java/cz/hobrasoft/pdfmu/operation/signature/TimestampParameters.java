@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.commons.validator.routines.UrlValidator;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_INVALID_URL;
 
 /**
  * Parameters of timestamping process.
@@ -99,6 +101,14 @@ public class TimestampParameters implements ArgsConfiguration {
     @Override
     public void setFromNamespace(Namespace namespace) throws OperationException {
         url = namespace.get("tsa_url");
+
+        if (url != null) {
+            UrlValidator urlValidator = new UrlValidator();
+            if (!urlValidator.isValid(url)) {
+                throw new OperationException(SIGNATURE_ADD_TSA_INVALID_URL);
+            }
+        }
+
         username = namespace.getString("tsa_username");
 
         passwordArgs.setFromNamespace(namespace);

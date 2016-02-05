@@ -326,7 +326,7 @@ public class OperationSignatureAdd extends OperationCommon {
                     if (oe != null) {
                         throw oe;
                     }
-                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);
                 }
 
                 if (exInner instanceof UnknownHostException) {
@@ -345,7 +345,7 @@ public class OperationSignatureAdd extends OperationCommon {
                     if (oe != null) {
                         throw oe;
                     }
-                    throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);
                 }
 
                 Set<ExceptionMessagePattern> patterns = new HashSet<>();
@@ -377,7 +377,7 @@ public class OperationSignatureAdd extends OperationCommon {
                 assert oe != null;
                 throw oe;
             }
-            throw new OperationException(SIGNATURE_ADD_FAIL, ex);
+            throw new OperationException(SIGNATURE_ADD_FAIL, exInner);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
             throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         } catch (NullPointerException ex) {

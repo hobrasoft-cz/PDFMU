@@ -65,12 +65,15 @@ Information on the web:
 
 ### TrustStore
 
-Only the types JKS and JCEKS (not PKCS #12) are supported for TrustStore (`--ssl-truststore-type`).
-You do not need to specify the password (`--ssl-truststore-password`) – it seems that the CA certificates in the keystore are not password protected.
+Only the types JKS and JCEKS (not PKCS #12) are supported for TrustStore
+(`--ssl-truststore-type`).
+You do not need to specify the password (`--ssl-truststore-password`) –
+it seems that the CA certificates in the keystore are not password protected.
 
 ### KeyStore
 
-The KeyStore must be protected by a non-empty password (`--ssl-keystore-password`).
+The KeyStore must be protected by a non-empty password
+(`--ssl-keystore-password`).
 All the private keys in a JKS or JCEKS KeyStore must be protected by the same password as the KeyStore.
 
 ## Development
@@ -84,11 +87,15 @@ Update the following values in "pdfmu/pom.xml":
 
 ### How do I change the license header?
 
-Use the NetBeans plugin [License Changer](http://plugins.netbeans.org/plugin/17960/license-changer) to update the license header including the copyright line in the source files.
-Version 1.9.2 of the plugin contains a bug that makes it generate CRLF instead of LF line endings.
+Use the NetBeans plugin
+[License Changer](http://plugins.netbeans.org/plugin/17960/license-changer)
+to update the license header including the copyright line in the source files.
+Version 1.9.2 of the plugin contains a bug
+that makes it generate CRLF instead of LF line endings.
 To fix the line endings,
 use the utility `dox2unix`.
-To run it on all the source files, execute the following command in the directory "pdfmu/src":
+To run it on all the source files,
+execute the following command in the directory "pdfmu/src":
 `find -type f -exec dos2unix {} \;`
 
 ### How do I update the copyright?

@@ -89,7 +89,7 @@ use the utility `dox2unix`.
 To run it on all the source files, execute the following command in the directory "pdfmu/src":
 `find -type f -exec dos2unix {} \;`
 
-### How do I change the copyright?
+### How do I update the copyright?
 Update the value `project.properties.copyright` in "pdfmu/pom.xml".
 Update the license header according to the instructions in the previous section,
 since the license header includes a copyright line.

@@ -107,7 +107,7 @@ Update the value `project.properties.copyright` in "pdfmu/pom.xml".
 Update the license header according to the instructions in the previous section,
 since the license header includes a copyright line.
 
-## Copyright and License
+## Copyright and license
 
 ```
 Copyright (C) 2016 Hobrasoft s.r.o.

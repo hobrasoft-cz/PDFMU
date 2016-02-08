@@ -86,7 +86,7 @@ Use the NetBeans plugin [License Changer](http://plugins.netbeans.org/plugin/179
 Version 1.9.2 of the plugin contains a bug that makes it generate CRLF instead of LF line endings.
 To fix the line endings,
 use the utility `dox2unix`.
-To run it on all files, execute the following in "pdfmu/src":
+To run it on all the source files, execute the following command in the directory "pdfmu/src":
 `find -type f -exec dos2unix {} \;`
 
 ### How do I change the copyright?

@@ -6,7 +6,10 @@
 2. Install [NetBeans 8.1 Beta](http://download.netbeans.org/netbeans/8.1/beta/)
 3. Run NetBeans
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
-5. Run > Run Project (pdfmu)
+5. Run > Build Project (PDF Manipulation Utility)
+
+A standalone executable JAR with the program will be generated in
+"pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
 
 ## Software dependencies
 

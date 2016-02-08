@@ -17,7 +17,7 @@
 
 ## Actions
 
-All the paths below are relative to the repository root.
+All the paths mentioned below are relative to the repository root.
 
 ### Build using NetBeans
 

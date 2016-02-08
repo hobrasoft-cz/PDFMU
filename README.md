@@ -11,7 +11,7 @@
 ## Software dependencies
 
 * [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
-* [NetBeans 8.1 Beta](http://download.netbeans.org/netbeans/8.1/beta/) (optional)
+* [NetBeans 8.1](https://netbeans.org/downloads/) (optional)
 * [Maven](http://maven.apache.org/download.cgi) 3.3.3 (part of NetBeans)
 * [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10 (optional)
 

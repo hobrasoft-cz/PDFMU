@@ -73,7 +73,7 @@ public class TimestampParameters implements ArgsConfiguration {
         passwordArgs.finalizeArguments();
 
         sslKeystore.fileArgument = group.addArgument("--ssl-keystore")
-                .help("The keystore file that contains the private keys used for SSL authorization");
+                .help("The keystore file that contains the private keys used for SSL authorization. Must be protected by a non-empty password.");
         sslKeystore.typeArgument = group.addArgument("--ssl-keystore-type")
                 .help("SSL KeyStore type")
                 .choices(new String[]{"jks", "jceks", "pkcs12"});

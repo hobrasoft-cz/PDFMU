@@ -76,7 +76,7 @@ All the private keys in a JKS or JCEKS KeyStore must be protected by the same pa
 ## Development
 
 ### How do I change the version of PDFMU?
-Update the following values in `pom.xml`:
+Update the following values in "pdfmu/pom.xml":
 
 * `project.version`
 * `project.properties.exeVersion`
@@ -90,6 +90,6 @@ To run it on all files, execute the following in "pdfmu/src":
 `find -type f -exec dos2unix {} \;`
 
 ### How do I change the copyright?
-Update the value `project.properties.copyright` in `pom.xml`.
+Update the value `project.properties.copyright` in "pdfmu/pom.xml".
 Update the license header according to the instructions in the previous section,
 since the license header includes the copyright.

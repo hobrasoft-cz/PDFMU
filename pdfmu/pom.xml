@@ -250,14 +250,7 @@
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <downloadUrl>http://java.com/download</downloadUrl>
-                            <chdir>.</chdir>
                             <!--<icon></icon>-->
-                            <classPath>
-                                <mainClass>${mainClass}</mainClass>
-                                <addDependencies>true</addDependencies>
-                                <jarLocation>${exeJarLocation}/</jarLocation>
-                                <preCp>anything</preCp>
-                            </classPath>
                             <jre>
                                 <path>${exeJreLocation}</path>
                                 <minVersion>1.7.0</minVersion>

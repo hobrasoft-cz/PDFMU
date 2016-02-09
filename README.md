@@ -24,24 +24,31 @@ A standalone executable JAR with the program will be generated in
 
 All the paths mentioned below are relative to the repository root.
 
-### Build using NetBeans
+### Build for Windows using NetBeans
 
 1. Run NetBeans
 2. File > Open Project > "pdfmu"
 3. Run > Build Project (pdfmu)
 
-The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+The resulting file is "pdfmu/target/exe/pdfmu.exe".
 
-### Build using Maven
+### Build for Windows using Maven
 
 1. Go to "pdfmu" in command line
 2. `mvn package`
 
+The resulting file is "pdfmu/target/exe/pdfmu.exe".
+
+### Build a self-contained JAR using Maven
+
+1. Go to "pdfmu" in command line
+2. `mvn package assembly:single`
+
 The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
 
-### Run from command line
+### Run the self-contained jar
 
-1. Build (see above)
+1. Build the self-contained JAR (see above)
 2. Go to "pdfmu/target" in command line
 3. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
 

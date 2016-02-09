@@ -263,7 +263,7 @@
             </plugin>
             
             <!-- Assemble a JAR that contains PDFMU and all of its dependencies. -->
-            <!-- Phase: package -->
+            <!-- Run `mvn package assembly:single` to generate the JAR with dependencies. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -280,14 +280,6 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             
             <!-- Generate the documentation. -->

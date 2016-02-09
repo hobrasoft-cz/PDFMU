@@ -108,7 +108,7 @@
     <build>
         <plugins>
             
-            <!-- Generate "pom.properties" so that we can read the project version in the program -->
+            <!-- Generate "pom.properties" so that we can read the project version in the program. -->
             <!-- Phase: generate-resources -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

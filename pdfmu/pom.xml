@@ -116,6 +116,7 @@
                 <version>1.0.0</version>
                 <executions>
                     <execution>
+                        <id>generate-pom-properties</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>write-project-properties</goal>

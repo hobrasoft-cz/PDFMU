@@ -37,7 +37,6 @@
         <!-- exeVersion must be four dot-separated digits. -->
         <exeVersion>1.0.0.0</exeVersion>
         <exeJarLocation>lib</exeJarLocation>
-        <exeJreLocation>jre</exeJreLocation>
         <projectVersion>${project.version}</projectVersion>
         <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
     </properties>
@@ -182,7 +181,6 @@
             <!--
                 * Copy the resources [process-resources]
                 * Copy the JAR [package]
-                * Copy the JRE [package]
             -->
             <!-- Phases: process-resources, process-test-resources, package -->
             <plugin>
@@ -207,21 +205,6 @@
                                     <includes>
                                         <include>${project.build.finalName}.${project.packaging}</include>
                                     </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-jre</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/${exeLocation}/${exeJreLocation}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${java.home}</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -261,7 +244,6 @@
                             which can only happen if jre.path is specified and jre.minVersion is not specified. -->
                             <supportUrl>${project.url}</supportUrl>
                             <jre>
-                                <path>${exeJreLocation}</path>
                                 <minVersion>1.7.0</minVersion>
                             </jre>
                             <versionInfo>

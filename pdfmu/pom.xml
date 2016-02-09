@@ -262,7 +262,7 @@
                 </executions>
             </plugin>
             
-            <!-- Assemble a JAR that contains PDFMU and all its dependencies -->
+            <!-- Assemble a JAR that contains PDFMU and all of its dependencies. -->
             <!-- Phase: package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -290,7 +290,7 @@
                 </executions>
             </plugin>
             
-            <!-- Generate the documentation -->
+            <!-- Generate the documentation. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

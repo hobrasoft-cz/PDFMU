@@ -250,8 +250,12 @@
                             <outfile>${project.build.directory}/${exeLocation}/${exeFilename}.exe</outfile>
                             <!-- `jar`: Path relative to the executable, since `dontWrapJar` is enabled -->
                             <jar>${project.build.finalName}.${project.packaging}</jar>
+                            <!-- The binary will look for the JAR relative to itself. -->
                             <dontWrapJar>true</dontWrapJar>
+                            <!-- errTitle is displayed in the error messages printed by Launch4j. -->
                             <errTitle>${project.name}</errTitle>
+                            <!-- The program opens downloadUrl if an appropriate version of JRE is missing,
+                            which can only happen if jre.minVersion is specified. -->
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <!-- The program opens supportUrl in the web browser if a bundled JRE is required and missing,
                             which can only happen if jre.path is specified and jre.minVersion is not specified. -->

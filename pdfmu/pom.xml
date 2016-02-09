@@ -147,8 +147,10 @@
                 <configuration>
                     <archive>
                         <manifest>
+                            <addClasspath>true</addClasspath>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <classpathPrefix>${exeJarLocation}</classpathPrefix>
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>

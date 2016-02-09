@@ -283,6 +283,7 @@
             </plugin>
             
             <!-- Generate the documentation. -->
+            <!-- Run `mvn javadoc:javadoc` to generate the documentation. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

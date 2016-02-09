@@ -251,6 +251,9 @@
                             <dontWrapJar>true</dontWrapJar>
                             <errTitle>${project.name}</errTitle>
                             <downloadUrl>http://java.com/download</downloadUrl>
+                            <!-- The program opens supportUrl in the web browser if a bundled JRE is required and missing,
+                            which can only happen if jre.path is specified and jre.minVersion is not specified. -->
+                            <supportUrl>${project.url}</supportUrl>
                             <!--<icon></icon>-->
                             <jre>
                                 <path>${exeJreLocation}</path>

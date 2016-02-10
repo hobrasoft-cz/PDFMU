@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs xmlns="http://maven.apache.org/FML/1.0.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 http://maven.apache.org/xsd/fml-1.0.1.xsd"
+      title="Development HOWTO"
+      toplink="false">
+    <part id="development">
+        
+        <faq id="version">
+            <question>How do I change the version of PDFMU?</question>
+            <answer>
+                <p>Update the following values in "pdfmu/pom.xml":</p>
+                <ul>
+                    <li>
+                        <tt>project.version</tt>
+                    </li>
+                    <li>
+                        <tt>project.properties.exeVersion</tt>
+                    </li>
+                </ul>
+            </answer>
+        </faq>
+
+        <faq id="license">
+            <question>How do I change the license header?</question>
+            <answer>
+                <p>
+                    Use the NetBeans plugin
+                    <a href="http://plugins.netbeans.org/plugin/17960/license-changer">License Changer</a>
+                    to update the license header including the copyright line in the source files.
+                    Version 1.9.2 of the plugin contains a bug that makes it generate CRLF instead of LF line endings.
+                    To fix the line endings, use the utility <tt>dox2unix</tt>.
+                    To run it on all the source files,
+                    execute the following command in the directory "pdfmu/src":
+                    <tt>find -type f -exec dos2unix {} \;</tt>
+                </p>
+            </answer>
+        </faq>
+
+        <faq id="copyright">
+            <question>How do I update the copyright?</question>
+            <answer>
+                <p>
+                    Update the value <tt>project.properties.copyright</tt> in "pdfmu/pom.xml".
+                    Update the license header according to the instructions in the previous section,
+                    since the license header includes a copyright line.
+                </p>
+            </answer>
+        </faq>
+        
+    </part>
+</faqs>

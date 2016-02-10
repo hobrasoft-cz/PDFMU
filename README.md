@@ -79,34 +79,6 @@ The KeyStore must be protected by a non-empty password
 (`--ssl-keystore-password`).
 All the private keys in a JKS or JCEKS KeyStore must be protected by the same password as the KeyStore.
 
-## Development
-
-### How do I change the version of PDFMU?
-
-Update the following values in "pdfmu/pom.xml":
-
-* `project.version`
-* `project.properties.exeVersion`
-
-### How do I change the license header?
-
-Use the NetBeans plugin
-[License Changer](http://plugins.netbeans.org/plugin/17960/license-changer)
-to update the license header including the copyright line in the source files.
-Version 1.9.2 of the plugin contains a bug
-that makes it generate CRLF instead of LF line endings.
-To fix the line endings,
-use the utility `dox2unix`.
-To run it on all the source files,
-execute the following command in the directory "pdfmu/src":
-`find -type f -exec dos2unix {} \;`
-
-### How do I update the copyright?
-
-Update the value `project.properties.copyright` in "pdfmu/pom.xml".
-Update the license header according to the instructions in the previous section,
-since the license header includes a copyright line.
-
 ## Copyright and license
 
 ```

@@ -4,8 +4,8 @@ This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 
 ## Quick start
 
-1. Install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
-2. Install [NetBeans 8.1](https://netbeans.org/downloads/)
+1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+2. Download and install [NetBeans 8.1](https://netbeans.org/downloads/)
 3. Run NetBeans
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Build Project (PDF Manipulation Utility)

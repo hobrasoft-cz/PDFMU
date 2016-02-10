@@ -2,7 +2,7 @@
 
 This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 
-## Quick start
+## Quick start in Windows
 
 1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 2. Download and install [NetBeans 8.1](https://netbeans.org/downloads/)
@@ -10,8 +10,7 @@ This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
 5. Run > Build Project (PDF Manipulation Utility)
 
-A standalone executable JAR with the program will be generated in
-"pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+An executable will be generated in "pdfmu/target/exe/pdfmu.exe".
 
 ## Software dependencies
 

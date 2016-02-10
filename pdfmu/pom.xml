@@ -105,6 +105,18 @@
     </dependencies>
     
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <!-- Version 3.3 and newer support Markdown. -->
+                    <!-- http://illegalexception.schlichtherle.de/2013/06/17/how-to-use-markdown-syntax-with-the-maven-site-plugin/ -->
+                    <version>3.4</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
             
             <!-- Generate "pom.properties" so that we can read the project version in the program. -->

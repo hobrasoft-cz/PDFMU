@@ -66,23 +66,23 @@ To inspect the resulting documentation open "pdfmu/target/site/apidocs/index.htm
 
 To inspect the resulting documentation open "doxygen/html/index.html".
 
-# Options
+## Options
 
-## SSL
+### SSL
 
 Information on the web:
 
 * [Generating a KeyStore and TrustStore](http://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/index.html)
 * [Configuring JSSE System Properties](https://access.redhat.com/documentation/en-US/Fuse_MQ_Enterprise/7.1/html/Security_Guide/files/SSL-SysProps.html)
 
-### TrustStore
+#### TrustStore
 
 Only the types JKS and JCEKS (not PKCS #12) are supported for TrustStore
 (`--ssl-truststore-type`).
 You do not need to specify the password (`--ssl-truststore-password`) –
 it seems that the CA certificates in the keystore are not password protected.
 
-### KeyStore
+#### KeyStore
 
 The KeyStore must be protected by a non-empty password
 (`--ssl-keystore-password`).

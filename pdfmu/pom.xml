@@ -282,6 +282,20 @@
                 </configuration>
             </plugin>
             
+        </plugins>
+        
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    
+    <reporting>
+        <plugins>
             <!-- Generate the documentation. -->
             <!-- Run `mvn javadoc:javadoc` to generate the documentation. -->
             <plugin>
@@ -300,16 +314,6 @@
                     </links>
                 </configuration>
             </plugin>
-            
         </plugins>
-        
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
+    </reporting>
 </project>

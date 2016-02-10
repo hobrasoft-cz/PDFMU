@@ -17,7 +17,6 @@ An executable will be generated in "pdfmu/target/exe/pdfmu.exe".
 * [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 * [NetBeans 8.1](https://netbeans.org/downloads/) (optional)
 * [Maven](http://maven.apache.org/download.cgi) 3.3.3 (part of NetBeans)
-* [Doxygen](http://www.stack.nl/~dimitri/doxygen/) 1.8.10 (optional)
 
 ## Actions
 
@@ -57,13 +56,6 @@ The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar
 2. `mvn javadoc:javadoc`
 
 To inspect the resulting documentation open "pdfmu/target/site/apidocs/index.html".
-
-### Generate documentation using Doxygen
-
-1. Go to "." in command line
-2. `doxygen Doxyfile`
-
-To inspect the resulting documentation open "doxygen/html/index.html".
 
 ## Options
 

@@ -318,7 +318,7 @@
                 <configuration>
                     <links>
                         <!--
-                        See option "-link" of the command "javadoc".
+                        See option "-link" of the command "javadoc":
                         http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#bottom
                         -->
                         <link>http://argparse4j.github.io/apidocs/</link>

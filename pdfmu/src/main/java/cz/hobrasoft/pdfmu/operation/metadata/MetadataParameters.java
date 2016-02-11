@@ -127,7 +127,9 @@ public class MetadataParameters implements ArgsConfiguration {
         if (elements != null) {
             for (List<String> element : elements) {
                 String key = element.get(0);
+                // TODO: Warn if key is Producer or ModDate
                 String value = element.get(1);
+                // TODO: Warn if key is Trapped and value is not one of True, False, Unknown
                 info.put(key, value);
             }
         }

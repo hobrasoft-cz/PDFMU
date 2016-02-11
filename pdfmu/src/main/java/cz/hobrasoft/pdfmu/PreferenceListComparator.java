@@ -18,10 +18,12 @@ package cz.hobrasoft.pdfmu;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import org.apache.commons.collections.IteratorUtils;
 
 /**
  * Orders the items by a preference list.
@@ -79,6 +81,16 @@ public class PreferenceListComparator<T> implements Comparator<T>, MapSorter<T> 
      */
     public PreferenceListComparator(T[] preferred) {
         this(Arrays.asList(preferred));
+    }
+
+    /**
+     * Creates a new comparator.
+     *
+     * @param preferredIterator an iterator that iterates over the items in the
+     * order of preference
+     */
+    public PreferenceListComparator(Iterator<T> preferredIterator) {
+        this(IteratorUtils.toList(preferredIterator));
     }
 
     /**

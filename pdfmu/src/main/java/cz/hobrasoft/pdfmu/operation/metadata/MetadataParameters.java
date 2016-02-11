@@ -18,8 +18,10 @@ package cz.hobrasoft.pdfmu.operation.metadata;
 
 import com.itextpdf.text.pdf.PdfReader;
 import cz.hobrasoft.pdfmu.MapSorter;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
 import cz.hobrasoft.pdfmu.PreferenceListComparator;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,9 +54,20 @@ public class MetadataParameters implements ArgsConfiguration {
         return info;
     }
 
-    private static final List<String> standardProperties = Arrays.asList(new String[]{
-        "Title", "Subject", "Author", "Keywords", "Creator", "Producer",
-        "CreationDate", "ModDate", "Trapped"});
+    // Table with the descriptions:
+    // http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf
+    // (table 317, section 14.3.3, page 550)
+    private static final SortedMap<String, String> standardProperties = PdfmuUtils.sortedMap(
+            new AbstractMap.SimpleEntry<String, String>("Title", "The document's title."),
+            new AbstractMap.SimpleEntry<String, String>("Subject", "The subject of the document."),
+            new AbstractMap.SimpleEntry<String, String>("Author", "The name of the person who created the document."),
+            new AbstractMap.SimpleEntry<String, String>("Keywords", "Keywords associated with the document."),
+            new AbstractMap.SimpleEntry<String, String>("Creator", "The name of the product that created the document in the original format."),
+            new AbstractMap.SimpleEntry<String, String>("Producer", "The name of the product that converted the document from the original format to PDF."),
+            new AbstractMap.SimpleEntry<String, String>("CreationDate", "The date and time the document was created, in human-readable form."),
+            new AbstractMap.SimpleEntry<String, String>("ModDate", "The date and time the document was most recently modified, in human-readable form."),
+            new AbstractMap.SimpleEntry<String, String>("Trapped", "Has the document been modified to include trapping information? (recommended values: True,False,Unknown)")
+    );
 
     // iText does not let us set the Producer property.
     // The ModDate property also seems to be set automatically.
@@ -87,8 +100,10 @@ public class MetadataParameters implements ArgsConfiguration {
         // Standard properties
         ArgumentGroup group = parser.addArgumentGroup("standard properties");
         for (String property : standardSettableProperties) {
+            assert standardProperties.containsKey(property);
+            String help = standardProperties.get(property);
             group.addArgument("--" + property)
-                    .help(property) // TODO: Change to something sensible
+                    .help(help)
                     .type(String.class);
         }
     }
@@ -131,7 +146,7 @@ public class MetadataParameters implements ArgsConfiguration {
     }
 
     private static final MapSorter<String> propertySorter
-            = new PreferenceListComparator<>(standardProperties);
+            = new PreferenceListComparator<>(standardProperties.keySet().iterator());
 
     public SortedMap<String, String> getSorted() {
         SortedMap<String, String> infoSorted = propertySorter.sort(info);

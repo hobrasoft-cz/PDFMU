@@ -25,9 +25,9 @@ import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.OperationInspect;
-import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
-import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
-import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
+import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadataSet;
+import cz.hobrasoft.pdfmu.operation.signature.OperationSignatureAdd;
+import cz.hobrasoft.pdfmu.operation.version.OperationVersionSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -181,11 +181,11 @@ public class Main {
 
         // Create a map of operations
         SortedMap<String, Operation> operations = new TreeMap<>();
-        operations.put("version", OperationVersion.getInstance());
-        operations.put("signature", OperationSignature.getInstance());
-        operations.put("attach", OperationAttach.getInstance());
-        operations.put("metadata", OperationMetadata.getInstance());
         operations.put("inspect", OperationInspect.getInstance());
+        operations.put("update-version", OperationVersionSet.getInstance());
+        operations.put("update-properties", OperationMetadataSet.getInstance());
+        operations.put("attach", OperationAttach.getInstance());
+        operations.put("sign", OperationSignatureAdd.getInstance());
 
         // Create a command line argument parser
         ArgumentParser parser = createFullParser(operations);

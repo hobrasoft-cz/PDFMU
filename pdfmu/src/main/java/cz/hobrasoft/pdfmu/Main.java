@@ -106,6 +106,13 @@ public class Main {
         return pomProperties.getProperty("projectVersion");
     }
 
+    /**
+     * Use {@link LinkedHashMap} or {@link java.util.TreeMap} as operations to
+     * specify the order in which the operations are printed.
+     *
+     * @param operations a map that assigns the operations to their names
+     * @return an argument parser with the operations attached as sub-commands
+     */
     private static ArgumentParser createFullParser(Map<String, Operation> operations) {
         // Create a command line argument parser
         ArgumentParser parser = createBasicParser();

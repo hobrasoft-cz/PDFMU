@@ -47,7 +47,7 @@ public class TimestampParameters implements ArgsConfiguration {
      */
     public String username;
 
-    private PasswordArgs passwordArgs = new PasswordArgs("TSA password");
+    private final PasswordArgs passwordArgs = new PasswordArgs("TSA password");
 
     private final KeystoreParameters sslKeystore = new KeystoreParameters(SslKeystore.PRIVATE.getName());
     private final KeystoreParameters sslTruststore = new KeystoreParameters(SslKeystore.TRUSTSTORE.getName());

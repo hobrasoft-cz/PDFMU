@@ -114,15 +114,11 @@ public class OperationAttach extends OperationCommon {
 
             logger.info(String.format("Attached file: %s", file));
             logger.info(String.format("Description: %s", (description != null ? description : "<none>")));
-            logger.info(String.format("Display name: %s", (fileDisplay != null ? fileDisplay : "<none>")));
+            logger.info(String.format("Display name: %s", fileDisplay));
             {
-                if (fileDisplay == null) {
-                    logger.warning("Display name has not been set. Adobe Reader XI does not allow opening or saving such attachment.");
-                } else {
-                    Matcher m = filenameWithExtension.matcher(fileDisplay);
-                    if (!m.matches()) {
-                        logger.warning("Display name does not contain a file extension. Adobe Reader XI does not allow opening or saving such attachment.");
-                    }
+                Matcher m = filenameWithExtension.matcher(fileDisplay);
+                if (!m.matches()) {
+                    logger.warning("Display name does not contain a file extension. Adobe Reader XI does not allow opening or saving such attachment.");
                 }
             }
         }

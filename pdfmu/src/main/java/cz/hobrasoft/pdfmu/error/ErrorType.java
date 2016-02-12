@@ -238,7 +238,7 @@ public enum ErrorType {
     public String getMessagePattern() {
         String key = toString();
         assert messages != null;
-        if (messages != null && messages.containsKey(key)) {
+        if (messages.containsKey(key)) {
             return messages.getString(key);
         } else {
             return null;

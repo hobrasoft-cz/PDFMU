@@ -58,15 +58,15 @@ public class MetadataParameters implements ArgsConfiguration {
     // http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf
     // (table 317, section 14.3.3, page 550)
     private static final SortedMap<String, String> standardProperties = PdfmuUtils.sortedMap(
-            new AbstractMap.SimpleEntry<String, String>("Title", "The document's title."),
-            new AbstractMap.SimpleEntry<String, String>("Subject", "The subject of the document."),
-            new AbstractMap.SimpleEntry<String, String>("Author", "The name of the person who created the document."),
-            new AbstractMap.SimpleEntry<String, String>("Keywords", "Keywords associated with the document."),
-            new AbstractMap.SimpleEntry<String, String>("Creator", "The name of the product that created the document in the original format."),
-            new AbstractMap.SimpleEntry<String, String>("Producer", "The name of the product that converted the document from the original format to PDF."),
-            new AbstractMap.SimpleEntry<String, String>("CreationDate", "The date and time the document was created, in human-readable form."),
-            new AbstractMap.SimpleEntry<String, String>("ModDate", "The date and time the document was most recently modified, in human-readable form."),
-            new AbstractMap.SimpleEntry<String, String>("Trapped", "Has the document been modified to include trapping information? (recommended values: True,False,Unknown)")
+            new AbstractMap.SimpleEntry<>("Title", "The document's title."),
+            new AbstractMap.SimpleEntry<>("Subject", "The subject of the document."),
+            new AbstractMap.SimpleEntry<>("Author", "The name of the person who created the document."),
+            new AbstractMap.SimpleEntry<>("Keywords", "Keywords associated with the document."),
+            new AbstractMap.SimpleEntry<>("Creator", "The name of the product that created the document in the original format."),
+            new AbstractMap.SimpleEntry<>("Producer", "The name of the product that converted the document from the original format to PDF."),
+            new AbstractMap.SimpleEntry<>("CreationDate", "The date and time the document was created, in human-readable form."),
+            new AbstractMap.SimpleEntry<>("ModDate", "The date and time the document was most recently modified, in human-readable form."),
+            new AbstractMap.SimpleEntry<>("Trapped", "Has the document been modified to include trapping information? (recommended values: True,False,Unknown)")
     );
 
     // iText does not let us set the Producer property.

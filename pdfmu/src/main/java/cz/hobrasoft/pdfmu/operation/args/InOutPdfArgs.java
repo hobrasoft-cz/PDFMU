@@ -72,10 +72,6 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
         open(signature, '\0');
     }
 
-    public void open(char pdfVersion) throws OperationException {
-        open(false, pdfVersion);
-    }
-
     public void open(boolean signature, char pdfVersion) throws OperationException {
         PdfReader reader = in.open();
         out.open(reader, signature, pdfVersion);

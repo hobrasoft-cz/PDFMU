@@ -191,18 +191,6 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
         return stp;
     }
 
-    public PdfStamper open(PdfReader pdfReader, boolean signature) throws OperationException {
-        return open(pdfReader, signature, '\0');
-    }
-
-    public PdfStamper open(PdfReader pdfReader) throws OperationException {
-        return open(pdfReader, false);
-    }
-
-    public PdfStamper openSignature(PdfReader pdfReader) throws OperationException {
-        return open(pdfReader, true);
-    }
-
     /**
      * Writes the content of the internal buffer to the output file.
      *

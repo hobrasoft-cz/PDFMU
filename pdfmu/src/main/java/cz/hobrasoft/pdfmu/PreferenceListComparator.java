@@ -147,34 +147,6 @@ public class PreferenceListComparator<T> implements Comparator<T>, MapSorter<T> 
     }
 
     /**
-     * Sorts a map by its keys using a preference list.
-     *
-     * <p>
-     * If you use the same preference list repeatedly, you can re-use the
-     * comparator by calling {@link #sort(Map, Comparator)} instead:
-     * <pre>
-     * {@code
-     * List<K> preferenceList;
-     * Comparator<K> comparator = new PreferenceListComparator<>(preferenceList);
-     * while (true) {
-     *     Map<K, V> unsorted;
-     *     SortedMap<K, V> sorted = PreferenceListComparator.sort(unsorted, comparator);
-     * }
-     * }
-     * </pre>
-     *
-     * @param <K> the type of keys
-     * @param <V> the type of values
-     * @param unsorted the original (unsorted) map
-     * @param preferenceList a preference list of possible keys
-     * @return a sorted map
-     */
-    public static <K, V> SortedMap<K, V> sort(Map<K, V> unsorted, List<K> preferenceList) {
-        Comparator<K> comparator = new PreferenceListComparator<>(preferenceList);
-        return sort(unsorted, comparator);
-    }
-
-    /**
      * Sorts a map by its keys using a comparator.
      *
      * @param <K> the type of keys

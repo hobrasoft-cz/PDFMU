@@ -60,10 +60,6 @@ public class PdfmuUtils {
         return result;
     }
 
-    public static SortedMap<String, String> getMatcherGroups(Matcher m, String[] names) {
-        return getMatcherGroups(m, Arrays.asList(names));
-    }
-
     /**
      * Extracts named groups from a matcher.
      *

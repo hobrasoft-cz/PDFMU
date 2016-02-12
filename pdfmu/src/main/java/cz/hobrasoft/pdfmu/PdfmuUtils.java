@@ -16,11 +16,9 @@
  */
 package cz.hobrasoft.pdfmu;
 
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 
 /**
@@ -30,7 +28,7 @@ import java.util.regex.Matcher;
 public class PdfmuUtils {
 
     /**
-     * Converts an array of keys and an array of values to a {@link SortedMap}.
+     * Converts an array of keys and an array of values to a {@link Map}.
      *
      * @param <K> the type of keys.
      * @param <V> the type of values.
@@ -38,11 +36,13 @@ public class PdfmuUtils {
      * are used.
      * @param values the array of values. Only the values that have a matching
      * key are used.
-     * @return a {@link SortedMap} that contains a key-value pair for each index
-     * in keys and values.
+     * @return a {@link Map} that contains a key-value pair for each index in
+     * keys and values. The order of the entries is preserved by the underlying
+     * implementation ({@link LinkedHashMap}).
      */
-    public static <K, V> SortedMap<K, V> sortedMap(K[] keys, V[] values) {
-        SortedMap<K, V> result = new TreeMap<>();
+    // TODO: Rename
+    public static <K, V> Map<K, V> sortedMap(K[] keys, V[] values) {
+        Map<K, V> result = new LinkedHashMap<>();
         int n = Math.min(keys.length, values.length);
         for (int i = 0; i < n; ++i) {
             result.put(keys[i], values[i]);
@@ -50,8 +50,9 @@ public class PdfmuUtils {
         return result;
     }
 
-    public static <K, V> SortedMap<K, V> sortedMap(Map.Entry<K, V>... entries) {
-        SortedMap<K, V> result = new TreeMap<>();
+    // TODO: Rename
+    public static <K, V> Map<K, V> sortedMap(Map.Entry<K, V>... entries) {
+        Map<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : entries) {
             K key = entry.getKey();
             V value = entry.getValue();
@@ -67,10 +68,10 @@ public class PdfmuUtils {
      * @param names the names of the groups.
      * @return a sorted map that assigns group values to the names.
      */
-    public static SortedMap<String, String> getMatcherGroups(Matcher m, List<String> names) {
+    public static Map<String, String> getMatcherGroups(Matcher m, List<String> names) {
         assert m != null;
         assert names != null;
-        SortedMap<String, String> result = new TreeMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
         for (String name : names) {
             result.put(name, m.group(name));
         }

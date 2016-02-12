@@ -43,7 +43,7 @@ public class SchemaGenerator {
         types.put("RpcResponse", RpcResponse.class);
         types.put("result/version get", VersionGet.class);
         types.put("result/version set", VersionSet.class);
-        types.put("result/signature display", SignatureDisplay.class);
+        types.put("result/signature show", SignatureDisplay.class);
         types.put("result/signature add", SignatureAdd.class);
         types.put("result/metadata get", MetadataGet.class);
         types.put("result/empty", EmptyResult.class);

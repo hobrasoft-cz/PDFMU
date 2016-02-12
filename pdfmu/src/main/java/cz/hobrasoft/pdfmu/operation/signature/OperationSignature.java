@@ -35,7 +35,7 @@ public class OperationSignature {
     private static SortedMap<String, Operation> getOperations() {
         SortedMap<String, Operation> operations = new TreeMap<>();
         operations.put("add", OperationSignatureAdd.getInstance());
-        operations.put("display", OperationSignatureDisplay.getInstance());
+        operations.put("show", OperationSignatureDisplay.getInstance());
         return operations;
     }
 

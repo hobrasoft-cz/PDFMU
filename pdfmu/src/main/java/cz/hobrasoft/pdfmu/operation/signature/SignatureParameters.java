@@ -64,7 +64,6 @@ class SignatureParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        // CLI inspired by `keytool`
         keystore.fileArgument = parser.addArgument("-s", "--keystore")
                 .help("keystore file that contains the signing private key");
         // Valid types:
@@ -75,12 +74,12 @@ class SignatureParameters implements ArgsConfiguration {
         // TODO?: Guess type from file extension by default
         // TODO?: Default to "pkcs12"
         // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
-        keystore.typeArgument = parser.addArgument("-t", "--storetype")
+        keystore.typeArgument = parser.addArgument("-t", "--keystore-type")
                 .help("type of the signing keystore")
                 .choices(new String[]{"jceks", "jks", "pkcs12", "Windows-MY"});
-        keystore.passwordArgs.passwordArgument = parser.addArgument("--storepass")
+        keystore.passwordArgs.passwordArgument = parser.addArgument("--keystore-password")
                 .help("signing keystore password (default: <empty>)");
-        keystore.passwordArgs.environmentVariableArgument = parser.addArgument("--storepass-envvar")
+        keystore.passwordArgs.environmentVariableArgument = parser.addArgument("--keystore-password-envvar")
                 .help("signing keystore password environment variable")
                 .setDefault("PDFMU_STOREPASS");
 

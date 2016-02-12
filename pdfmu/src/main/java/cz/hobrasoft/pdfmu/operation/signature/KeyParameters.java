@@ -55,13 +55,13 @@ class KeyParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        parser.addArgument("-a", "--alias")
+        parser.addArgument("-a", "--key-alias")
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
 
-        passwordArgs.passwordArgument = parser.addArgument("--keypass")
+        passwordArgs.passwordArgument = parser.addArgument("--key-password")
                 .help("key password (default: <empty>)");
-        passwordArgs.environmentVariableArgument = parser.addArgument("--keypass-envvar")
+        passwordArgs.environmentVariableArgument = parser.addArgument("--key-password-envvar")
                 .help("key password environment variable")
                 .setDefault("PDFMU_KEYPASS");
         passwordArgs.finalizeArguments();

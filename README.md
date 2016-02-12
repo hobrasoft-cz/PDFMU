@@ -7,10 +7,10 @@ This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 2. Download and install [NetBeans 8.1](https://netbeans.org/downloads/)
 3. Run NetBeans
-4. File > Open Project > "pdfmu" (the directory (Project Folder) in this repository)
+4. File > Open Project > "." (the root directory of this repository)
 5. Run > Build Project (PDF Manipulation Utility)
 
-An executable will be generated in "pdfmu/target/exe/pdfmu.exe".
+An executable will be generated in "target/exe/pdfmu.exe".
 
 ## Software dependencies
 
@@ -25,37 +25,37 @@ All the paths mentioned below are relative to the repository root.
 ### Build for Windows using NetBeans
 
 1. Run NetBeans
-2. File > Open Project > "pdfmu"
+2. File > Open Project > "."
 3. Run > Build Project (pdfmu)
 
-The resulting file is "pdfmu/target/exe/pdfmu.exe".
+The resulting file is "target/exe/pdfmu.exe".
 
 ### Build for Windows using Maven
 
-1. Go to "pdfmu" in command line
+1. Go to "." in command line
 2. `mvn package`
 
-The resulting file is "pdfmu/target/exe/pdfmu.exe".
+The resulting file is "target/exe/pdfmu.exe".
 
 ### Build a self-contained JAR using Maven
 
-1. Go to "pdfmu" in command line
+1. Go to "." in command line
 2. `mvn package assembly:single`
 
-The resulting file is "pdfmu/target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+The resulting file is "target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
 
 ### Run the self-contained jar
 
 1. Build the self-contained JAR (see above)
-2. Go to "pdfmu/target" in command line
+2. Go to "target" in command line
 3. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
 ### Generate documentation using Maven and javadoc
 
-1. Go to "pdfmu" in command line
+1. Go to "." in command line
 2. `mvn javadoc:javadoc`
 
-To inspect the resulting documentation open "pdfmu/target/site/apidocs/index.html".
+To inspect the resulting documentation open "target/site/apidocs/index.html".
 
 ## Options
 

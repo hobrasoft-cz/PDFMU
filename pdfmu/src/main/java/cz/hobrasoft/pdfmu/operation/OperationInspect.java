@@ -36,6 +36,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -266,20 +267,23 @@ public class OperationInspect extends OperationCommon {
     private SortedMap<String, List<String>> showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 
-        SortedMap<String, ArrayList<String>> fieldsSorted = dnTypeSorter.sort(fields);
+        // Convert to Map<String, List<String>>
+        Map<String, List<String>> fieldsLists = new LinkedHashMap<>();
+        fieldsLists.putAll(fields);
 
-        for (Entry<String, ArrayList<String>> field : fieldsSorted.entrySet()) {
+        // Sort by dnTypeSorter
+        SortedMap<String, List<String>> fieldsSorted = dnTypeSorter.sort(fieldsLists);
+
+        // Print
+        for (Entry<String, List<String>> field : fieldsSorted.entrySet()) {
             String type = field.getKey();
             type = niceX500AttributeType(type);
-            ArrayList<String> values = field.getValue();
+            List<String> values = field.getValue();
             String valuesString = StringUtils.join(values, ", ");
             to.println(String.format("%s: %s", type, valuesString));
         }
 
-        SortedMap<String, List<String>> result = new TreeMap<>();
-        result.putAll(fieldsSorted);
-
-        return result;
+        return fieldsSorted;
     }
 
     private static final Map<String, String> attributeTypeAliases = new HashMap<>();

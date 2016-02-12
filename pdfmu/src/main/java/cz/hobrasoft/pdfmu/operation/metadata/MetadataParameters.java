@@ -98,7 +98,8 @@ public class MetadataParameters implements ArgsConfiguration {
                 .action(Arguments.append());
 
         // Standard properties
-        ArgumentGroup group = parser.addArgumentGroup("standard properties");
+        ArgumentGroup group = parser.addArgumentGroup("standard properties")
+                .description("These are simple shortcuts for setting the standard properties. For example, `--Title TITLE` is equivalent to `--set Title TITLE`.");
         for (String property : standardSettableProperties) {
             assert standardProperties.containsKey(property);
             String help = standardProperties.get(property);

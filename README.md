@@ -42,13 +42,15 @@ The resulting file is "target/exe/pdfmu.exe".
 1. Go to "." in command line
 2. `mvn package assembly:single`
 
-The resulting file is "target/pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar".
+The resulting file is "target/pdfmu-${version}-jar-with-dependencies.jar",
+where ${version} is the current version of PDFMU.
 
 ### Run the self-contained jar
 
 1. Build the self-contained JAR (see above)
 2. Go to "target" in command line
-3. `java -jar pdfmu-1.0-SNAPSHOT-jar-with-dependencies.jar`
+3. `java -jar pdfmu-${version}-jar-with-dependencies.jar`
+   (replace ${version} by the current version of PDFMU)
 
 ### Generate documentation using Maven and javadoc
 

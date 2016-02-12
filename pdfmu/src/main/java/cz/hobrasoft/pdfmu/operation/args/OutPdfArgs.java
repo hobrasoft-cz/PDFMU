@@ -74,7 +74,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
         if (allowAppend) {
             parser.addArgument("--append")
-                    .help("append to the document, creating a new revision")
+                    .help("append to the document, creating a new revision. If this option is disabled, the operation invalidates all the existing signatures.")
                     .type(boolean.class)
                     .setDefault(true);
         }

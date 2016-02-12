@@ -77,18 +77,6 @@ public class MetadataParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        // Remove all properties
-        parser.addArgument("--clear-all")
-                .help("clear all properties")
-                .type(boolean.class)
-                .action(Arguments.storeTrue());
-
-        parser.addArgument("-c", "--clear")
-                .help("clear the property P")
-                .metavar("P")
-                .type(String.class)
-                .action(Arguments.append());
-
         // Generic properties
         parser.addArgument("-s", "--set")
                 .help("set the property P to the value V")
@@ -96,6 +84,18 @@ public class MetadataParameters implements ArgsConfiguration {
                 .nargs(2)
                 .type(String.class)
                 .action(Arguments.append());
+
+        parser.addArgument("-c", "--clear")
+                .help("clear the property P")
+                .metavar("P")
+                .type(String.class)
+                .action(Arguments.append());
+
+        // Remove all properties
+        parser.addArgument("--clear-all")
+                .help("clear all the properties")
+                .type(boolean.class)
+                .action(Arguments.storeTrue());
 
         // Standard properties
         ArgumentGroup group = parser.addArgumentGroup("standard properties")

@@ -24,6 +24,7 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNRECOGNIZED_COMMAND;
 import cz.hobrasoft.pdfmu.operation.Operation;
 import cz.hobrasoft.pdfmu.operation.OperationAttach;
 import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.OperationInspect;
 import cz.hobrasoft.pdfmu.operation.metadata.OperationMetadata;
 import cz.hobrasoft.pdfmu.operation.signature.OperationSignature;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersion;
@@ -184,6 +185,7 @@ public class Main {
         operations.put("signature", OperationSignature.getInstance());
         operations.put("attach", OperationAttach.getInstance());
         operations.put("metadata", OperationMetadata.getInstance());
+        operations.put("inspect", OperationInspect.getInstance());
 
         // Create a command line argument parser
         ArgumentParser parser = createFullParser(operations);

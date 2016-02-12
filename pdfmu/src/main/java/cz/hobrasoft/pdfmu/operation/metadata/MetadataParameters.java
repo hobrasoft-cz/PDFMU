@@ -151,8 +151,7 @@ public class MetadataParameters implements ArgsConfiguration {
             = new PreferenceListComparator<>(standardProperties.keySet().iterator());
 
     public SortedMap<String, String> getSorted() {
-        SortedMap<String, String> infoSorted = propertySorter.sort(info);
-        return infoSorted;
+        return propertySorter.sort(info);
     }
 
 }

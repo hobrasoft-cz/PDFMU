@@ -18,9 +18,9 @@ package cz.hobrasoft.pdfmu;
 
 import cz.hobrasoft.pdfmu.error.ErrorType;
 import cz.hobrasoft.pdfmu.operation.OperationException;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,8 +52,8 @@ public class ExceptionMessagePattern {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(message);
         if (m.matches()) {
-            SortedMap<String, String> arguments = PdfmuUtils.getMatcherGroups(m, groupNames);
-            SortedMap<String, Object> argumentsObjects = new TreeMap<>();
+            Map<String, String> arguments = PdfmuUtils.getMatcherGroups(m, groupNames);
+            Map<String, Object> argumentsObjects = new LinkedHashMap<>();
             argumentsObjects.putAll(arguments);
             return new OperationException(errorType, e, argumentsObjects);
         }

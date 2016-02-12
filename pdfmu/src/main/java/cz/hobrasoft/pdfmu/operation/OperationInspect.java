@@ -264,6 +264,9 @@ public class OperationInspect extends OperationCommon {
     private static final MapSorter<String> dnTypeSorter = new PreferenceListComparator(new String[]{
         "CN", "E", "OU", "O", "STREET", "L", "ST", "C"});
 
+    /**
+     * The returned map is ordered by keys by {@link dnTypeSorter}.
+     */
     private SortedMap<String, List<String>> showX500Name(X500Name name) {
         Map<String, ArrayList<String>> fields = name.getFields();
 

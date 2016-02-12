@@ -103,9 +103,8 @@ public class PreferenceListComparator<T> implements Comparator<T>, MapSorter<T> 
      * by the {@link Comparator} interface, so care should be taken when using
      * it. In practice, it at least allows a {@link TreeMap} initialized by a
      * {@link Comparator} to be used for one-time ordering of elements of a
-     * {@link Map} (using the method {@link TreeMap#putAll(Map)}). This use has
-     * been implemented in the static method {@link #sort(Map, List)}. Other
-     * uses of the comparator have not been tested.
+     * {@link Map} (using the method {@link TreeMap#putAll(Map)}). Other uses of
+     * the comparator have not been tested.
      *
      * @param o1 the first object to be compared.
      * @param o2 the second object to be compared.

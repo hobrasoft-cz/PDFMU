@@ -56,7 +56,7 @@ public class OperationInspect extends OperationCommon {
 
     @Override
     public Subparser configureSubparser(Subparser subparser) {
-        String help = "Display PDF version, signatures and properties of a PDF document";
+        String help = "Display PDF version, properties and signatures of a PDF document";
 
         // Configure the subparser
         subparser.help(help)

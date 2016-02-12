@@ -66,7 +66,7 @@ public class OperationAttach extends OperationCommon {
                 .metavar("FILENAME")
                 .type(String.class);
         subparser.addArgument("-d", "--description")
-                .help("attachment file description shown in the output PDF document (default: <none>)")
+                .help("attachment description shown in the output PDF document (default: <none>)")
                 .type(String.class);
 
         return subparser;

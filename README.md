@@ -99,4 +99,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 
 The full text of the GNU Affero General Public License
-can be inspected in the file `agpl-3.0.txt`.
+can be inspected in the file `LICENSE.txt`.

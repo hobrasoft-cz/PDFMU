@@ -85,13 +85,8 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.addArguments(parser);
         }
 
-        // TODO?: Rename
-        // Possible names:
-        // - sigtype
-        // - CryptoStandard
-        // - SubFilter
-        parser.addArgument("--sigtype")
-                .help("cryptographic standard (signature format)")
+        parser.addArgument("--format")
+                .help("signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)")
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())
                 .setDefault(sigtype);

@@ -19,6 +19,7 @@ package cz.hobrasoft.pdfmu.operation.signature;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +59,9 @@ class SignatureParameters implements ArgsConfiguration {
         "GOST3411"
     };
 
+    private Argument digestAlgorithmArgument;
+    private Argument formatArgument;
+
     @Override
     public void addArguments(ArgumentParser parser) {
         // CLI inspired by `keytool`
@@ -88,7 +92,7 @@ class SignatureParameters implements ArgsConfiguration {
         // - digest algorithm
         // - Hash Algorithm
         // - hash algorithm for making the signature
-        parser.addArgument("--digest-algorithm")
+        digestAlgorithmArgument = parser.addArgument("--digest-algorithm")
                 .help("hash algorithm for making the signature")
                 // Java 8 (using `String.join`):
                 //.metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
@@ -98,7 +102,7 @@ class SignatureParameters implements ArgsConfiguration {
                 .type(String.class)
                 .setDefault(digestAlgorithm);
 
-        parser.addArgument("--format")
+        formatArgument = parser.addArgument("--format")
                 .help("signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)")
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())
@@ -111,8 +115,8 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.setFromNamespace(namespace);
         }
 
-        sigtype = namespace.get("format");
-        digestAlgorithm = namespace.getString("digest_algorithm");
+        sigtype = namespace.get(formatArgument.getDest());
+        digestAlgorithm = namespace.getString(digestAlgorithmArgument.getDest());
     }
 
 }

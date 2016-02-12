@@ -1,8 +1,5 @@
 # NetBeans
 /pdfmu/target/
 
-# Doxygen
-/doxygen/
-
 # Output of SchemaGenerator
 /pdfmu/schema/

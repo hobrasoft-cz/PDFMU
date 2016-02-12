@@ -57,7 +57,7 @@ public class MetadataParameters implements ArgsConfiguration {
     // Table with the descriptions:
     // http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf
     // (table 317, section 14.3.3, page 550)
-    private static final SortedMap<String, String> standardProperties = PdfmuUtils.sortedMap(
+    private static final Map<String, String> standardProperties = PdfmuUtils.sortedMap(
             new AbstractMap.SimpleEntry<>("Title", "The document's title."),
             new AbstractMap.SimpleEntry<>("Subject", "The subject of the document."),
             new AbstractMap.SimpleEntry<>("Author", "The name of the person who created the document."),

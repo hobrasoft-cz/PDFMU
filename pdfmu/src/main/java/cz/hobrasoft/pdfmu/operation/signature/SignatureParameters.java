@@ -114,8 +114,8 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.setFromNamespace(namespace);
         }
 
-        format = namespace.get(formatArgument.getDest());
         digestAlgorithm = namespace.getString(digestAlgorithmArgument.getDest());
+        format = namespace.get(formatArgument.getDest());
     }
 
 }

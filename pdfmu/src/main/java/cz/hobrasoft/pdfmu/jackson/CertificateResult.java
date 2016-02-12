@@ -18,7 +18,7 @@ package cz.hobrasoft.pdfmu.jackson;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 /**
  *
@@ -35,7 +35,7 @@ public class CertificateResult {
     // Maps types to values.
     // Common types: CN, E, OU, O, L, ST, C
     @JsonPropertyDescription("Subject distinguished name attributes and their values. Common attributes: CN, E, OU, O, L, ST, C. An attribute may have more than one value associated. The values of an attribute are contained in an array.")
-    public SortedMap<String, List<String>> subject;
+    public Map<String, List<String>> subject;
     @JsonPropertyDescription("Issuer distinguished name attributes and their values. Common attributes: CN, E, OU, O, L, ST, C. An attribute may have more than one value associated. The values of an attribute are contained in an array.")
-    public SortedMap<String, List<String>> issuer;
+    public Map<String, List<String>> issuer;
 }

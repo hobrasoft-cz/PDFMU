@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import java.util.SortedMap;
+import java.util.Map;
 
 /**
  *
@@ -43,7 +43,7 @@ public class RpcError {
         public String causeMessage = null;
 
         @JsonInclude(Include.NON_NULL)
-        public SortedMap<String, Object> arguments = null;
+        public Map<String, Object> arguments = null;
     }
 
     @JsonPropertyDescription("A Primitive or Structured value that contains additional information about the error.\n"

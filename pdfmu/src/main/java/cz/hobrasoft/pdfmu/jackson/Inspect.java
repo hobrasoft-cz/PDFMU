@@ -17,7 +17,7 @@
 package cz.hobrasoft.pdfmu.jackson;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import java.util.SortedMap;
+import java.util.Map;
 
 /**
  *
@@ -30,7 +30,7 @@ public class Inspect extends Result {
 
     @JsonPropertyDescription("PDF properties. "
             + "Key-value pairs; keys are case-sensitive.")
-    public SortedMap<String, String> properties;
+    public Map<String, String> properties;
 
     public SignatureDisplay signatures;
 }

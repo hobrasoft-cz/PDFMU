@@ -46,7 +46,7 @@ public class OperationAttach extends OperationCommon {
 
     @Override
     public Subparser configureSubparser(Subparser subparser) {
-        String help = "Attach files to a PDF document";
+        String help = "Attach a file to a PDF document";
 
         subparser.help(help)
                 .description(help)

@@ -112,7 +112,7 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.setFromNamespace(namespace);
         }
 
-        sigtype = namespace.get("sigtype");
+        sigtype = namespace.get("format");
         digestAlgorithm = namespace.getString("digest_algorithm");
     }
 

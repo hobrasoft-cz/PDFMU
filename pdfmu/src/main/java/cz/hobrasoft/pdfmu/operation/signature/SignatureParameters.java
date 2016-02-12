@@ -39,7 +39,7 @@ class SignatureParameters implements ArgsConfiguration {
 
     // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
     public String digestAlgorithm = "SHA256";
-    public MakeSignature.CryptoStandard sigtype = MakeSignature.CryptoStandard.CMS;
+    public MakeSignature.CryptoStandard format = MakeSignature.CryptoStandard.CMS;
 
     private static final String[] digestAlgorithmChoices = {
         // Source: {@link DigestAlgorithms#digestNames}
@@ -105,7 +105,7 @@ class SignatureParameters implements ArgsConfiguration {
                 .help("signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)")
                 .type(MakeSignature.CryptoStandard.class)
                 .choices(MakeSignature.CryptoStandard.values())
-                .setDefault(sigtype);
+                .setDefault(format);
     }
 
     @Override
@@ -114,7 +114,7 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.setFromNamespace(namespace);
         }
 
-        sigtype = namespace.get(formatArgument.getDest());
+        format = namespace.get(formatArgument.getDest());
         digestAlgorithm = namespace.getString(digestAlgorithmArgument.getDest());
     }
 

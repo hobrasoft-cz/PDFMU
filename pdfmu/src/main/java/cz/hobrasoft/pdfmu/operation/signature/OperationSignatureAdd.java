@@ -153,7 +153,7 @@ public class OperationSignatureAdd extends OperationCommon {
             logger.info("No timestamp authority was specified.");
         }
 
-        MakeSignature.CryptoStandard sigtype = signatureParameters.sigtype;
+        MakeSignature.CryptoStandard sigtype = signatureParameters.format;
 
         // Initialize the signature appearance
         PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);

@@ -118,9 +118,9 @@ public class Main {
 
         // Create a Subparsers instance for operation subparsers
         Subparsers subparsers = parser.addSubparsers()
-                .help("operation to execute")
                 .title("operations")
                 .metavar("OPERATION")
+                .help("operation to execute")
                 .dest("operation");
 
         // Configure operation subparsers

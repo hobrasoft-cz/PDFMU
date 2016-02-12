@@ -24,7 +24,6 @@ import cz.hobrasoft.pdfmu.jackson.RpcError.Data;
 import cz.hobrasoft.pdfmu.jackson.RpcResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -43,7 +42,7 @@ public class OperationException extends Exception {
     private static final int defaultErrorCode = -1;
 
     private ErrorType errorType = null;
-    private SortedMap<String, Object> messageArguments = null;
+    private Map<String, Object> messageArguments = null;
 
     public OperationException(ErrorType errorType) {
         super(errorType.toString());
@@ -55,7 +54,7 @@ public class OperationException extends Exception {
         init(errorType, PdfmuUtils.sortedMap(entries));
     }
 
-    public OperationException(ErrorType errorType, SortedMap<String, Object> messageArguments) {
+    public OperationException(ErrorType errorType, Map<String, Object> messageArguments) {
         super(errorType.toString());
         init(errorType, messageArguments);
     }
@@ -78,12 +77,12 @@ public class OperationException extends Exception {
      * @param cause the original cause.
      * @param messageArguments the arguments of the message.
      */
-    public OperationException(ErrorType errorType, Throwable cause, SortedMap<String, Object> messageArguments) {
+    public OperationException(ErrorType errorType, Throwable cause, Map<String, Object> messageArguments) {
         super(errorType.toString(), cause);
         init(errorType, messageArguments);
     }
 
-    private void init(ErrorType errorType, SortedMap<String, Object> messageArguments) {
+    private void init(ErrorType errorType, Map<String, Object> messageArguments) {
         assert errorType != null;
         this.errorType = errorType;
         this.messageArguments = messageArguments;

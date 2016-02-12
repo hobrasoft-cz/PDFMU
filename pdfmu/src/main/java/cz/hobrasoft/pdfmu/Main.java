@@ -32,11 +32,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -107,7 +106,7 @@ public class Main {
         return pomProperties.getProperty("projectVersion");
     }
 
-    private static ArgumentParser createFullParser(SortedMap<String, Operation> operations) {
+    private static ArgumentParser createFullParser(Map<String, Operation> operations) {
         // Create a command line argument parser
         ArgumentParser parser = createBasicParser();
 
@@ -181,7 +180,7 @@ public class Main {
         int exitStatus = 0; // Default: 0 (normal termination)
 
         // Create a map of operations
-        SortedMap<String, Operation> operations = new TreeMap<>();
+        Map<String, Operation> operations = new LinkedHashMap<>();
         operations.put("inspect", OperationInspect.getInstance());
         operations.put("update-version", OperationVersionSet.getInstance());
         operations.put("update-properties", OperationMetadataSet.getInstance());

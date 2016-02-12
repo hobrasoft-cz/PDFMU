@@ -51,7 +51,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>
  */
-public class OperationSignatureDisplay extends OperationCommon {
+public class OperationSignatureShow extends OperationCommon {
 
     private final InPdfArgs in = new InPdfArgs();
 
@@ -289,12 +289,12 @@ public class OperationSignatureDisplay extends OperationCommon {
 
     public static Operation getInstance() {
         if (instance == null) {
-            instance = new OperationSignatureDisplay();
+            instance = new OperationSignatureShow();
         }
         return instance;
     }
 
-    private OperationSignatureDisplay() {
+    private OperationSignatureShow() {
         // Singleton
     }
 

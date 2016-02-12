@@ -84,7 +84,7 @@ public class OperationSignatureAdd extends OperationCommon {
 
     @Override
     public Subparser configureSubparser(Subparser subparser) {
-        String help = "Digitally sign a PDF document";
+        String help = "Add a digital signature to a PDF document";
 
         // Configure the subparser
         subparser.help(help)

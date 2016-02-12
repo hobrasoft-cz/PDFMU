@@ -40,7 +40,7 @@ public class OperationMetadataSet extends OperationCommon {
 
     @Override
     public Subparser configureSubparser(Subparser subparser) {
-        String help = "Update metadata in a PDF document";
+        String help = "Update PDF properties of a PDF document";
 
         // Configure the subparser
         subparser.help(help)

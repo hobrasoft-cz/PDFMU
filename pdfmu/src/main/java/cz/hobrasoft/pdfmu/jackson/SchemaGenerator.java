@@ -41,8 +41,8 @@ public class SchemaGenerator {
 
         Map<String, Type> types = new HashMap<>();
         types.put("RpcResponse", RpcResponse.class);
+        types.put("result/inspect", Inspect.class);
         types.put("result/version set", VersionSet.class);
-        types.put("result/signature show", SignatureDisplay.class);
         types.put("result/signature add", SignatureAdd.class);
         types.put("result/empty", EmptyResult.class);
 

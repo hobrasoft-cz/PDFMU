@@ -89,8 +89,7 @@ public class OperationSignatureAdd extends OperationCommon {
         // Configure the subparser
         subparser.help(help)
                 .description(help)
-                .defaultHelp(true)
-                .setDefault("command", OperationSignatureAdd.class);
+                .defaultHelp(true);
 
         inout.addArguments(subparser);
         signatureParameters.addArguments(subparser);

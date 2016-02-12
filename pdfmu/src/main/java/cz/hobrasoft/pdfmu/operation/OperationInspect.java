@@ -62,8 +62,7 @@ public class OperationInspect extends OperationCommon {
         // Configure the subparser
         subparser.help(help)
                 .description(help)
-                .defaultHelp(true)
-                .setDefault("command", OperationInspect.class);
+                .defaultHelp(true);
 
         in.addArguments(subparser);
 

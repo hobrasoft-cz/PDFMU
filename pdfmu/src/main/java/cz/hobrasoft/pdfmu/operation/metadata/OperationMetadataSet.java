@@ -45,8 +45,7 @@ public class OperationMetadataSet extends OperationCommon {
         // Configure the subparser
         subparser.help(help)
                 .description(help)
-                .defaultHelp(true)
-                .setDefault("command", OperationMetadataSet.class);
+                .defaultHelp(true);
 
         inout.addArguments(subparser);
         metadataParameters.addArguments(subparser);

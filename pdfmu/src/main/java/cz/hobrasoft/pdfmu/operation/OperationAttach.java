@@ -50,8 +50,7 @@ public class OperationAttach extends OperationCommon {
 
         subparser.help(help)
                 .description(help)
-                .defaultHelp(true)
-                .setDefault("command", OperationAttach.class);
+                .defaultHelp(true);
 
         inout.addArguments(subparser);
 

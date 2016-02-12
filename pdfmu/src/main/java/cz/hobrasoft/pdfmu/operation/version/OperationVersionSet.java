@@ -48,8 +48,7 @@ public class OperationVersionSet extends OperationCommon {
         // Configure the subparser
         subparser.help(help)
                 .description(description)
-                .defaultHelp(true)
-                .setDefault("command", OperationVersionSet.class);
+                .defaultHelp(true);
 
         inout.addArguments(subparser);
 

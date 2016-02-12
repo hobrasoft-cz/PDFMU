@@ -55,7 +55,7 @@ class KeyParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        parser.addArgument("-a", "--key-alias")
+        parser.addArgument("--key-alias")
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
 

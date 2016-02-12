@@ -64,7 +64,7 @@ class SignatureParameters implements ArgsConfiguration {
 
     @Override
     public void addArguments(ArgumentParser parser) {
-        keystore.fileArgument = parser.addArgument("-s", "--keystore")
+        keystore.fileArgument = parser.addArgument("--keystore")
                 .help("keystore file that contains the signing private key");
         // Valid types:
         // https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore
@@ -74,7 +74,7 @@ class SignatureParameters implements ArgsConfiguration {
         // TODO?: Guess type from file extension by default
         // TODO?: Default to "pkcs12"
         // TODO: Do not allow "Windows-MY" when running in a different OS than Windows
-        keystore.typeArgument = parser.addArgument("-t", "--keystore-type")
+        keystore.typeArgument = parser.addArgument("--keystore-type")
                 .help("type of the signing keystore")
                 .choices(new String[]{"jceks", "jks", "pkcs12", "Windows-MY"});
         keystore.passwordArgs.passwordArgument = parser.addArgument("--keystore-password")

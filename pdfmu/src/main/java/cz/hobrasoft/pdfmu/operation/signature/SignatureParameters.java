@@ -85,12 +85,6 @@ class SignatureParameters implements ArgsConfiguration {
             configuration.addArguments(parser);
         }
 
-        parser.addArgument("--format")
-                .help("signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)")
-                .type(MakeSignature.CryptoStandard.class)
-                .choices(MakeSignature.CryptoStandard.values())
-                .setDefault(sigtype);
-
         // Possible names:
         // - digest algorithm
         // - Hash Algorithm
@@ -104,6 +98,12 @@ class SignatureParameters implements ArgsConfiguration {
                 // TODO?: Limit the choices to `digesetAlgorithmChoices`
                 .type(String.class)
                 .setDefault(digestAlgorithm);
+
+        parser.addArgument("--format")
+                .help("signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)")
+                .type(MakeSignature.CryptoStandard.class)
+                .choices(MakeSignature.CryptoStandard.values())
+                .setDefault(sigtype);
     }
 
     @Override

@@ -306,6 +306,11 @@
     <reporting>
         <!-- http://www.javaworld.com/article/2071733/java-app-dev/get-the-most-out-of-maven-2-site-generation.html -->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
             <!-- Generate the documentation. -->
             <!-- Run `mvn javadoc:javadoc` to generate the documentation. -->
             <plugin>

@@ -104,6 +104,9 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
     /**
      * Set the target file if it has not been set by
      * {@link #setFromNamespace(Namespace)}.
+     *
+     * @param file the default file to be used in case none was specified by
+     * {@link #setFromNamespace(Namespace)}
      */
     public void setDefaultFile(File file) {
         if (this.file == null) {
@@ -160,6 +163,7 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
      * @param signature shall we be signing the document?
      * @param pdfVersion the last character of the PDF version number ('2' to
      * '7'), or '\0' to keep the original version
+     * @return a {@link PdfStamper} that uses pdfReader as the source
      *
      * @throws OperationException if an error occurs
      */

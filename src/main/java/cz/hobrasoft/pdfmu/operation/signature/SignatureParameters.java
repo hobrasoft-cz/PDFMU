@@ -97,7 +97,7 @@ class SignatureParameters implements ArgsConfiguration {
                 //.metavar(String.format("{%s}", String.join(",", digestAlgorithmChoices)))
                 // Java 7 (using `org.apache.commons.lang3.StringUtils.join`):
                 .metavar(String.format("{%s}", StringUtils.join(digestAlgorithmChoices, ",")))
-                // TODO?: Limit the choices to `digesetAlgorithmChoices`
+                // TODO?: Limit the choices to `digestAlgorithmChoices`
                 .type(String.class)
                 .setDefault(digestAlgorithm);
 

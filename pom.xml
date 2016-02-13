@@ -35,6 +35,10 @@
         <developerConnection>scm:git:git@github.com:hobrasoft-cz/PDFMU.git</developerConnection>
         <url>https://github.com/hobrasoft-cz/PDFMU</url>
     </scm>
+    <issueManagement>
+      <system>GitHub</system>
+      <url>https://github.com/hobrasoft-cz/PDFMU/issues</url>
+   </issueManagement>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

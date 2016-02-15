@@ -32,6 +32,7 @@ import com.itextpdf.text.pdf.security.TSAClient;
 import cz.hobrasoft.pdfmu.ExceptionMessagePattern;
 import cz.hobrasoft.pdfmu.PdfmuUtils;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_SIGNATURE_EXCEPTION;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_BAD_CERTIFICATE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
@@ -57,6 +58,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
+import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -379,6 +381,8 @@ public class OperationSignatureAdd extends OperationCommon {
                 throw oe;
             }
             throw new OperationException(SIGNATURE_ADD_FAIL, exInner);
+        } catch (SignatureException ex) {
+            throw new OperationException(SIGNATURE_ADD_SIGNATURE_EXCEPTION, ex);
         } catch (IOException | DocumentException | GeneralSecurityException ex) {
             throw new OperationException(SIGNATURE_ADD_FAIL, ex);
         } catch (NullPointerException ex) {

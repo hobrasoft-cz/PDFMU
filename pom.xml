@@ -106,6 +106,7 @@
     </dependencies>
     
     <build>
+        <defaultGoal>package</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>

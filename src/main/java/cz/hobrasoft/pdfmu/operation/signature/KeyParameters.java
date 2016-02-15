@@ -36,6 +36,7 @@ import java.security.cert.Certificate;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -53,9 +54,11 @@ class KeyParameters implements ArgsConfiguration {
 
     public PasswordArgs passwordArgs = new PasswordArgs("key password");
 
+    private Argument keyAliasArgument;
+
     @Override
     public void addArguments(ArgumentParser parser) {
-        parser.addArgument("--key-alias")
+        keyAliasArgument = parser.addArgument("--key-alias")
                 .help("key keystore entry alias (default: <first entry in the keystore>)")
                 .type(String.class);
 
@@ -69,7 +72,8 @@ class KeyParameters implements ArgsConfiguration {
 
     @Override
     public void setFromNamespace(Namespace namespace) {
-        alias = namespace.getString("alias");
+        assert keyAliasArgument != null;
+        alias = namespace.getString(keyAliasArgument.getDest());
 
         // Set password
         assert passwordArgs != null;

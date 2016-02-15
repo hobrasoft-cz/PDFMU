@@ -2,6 +2,8 @@
 
 This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 
+Homepage: [http://hobrasoft-cz.github.io/PDFMU/](http://hobrasoft-cz.github.io/PDFMU/)
+
 ## Quick start in Windows
 
 1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)

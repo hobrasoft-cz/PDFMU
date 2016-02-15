@@ -10,7 +10,7 @@
     
     <name>PDF Manipulation Utility</name>
     <description>A command line tool that makes manipulating PDF documents easy.</description>
-    <url>http://www.hobrasoft.cz/</url>
+    <url>http://hobrasoft-cz.github.io/PDFMU/</url>
     <organization>
         <name>Hobrasoft s.r.o.</name>
         <url>http://www.hobrasoft.cz/</url>

@@ -40,6 +40,9 @@ public class RpcError {
     public static class Data {
 
         @JsonInclude(Include.NON_NULL)
+        public Class causeClass = null;
+
+        @JsonInclude(Include.NON_NULL)
         public String causeMessage = null;
 
         @JsonInclude(Include.NON_NULL)

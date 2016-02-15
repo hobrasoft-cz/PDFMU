@@ -125,6 +125,7 @@ public class OperationException extends Exception {
         if (cause != null || messageArguments != null) {
             re.data = new Data();
             if (cause != null) {
+                re.data.causeClass = cause.getClass();
                 re.data.causeMessage = cause.getLocalizedMessage();
             }
             re.data.arguments = messageArguments;

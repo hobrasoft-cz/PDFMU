@@ -13,6 +13,7 @@ Homepage: [http://hobrasoft-cz.github.io/PDFMU/](http://hobrasoft-cz.github.io/P
 5. Run > Build Project (PDF Manipulation Utility)
 
 An executable will be generated in "target/exe/pdfmu.exe".
+Go to "target/exe" and run `pdfmu --help` to see the available operations.
 
 ## Software dependencies
 

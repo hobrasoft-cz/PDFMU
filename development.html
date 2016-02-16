@@ -102,6 +102,7 @@
 <h2><a name="Development_HOWTO"></a><a name="top">Development HOWTO</a></h2>
 <ol style="list-style-type: decimal">
 <li><a href="#version">How do I change the version of PDFMU?</a></li>
+<li><a href="#site">How do I update the web site?</a></li>
 <li><a href="#license">How do I change the license header?</a></li>
 <li><a href="#copyright">How do I update the copyright?</a></li></ol></div>
 <dl>
@@ -120,6 +121,16 @@
                         <tt>project.properties.exeVersion</tt>
                    </li>
                </ul>
+            <hr /></dd>
+<dt><a name="site">How do I update the web site?</a></dt>
+<dd>
+                
+<p>
+                    Generate an up-to-date local copy of the site
+                    by executing the Maven goal <tt>site</tt> (calling <tt>mvn site</tt>).
+                    The site is generated in the directory <tt>target/site</tt>.
+                    Push the content of that directory to the branch <tt>gh-pages</tt>.
+               </p>
             <hr /></dd>
 <dt><a name="license">How do I change the license header?</a></dt>
 <dd>

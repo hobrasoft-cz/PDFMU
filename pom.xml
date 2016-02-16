@@ -335,6 +335,7 @@
                         <link>https://commons.apache.org/proper/commons-collections/apidocs/</link>
                     </links>
                     <notimestamp>true</notimestamp>
+                    <quiet>true</quiet>
                 </configuration>
             </plugin>
             <plugin>

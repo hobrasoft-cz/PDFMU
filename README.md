@@ -1,5 +1,14 @@
 # PDF Manipulation Utility
 
+PDF Manipulation Utility (PDFMU) lets you perform the following operations
+with PDF documents using command line interface:
+
+* set PDF version
+* set or clear properties
+* attach a file
+* add a digital signature
+* display PDF version, properties and signatures
+
 This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 
 Homepage: [http://hobrasoft-cz.github.io/PDFMU/](http://hobrasoft-cz.github.io/PDFMU/)

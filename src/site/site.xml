@@ -10,6 +10,7 @@
     <body>
         <menu ref="reports" />
         <menu>
+            <item name="README" href="README.html" />
             <item name="Development HOWTO" href="development.html" />
         </menu>
     </body>

@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* <a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Copyright (C) 2016 Hobrasoft s.r.o.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> *<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * This program is free software: you can redistribute it and/or modify<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * it under the terms of the GNU Affero General Public License as published by<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * the Free Software Foundation, either version 3 of the License, or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * (at your option) any later version.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * This program is distributed in the hope that it will be useful,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * GNU Affero General Public License for more details.<a name="line.12"></a>
+<span class="sourceLineNo">013</span> *<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * You should have received a copy of the GNU Affero General Public License<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package cz.hobrasoft.pdfmu;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.Arrays;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Comparator;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.Iterator;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.List;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.util.Map;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.SortedMap;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.TreeMap;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import org.apache.commons.collections.IteratorUtils;<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>/**<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * Orders the items by a preference list.<a name="line.29"></a>
+<span class="sourceLineNo">030</span> *<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * &lt;p&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * The items at the start of the preference list are placed before (that is<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * deemed smaller than) the other items. The items that appear in the preference<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * list are placed before the items that do not appear in the preference list.<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * The order of items that do not appear in the preference list is not specified<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * (and is application specific in practice). Thus the induced order is not<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * guaranteed to be linear.<a name="line.37"></a>
+<span class="sourceLineNo">038</span> *<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * &lt;p&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * Usage example:<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * &lt;pre&gt;<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * {@code<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * import java.util.Comparator;<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * import java.util.List;<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * import java.util.Map;<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * import java.util.SortedMap;<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * import java.util.TreeMap;<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * }<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * &lt;/pre&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * &lt;pre&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * {@code<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * Map&lt;K, V&gt; unsorted;<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * List&lt;K&gt; preferenceList;<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * Comparator&lt;K&gt; comparator = new PreferenceListComparator&lt;&gt;(preferenceList);<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * SortedMap&lt;K, V&gt; sorted = new TreeMap&lt;&gt;(comparator);<a name="line.55"></a>
+<span class="sourceLineNo">056</span> * sorted.putAll(unsorted);<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * }<a name="line.57"></a>
+<span class="sourceLineNo">058</span> * &lt;/pre&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span> *<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * @param &lt;T&gt; the type of objects that may be compared by this comparator<a name="line.60"></a>
+<span class="sourceLineNo">061</span> *<a name="line.61"></a>
+<span class="sourceLineNo">062</span> * @author &lt;a href="mailto:filip.bartek@hobrasoft.cz"&gt;Filip Bartek&lt;/a&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span> */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>public class PreferenceListComparator&lt;T&gt; implements Comparator&lt;T&gt;, MapSorter&lt;T&gt; {<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>    private final List&lt;T&gt; preferred;<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>    /**<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * Creates a new comparator.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     *<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * @param preferred the preference list<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    public PreferenceListComparator(List&lt;T&gt; preferred) {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        this.preferred = preferred;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>    }<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>    /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * Creates a new comparator.<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * @param preferred the preference list specified by an array<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     */<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    public PreferenceListComparator(T[] preferred) {<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        this(Arrays.asList(preferred));<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    }<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * Creates a new comparator.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     *<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * @param preferredIterator an iterator that iterates over the items in the<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * order of preference<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    public PreferenceListComparator(Iterator&lt;T&gt; preferredIterator) {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        this(IteratorUtils.toList(preferredIterator));<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    }<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * Compares its two arguments for order. Returns a negative integer, zero,<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * or a positive integer as the first argument is less than, equal to, or<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * greater than the second.<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     *<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;p&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * Note that this implementation violates some of the requirements imposed<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * by the {@link Comparator} interface, so care should be taken when using<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * it. In practice, it at least allows a {@link TreeMap} initialized by a<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * {@link Comparator} to be used for one-time ordering of elements of a<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * {@link Map} (using the method {@link TreeMap#putAll(Map)}). Other uses of<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * the comparator have not been tested.<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     *<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * @param o1 the first object to be compared.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * @param o2 the second object to be compared.<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * @return a negative integer, zero, or a positive integer as the first<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * argument is less than, equal to, or greater than the second.<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     */<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    @Override<a name="line.114"></a>
+<span class="sourceLineNo">115</span>    public int compare(T o1, T o2) {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        if (o1.equals(o2)) {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>            return 0;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        }<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>        int i1 = preferred.indexOf(o1);<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        int i2 = preferred.indexOf(o2);<a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122"></a>
+<span class="sourceLineNo">123</span>        if (i1 == -1 &amp;&amp; i2 != -1) {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>            // `o1` is not in `preferred` but `o2` is.<a name="line.124"></a>
+<span class="sourceLineNo">125</span>            // "Prefer" `o2`, that is claim it smaller than `o1`.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>            return 1;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        }<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        if (i2 == -1 &amp;&amp; i1 != -1) {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>            return -1;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        }<a name="line.130"></a>
+<span class="sourceLineNo">131</span>        if (i1 == -1 &amp;&amp; i2 == -1) {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>            // HACK:<a name="line.132"></a>
+<span class="sourceLineNo">133</span>            // None of `o1` and `o2` is in `preferred`.<a name="line.133"></a>
+<span class="sourceLineNo">134</span>            // Prefer `o1` (the former), preserving the order.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>            // With this hack, it may happen that `a &lt; b` and `b &lt; a`,<a name="line.135"></a>
+<span class="sourceLineNo">136</span>            // so the comparator does not provide a &lt;em&gt;linear&lt;/em&gt; order.<a name="line.136"></a>
+<span class="sourceLineNo">137</span>            return -1;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        }<a name="line.138"></a>
+<span class="sourceLineNo">139</span><a name="line.139"></a>
+<span class="sourceLineNo">140</span>        // `i1 == i2` can only occur if `o1.equals(o1)`<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        // or when none of `o1` and `o2` is in `preferred`.<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        assert i1 != i2;<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        // If `o1` comes before `o1` in `preferred`, the result will be negative.<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        return i1 - i2;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>    }<a name="line.146"></a>
+<span class="sourceLineNo">147</span><a name="line.147"></a>
+<span class="sourceLineNo">148</span>    /**<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     * Sorts a map by its keys using a comparator.<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     *<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * @param &lt;K&gt; the type of keys<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * @param &lt;V&gt; the type of values<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * @param unsorted the original (unsorted) map<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * @param comparator a comparator on K<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * @return a sorted map<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     */<a name="line.156"></a>
+<span class="sourceLineNo">157</span>    public static &lt;K, V&gt; SortedMap&lt;K, V&gt; sort(Map&lt;K, V&gt; unsorted, Comparator&lt;K&gt; comparator) {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        SortedMap&lt;K, V&gt; sorted = new TreeMap&lt;&gt;(comparator);<a name="line.158"></a>
+<span class="sourceLineNo">159</span>        sorted.putAll(unsorted);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        return sorted;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>    }<a name="line.161"></a>
+<span class="sourceLineNo">162</span><a name="line.162"></a>
+<span class="sourceLineNo">163</span>    @Override<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    public &lt;V&gt; SortedMap&lt;T, V&gt; sort(Map&lt;T, V&gt; unsorted) {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>        return sort(unsorted, this);<a name="line.165"></a>
+<span class="sourceLineNo">166</span>    }<a name="line.166"></a>
+<span class="sourceLineNo">167</span>}<a name="line.167"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

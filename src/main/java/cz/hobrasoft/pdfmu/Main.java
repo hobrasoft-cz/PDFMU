@@ -30,6 +30,7 @@ import cz.hobrasoft.pdfmu.operation.signature.OperationSignatureAdd;
 import cz.hobrasoft.pdfmu.operation.version.OperationVersionSet;
 import java.io.IOException;
 import java.io.InputStream;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -47,6 +48,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 import net.sourceforge.argparse4j.internal.HelpScreenException;
 import net.sourceforge.argparse4j.internal.UnrecognizedArgumentException;
 import net.sourceforge.argparse4j.internal.UnrecognizedCommandException;
+import org.apache.commons.io.IOUtils;
 
 /**
  * The main class of PDFMU
@@ -112,8 +114,32 @@ public class Main {
         }
     }
 
+    private static final String LEGAL_NOTICE_RESOURCE_NAME = "cz/hobrasoft/pdfmu/legalNotice.txt";
+    private static String legalNotice;
+
+    private static void loadLegalNotice() {
+        ClassLoader classLoader = Main.class.getClassLoader();
+        InputStream in = classLoader.getResourceAsStream(LEGAL_NOTICE_RESOURCE_NAME);
+        if (in != null) {
+            try {
+                legalNotice = IOUtils.toString(in, US_ASCII);
+            } catch (IOException ex) {
+                logger.severe(String.format("Could not load the legal notice file: %s", ex));
+            }
+            try {
+                in.close();
+            } catch (IOException ex) {
+                logger.severe(String.format("Could not close the legal notice file: %s", ex));
+            }
+        } else {
+            logger.severe("Could not open the legal notice file.");
+        }
+    }
+
     static {
         loadPomProperties();
+        loadLegalNotice();
+        assert legalNotice != null;
     }
 
     private static String getProjectVersion() {

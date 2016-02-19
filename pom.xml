@@ -323,6 +323,7 @@
                 <directory>${basedir}/src/main/java</directory>
                 <includes>
                     <include>**/*.properties</include>
+                    <include>**/*.txt</include>
                 </includes>
             </resource>
         </resources>

@@ -99,7 +99,7 @@ public class Main {
         return parser;
     }
 
-    public static final String POM_PROPERTIES_RESOURCE_NAME = "pom.properties";
+    private static final String POM_PROPERTIES_RESOURCE_NAME = "pom.properties";
     private static final Properties POM_PROPERTIES = new Properties();
 
     private static void loadPomProperties() {

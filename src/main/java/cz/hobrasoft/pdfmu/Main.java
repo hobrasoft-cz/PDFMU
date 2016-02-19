@@ -85,13 +85,15 @@ public class Main {
         return parser;
     }
 
-    private static String getProjectVersion() {
+    public static final String POM_PROPERTIES_RESOURCE_NAME = "pom.properties";
+    private static final Properties POM_PROPERTIES = new Properties();
+
+    private static void loadPomProperties() {
         ClassLoader classLoader = Main.class.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream("pom.properties");
-        Properties pomProperties = new Properties();
+        InputStream in = classLoader.getResourceAsStream(POM_PROPERTIES_RESOURCE_NAME);
         if (in != null) {
             try {
-                pomProperties.load(in);
+                POM_PROPERTIES.load(in);
             } catch (IOException ex) {
                 logger.severe(String.format("Could not load the POM properties file: %s", ex));
             }
@@ -103,7 +105,14 @@ public class Main {
         } else {
             logger.severe("Could not open the POM properties file.");
         }
-        return pomProperties.getProperty("projectVersion");
+    }
+
+    static {
+        loadPomProperties();
+    }
+
+    private static String getProjectVersion() {
+        return POM_PROPERTIES.getProperty("projectVersion");
     }
 
     /**

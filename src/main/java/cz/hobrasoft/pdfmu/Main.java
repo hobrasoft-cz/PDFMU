@@ -120,6 +120,10 @@ public class Main {
         return POM_PROPERTIES.getProperty("projectVersion");
     }
 
+    private static String getProjectCopyright() {
+        return POM_PROPERTIES.getProperty("copyright");
+    }
+
     /**
      * Use {@link LinkedHashMap} or {@link java.util.TreeMap} as operations to
      * specify the order in which the operations are printed.

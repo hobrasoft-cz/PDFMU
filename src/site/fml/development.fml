@@ -31,6 +31,11 @@
                     Push the content of that directory to the branch <tt>gh-pages</tt>
                     of the GitHub repository.
                 </p>
+                <p>
+                    To facilitate updating the web site, you may clone and track
+                    the branch <tt>gh-pages</tt> in the directory
+                    <tt>target/site</tt>.
+                </p>
             </answer>
         </faq>
 

@@ -120,6 +120,9 @@
                 </plugin>
                 
                 <!-- Run `mvn javadoc:javadoc` to generate the JavaDoc API documentation. -->
+                <!-- The plugin is configured here rather than in reporting so
+                as to use the same configuration for both the goals `site` and
+                `javadoc:javadoc`. -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>

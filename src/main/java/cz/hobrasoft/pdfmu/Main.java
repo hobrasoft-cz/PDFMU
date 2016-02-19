@@ -224,55 +224,59 @@ public class Main {
             parser.handleError(ape); // Print the error in human-readable format
         }
 
+        if (namespace == null) {
+            System.exit(exitStatus);
+        }
+
+        assert exitStatus == 0;
+
         // Handle command line arguments
-        if (namespace != null) {
-            WritingMapper wm = null;
+        WritingMapper wm = null;
 
-            // Extract operation name
-            String operationName = namespace.getString("operation");
-            assert operationName != null; // The argument "operation" is a sub-command, thus it is required
+        // Extract operation name
+        String operationName = namespace.getString("operation");
+        assert operationName != null; // The argument "operation" is a sub-command, thus it is required
 
-            // Select the operation from `operations`
-            assert operations.containsKey(operationName); // Only supported operation names are allowed
-            Operation operation = operations.get(operationName);
-            assert operation != null;
+        // Select the operation from `operations`
+        assert operations.containsKey(operationName); // Only supported operation names are allowed
+        Operation operation = operations.get(operationName);
+        assert operation != null;
 
-            // Choose the output format
-            String outputFormat = namespace.getString("output_format");
-            switch (outputFormat) {
-                case "json":
-                    // Disable loggers
-                    disableLoggers();
-                    // Initialize the JSON serializer
-                    wm = new WritingMapper();
-                    operation.setWritingMapper(wm); // Configure the operation
-                    break;
-                case "text":
-                    // Initialize the text output
-                    TextOutput to = new TextOutput(System.err); // Bind to `System.err`
-                    operation.setTextOutput(to); // Configure the operation
-                    break;
-                default:
-                    assert false; // The option has limited choices
+        // Choose the output format
+        String outputFormat = namespace.getString("output_format");
+        switch (outputFormat) {
+            case "json":
+                // Disable loggers
+                disableLoggers();
+                // Initialize the JSON serializer
+                wm = new WritingMapper();
+                operation.setWritingMapper(wm); // Configure the operation
+                break;
+            case "text":
+                // Initialize the text output
+                TextOutput to = new TextOutput(System.err); // Bind to `System.err`
+                operation.setTextOutput(to); // Configure the operation
+                break;
+            default:
+                assert false; // The option has limited choices
+        }
+
+        // Execute the operation
+        try {
+            operation.execute(namespace);
+        } catch (OperationException ex) {
+            exitStatus = ex.getCode();
+
+            // Log the exception
+            logger.severe(ex.getLocalizedMessage());
+            Throwable cause = ex.getCause();
+            if (cause != null && cause.getMessage() != null) {
+                logger.severe(cause.getLocalizedMessage());
             }
 
-            // Execute the operation
-            try {
-                operation.execute(namespace);
-            } catch (OperationException ex) {
-                exitStatus = ex.getCode();
-
-                // Log the exception
-                logger.severe(ex.getLocalizedMessage());
-                Throwable cause = ex.getCause();
-                if (cause != null && cause.getMessage() != null) {
-                    logger.severe(cause.getLocalizedMessage());
-                }
-
-                if (wm != null) {
-                    // JSON output is enabled
-                    ex.writeInWritingMapper(wm);
-                }
+            if (wm != null) {
+                // JSON output is enabled
+                ex.writeInWritingMapper(wm);
             }
         }
         System.exit(exitStatus);

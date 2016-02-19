@@ -109,6 +109,7 @@
         <defaultGoal>package</defaultGoal>
         <pluginManagement>
             <plugins>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
@@ -116,6 +117,31 @@
                     <!-- http://illegalexception.schlichtherle.de/2013/06/17/how-to-use-markdown-syntax-with-the-maven-site-plugin/ -->
                     <version>3.4</version>
                 </plugin>
+                
+                <!-- Run `mvn javadoc:javadoc` to generate the JavaDoc API documentation. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <links>
+                            <!--
+                            See option "-link" of the command "javadoc":
+                            http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#bottom
+
+                            https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
+                            -->
+                            <link>http://argparse4j.github.io/apidocs/</link>
+                            <link>http://api.itextpdf.com/itext/</link>
+                            <link>https://commons.apache.org/proper/commons-collections/apidocs/</link>
+                        </links>
+                        <notimestamp>true</notimestamp>
+                        <quiet>true</quiet>
+                        <locale>en_US</locale>
+                        <linksource>true</linksource>
+                    </configuration>
+                </plugin>
+                
             </plugins>
         </pluginManagement>
         
@@ -337,28 +363,9 @@
                 <version>2.8.1</version>
             </plugin>
             <!-- Generate the JavaDoc API documentation. -->
-            <!-- Run `mvn javadoc:javadoc` to generate the JavaDoc API documentation. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-                <configuration>
-                    <links>
-                        <!--
-                        See option "-link" of the command "javadoc":
-                        http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#bottom
-                        
-                        https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
-                        -->
-                        <link>http://argparse4j.github.io/apidocs/</link>
-                        <link>http://api.itextpdf.com/itext/</link>
-                        <link>https://commons.apache.org/proper/commons-collections/apidocs/</link>
-                    </links>
-                    <notimestamp>true</notimestamp>
-                    <quiet>true</quiet>
-                    <locale>en_US</locale>
-                    <linksource>true</linksource>
-                </configuration>
             </plugin>
             <plugin>
                 <!-- http://maven.apache.org/plugins/maven-changes-plugin/ -->

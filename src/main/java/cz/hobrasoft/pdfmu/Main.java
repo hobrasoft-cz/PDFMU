@@ -95,6 +95,7 @@ public class Main {
                 .setDefault("text")
                 .type(String.class)
                 .help("format of stderr output");
+
         return parser;
     }
 

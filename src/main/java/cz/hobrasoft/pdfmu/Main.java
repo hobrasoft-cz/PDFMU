@@ -76,6 +76,11 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
                 .description("Manipulate a PDF document")
                 .defaultHelp(true);
+
+        parser.version(getProjectVersion());
+        parser.addArgument("-v", "--version")
+                .help("show version and exit")
+                .action(Arguments.version());
         // TODO: Use an enum
         parser.addArgument("--output-format")
                 .choices("text", "json")
@@ -125,11 +130,6 @@ public class Main {
     private static ArgumentParser createFullParser(Map<String, Operation> operations) {
         // Create a command line argument parser
         ArgumentParser parser = createBasicParser();
-
-        parser.version(getProjectVersion());
-        parser.addArgument("-v", "--version")
-                .help("print version of pdfmu")
-                .action(Arguments.version());
 
         // Create a Subparsers instance for operation subparsers
         Subparsers subparsers = parser.addSubparsers()

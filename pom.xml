@@ -50,6 +50,7 @@
         <exeJarLocation>lib</exeJarLocation>
         <projectVersion>${project.version}</projectVersion>
         <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
+        <javadocPluginVersion>2.10.3</javadocPluginVersion>
     </properties>
     
     <dependencies>
@@ -126,7 +127,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
+                    <version>${javadocPluginVersion}</version>
                     <configuration>
                         <links>
                             <!--
@@ -370,6 +371,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadocPluginVersion}</version>
             </plugin>
             <plugin>
                 <!-- http://maven.apache.org/plugins/maven-changes-plugin/ -->

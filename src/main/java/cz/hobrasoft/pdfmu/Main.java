@@ -83,6 +83,12 @@ public class Main {
         parser.addArgument("-v", "--version")
                 .help("show version and exit")
                 .action(Arguments.version());
+
+        String message = String.format("%s\n\n%s", getProjectCopyright(), legalNotice);
+        parser.addArgument("--legal-notice")
+                .help("show legal notice and exit")
+                .action(new PrintAndExitAction(message));
+
         // TODO: Use an enum
         parser.addArgument("--output-format")
                 .choices("text", "json")

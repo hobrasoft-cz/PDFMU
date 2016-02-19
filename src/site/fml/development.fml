@@ -28,7 +28,8 @@
                     Generate an up-to-date local copy of the site
                     by executing the Maven goal <tt>site</tt> (calling <tt>mvn site</tt>).
                     The site is generated in the directory <tt>target/site</tt>.
-                    Push the content of that directory to the branch <tt>gh-pages</tt>.
+                    Push the content of that directory to the branch <tt>gh-pages</tt>
+                    of the GitHub repository.
                 </p>
             </answer>
         </faq>

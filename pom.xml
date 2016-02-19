@@ -356,6 +356,7 @@
                     </links>
                     <notimestamp>true</notimestamp>
                     <quiet>true</quiet>
+                    <locale>cs_CZ</locale>
                 </configuration>
             </plugin>
             <plugin>

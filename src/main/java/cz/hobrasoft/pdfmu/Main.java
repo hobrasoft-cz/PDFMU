@@ -76,7 +76,7 @@ public class Main {
     private static ArgumentParser createBasicParser() {
         // Create a command line argument parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser("pdfmu")
-                .description("Manipulate a PDF document")
+                .description("PDF Manipulation Utility")
                 .defaultHelp(true);
 
         parser.version(getProjectVersion());

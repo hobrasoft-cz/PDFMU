@@ -5,4 +5,11 @@
     <properties>
         <author email="filip.bartek@hobrasoft.cz">Filip Bártek</author>
     </properties>
+    <body>
+        <release version="1.0" date="2016-02-23" description="First release">
+            <action dev="filip.bartek" type="add">
+                Created the first release version.
+            </action>
+        </release>
+    </body>
 </document>

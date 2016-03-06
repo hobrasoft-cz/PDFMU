@@ -13,6 +13,8 @@ This project is maintained by [Hobrasoft s.r.o.](http://www.hobrasoft.cz/)
 
 Homepage: [http://hobrasoft-cz.github.io/PDFMU/](http://hobrasoft-cz.github.io/PDFMU/)
 
+Source code: [https://github.com/hobrasoft-cz/PDFMU](https://github.com/hobrasoft-cz/PDFMU)
+
 Email: [pdfmu@hobrasoft.cz](mailto:pdfmu@hobrasoft.cz)
 
 ## Quick start in Windows

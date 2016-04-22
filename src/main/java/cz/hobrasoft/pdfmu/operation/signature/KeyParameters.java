@@ -84,21 +84,36 @@ class KeyParameters implements ArgsConfiguration {
         // TODO?: Use keystore password by default
     }
 
-    private void fixAliasWcs() {
+    /**
+     * Encodes the alias using ISO-8859-1 and replaces it with the longest
+     * prefix of itself that is an actual alias in the keystore. The shortening
+     * is a necessary magic necessary for strings with some non-ASCII
+     * characters.
+     */
+    private void fixAliasWcs(KeyStore ks) throws OperationException {
+        assert "Windows-MY".equals(ks.getType());
         if (alias != null) {
             logger.info(String.format("WCS alias compensation will be applied. Original alias: %s", alias));
-            Charset charset = StandardCharsets.ISO_8859_1;
-            String aliasEncoded = new String(alias.getBytes(), charset);
-            byte[] originalBytes = alias.getBytes();
-            byte[] encodedBytes = aliasEncoded.getBytes();
-            assert originalBytes.length == encodedBytes.length;
-            int matches = 0;
-            for (int i = 0; i < originalBytes.length; i++) {
-                if (originalBytes[i] == encodedBytes[i]) {
-                    matches++;
+            alias = new String(alias.getBytes(), StandardCharsets.ISO_8859_1);
+
+            Enumeration<String> aliases = null;
+            try {
+                aliases = ks.aliases();
+            } catch (KeyStoreException ex) {
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIASES, ex);
+            }
+            String aliasBest = null;
+            while (aliases.hasMoreElements()) {
+                String aliasCandidate = aliases.nextElement();
+                if (alias.startsWith(aliasCandidate)
+                        && (aliasBest == null
+                        || aliasCandidate.length() > aliasBest.length())) {
+                    aliasBest = aliasCandidate;
                 }
             }
-            alias = aliasEncoded.substring(0, matches);
+            if (aliasBest != null) {
+                alias = aliasBest;
+            }
         }
     }
 
@@ -118,7 +133,7 @@ class KeyParameters implements ArgsConfiguration {
             alias = aliases.nextElement();
             assert alias != null;
         } else if ("Windows-MY".equals(ks.getType())) {
-            fixAliasWcs();
+            fixAliasWcs(ks);
         }
         logger.info(String.format("Keystore entry alias: %s", alias));
 

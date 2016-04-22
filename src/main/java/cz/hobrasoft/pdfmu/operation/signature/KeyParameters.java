@@ -128,6 +128,7 @@ class KeyParameters implements ArgsConfiguration {
                     logger.info("The keystore Windows-MY does not accept key password.");
                     password = null;
                 }
+                break;
             default:
                 // Set key password to empty string if not set from command line
                 if (password == null) {

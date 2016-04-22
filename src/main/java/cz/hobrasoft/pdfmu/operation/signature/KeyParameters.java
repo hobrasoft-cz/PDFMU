@@ -112,6 +112,7 @@ class KeyParameters implements ArgsConfiguration {
             fixAliasWcs();
         }
         logger.info(String.format("Keystore entry alias: %s", alias));
+
         // Make sure the entry `alias` is present in the keystore
         try {
             if (!ks.containsAlias(alias)) {
@@ -122,6 +123,7 @@ class KeyParameters implements ArgsConfiguration {
             throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION, ex,
                     new SimpleEntry<String, Object>("alias", alias));
         }
+
         // Make sure `alias` is a key entry
         try {
             if (!ks.isKeyEntry(alias)) {

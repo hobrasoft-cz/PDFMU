@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -76,5 +77,15 @@ public class PdfmuUtils {
             result.put(name, m.group(name));
         }
         return result;
+    }
+
+    public static int countMatches(String regex, String message) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(message);
+        int count = 0;
+        while (m.find()) {
+            count++;
+        }
+        return count;
     }
 }

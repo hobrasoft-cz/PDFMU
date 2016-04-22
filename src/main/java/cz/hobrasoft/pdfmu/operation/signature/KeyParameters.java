@@ -16,6 +16,7 @@
  */
 package cz.hobrasoft.pdfmu.operation.signature;
 
+import cz.hobrasoft.pdfmu.PdfmuUtils;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIASES;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION;
 import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION;
@@ -27,6 +28,7 @@ import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_PRIVATE_
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
 import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
+import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +36,7 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 import net.sourceforge.argparse4j.inf.Argument;
@@ -82,6 +85,14 @@ class KeyParameters implements ArgsConfiguration {
         // TODO?: Use keystore password by default
     }
 
+    private void fixAliasWcs() {
+        if (alias != null) {
+            logger.info(String.format("WCS alias compensation will be applied. Original alias: %s", alias));
+            int count = PdfmuUtils.countMatches("\\p{ASCII}", alias);
+            alias = new String(Arrays.copyOfRange(alias.getBytes(), 0, count), Charset.forName("ISO-8859-1"));
+        }
+    }
+
     public void fixAlias(KeyStore ks) throws OperationException {
         if (alias == null) {
             // Get the first alias in the keystore
@@ -97,6 +108,8 @@ class KeyParameters implements ArgsConfiguration {
             }
             alias = aliases.nextElement();
             assert alias != null;
+        } else if ("Windows-MY".equals(ks.getType())) {
+            fixAliasWcs();
         }
         logger.info(String.format("Keystore entry alias: %s", alias));
         // Make sure the entry `alias` is present in the keystore

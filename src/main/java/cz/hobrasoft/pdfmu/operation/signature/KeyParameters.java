@@ -92,7 +92,7 @@ class KeyParameters implements ArgsConfiguration {
     private void fixAliasWcs(KeyStore ks) throws OperationException {
         assert "Windows-MY".equals(ks.getType());
         if (alias != null) {
-            logger.info(String.format("WCS alias compensation will be applied. Original alias: %s", alias));
+            logger.info(String.format("WCS alias correction will be applied. Original alias: %s", alias));
             alias = new String(alias.getBytes(), StandardCharsets.ISO_8859_1);
 
             Enumeration<String> aliases = null;

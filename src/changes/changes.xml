@@ -8,6 +8,11 @@
         <author email="filip.bartek@hobrasoft.cz">Filip Bártek</author>
     </properties>
     <body>
+        <release version="1.1" date="2016-04-24" description="Accept diacritics in key alias">
+            <action dev="filip.bartek" type="fix" date="2016-02-24">
+                Added support for key aliases with non-ASCII characters in Windows certificate strore.
+            </action>
+        </release>
         <release version="1.0" date="2016-02-23" description="First release">
             <action dev="filip.bartek" type="add">
                 Created the first release version.

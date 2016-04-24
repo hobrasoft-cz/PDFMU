@@ -16,11 +16,15 @@
  */
 package cz.hobrasoft.pdfmu;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  *
@@ -87,5 +91,17 @@ public class PdfmuUtils {
             count++;
         }
         return count;
+    }
+
+    public static byte[] objectToBytes(Object obj) throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        ObjectOutputStream so = new ObjectOutputStream(bo);
+        so.writeObject(obj);
+        so.flush();
+        return bo.toByteArray();
+    }
+
+    public static String encodeHexString(Object obj) throws IOException {
+        return Hex.encodeHexString(objectToBytes(obj));
     }
 }

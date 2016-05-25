@@ -86,10 +86,9 @@ public class Main {
                 .help("show version and exit")
                 .action(Arguments.version());
 
-        String message = String.format("%s\n\n%s", getProjectCopyright(), legalNotice);
         parser.addArgument("--legal-notice")
                 .help("show legal notice and exit")
-                .action(new PrintAndExitAction(message));
+                .action(new PrintAndExitAction(getLegalNotice()));
 
         // TODO: Use an enum
         parser.addArgument("--output-format")
@@ -157,6 +156,10 @@ public class Main {
 
     public static String getProjectCopyright() {
         return POM_PROPERTIES.getProperty("copyright");
+    }
+
+    public static String getLegalNotice() {
+        return String.format("%1$s\n\n%2$s", getProjectCopyright(), legalNotice);
     }
 
     /**

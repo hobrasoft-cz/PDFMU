@@ -71,11 +71,19 @@ public class OperationInspect extends OperationCommon {
     @Override
     public void execute(Namespace namespace) throws OperationException {
         in.setFromNamespace(namespace);
-
-        Inspect result = new Inspect();
-
         in.open();
         PdfReader pdfReader = in.getPdfReader();
+        Inspect result;
+        try {
+            result = execute(pdfReader);
+        } finally {
+            in.close();
+        }
+        writeResult(result);
+    }
+
+    private Inspect execute(PdfReader pdfReader) throws OperationException {
+        Inspect result = new Inspect();
 
         // Fetch the PDF version of the input PDF document
         PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
@@ -86,9 +94,7 @@ public class OperationInspect extends OperationCommon {
 
         result.signatures = display(pdfReader);
 
-        in.close();
-
-        writeResult(result);
+        return result;
     }
 
     private SortedMap<String, String> get(PdfReader pdfReader) {

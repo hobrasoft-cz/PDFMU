@@ -31,6 +31,10 @@ import cz.hobrasoft.pdfmu.jackson.SignatureMetadata;
 import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
 import cz.hobrasoft.pdfmu.operation.metadata.MetadataParameters;
 import cz.hobrasoft.pdfmu.operation.version.PdfVersion;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -80,6 +84,20 @@ public class OperationInspect extends OperationCommon {
             in.close();
         }
         writeResult(result);
+    }
+
+    public Inspect execute(File file) throws OperationException, IOException {
+        assert file != null;
+        Inspect result;
+        try (InputStream is = new FileInputStream(file)) {
+            PdfReader pdfReader = new PdfReader(is);
+            try {
+                result = execute(pdfReader);
+            } finally {
+                pdfReader.close();
+            }
+        }
+        return result;
     }
 
     private Inspect execute(PdfReader pdfReader) throws OperationException {
@@ -324,9 +342,9 @@ public class OperationInspect extends OperationCommon {
         return type;
     }
 
-    private static Operation instance = null;
+    private static OperationInspect instance = null;
 
-    public static Operation getInstance() {
+    public static OperationInspect getInstance() {
         if (instance == null) {
             instance = new OperationInspect();
         }

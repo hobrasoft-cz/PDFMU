@@ -110,6 +110,18 @@
             <version>1.6</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.16.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.java</groupId>
+            <artifactId>junit-dataprovider</artifactId>
+            <version>1.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>

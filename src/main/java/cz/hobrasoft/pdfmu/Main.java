@@ -151,11 +151,11 @@ public class Main {
         assert legalNotice != null;
     }
 
-    private static String getProjectVersion() {
+    public static String getProjectVersion() {
         return POM_PROPERTIES.getProperty("projectVersion");
     }
 
-    private static String getProjectCopyright() {
+    public static String getProjectCopyright() {
         return POM_PROPERTIES.getProperty("copyright");
     }
 

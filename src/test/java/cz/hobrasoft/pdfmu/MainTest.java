@@ -246,7 +246,7 @@ public class MainTest {
             if (!force.toBoolean() && onlyIfLower.toBoolean() && inputVersion.compareTo(expectedVersion) >= 0) {
                 // Discard combinations that do not create an output file
                 continue;
-                }
+            }
             if (onlyIfLower.toBoolean() && inputVersion.compareTo(expectedVersion) > 0) {
                 expectedVersion = inputVersion;
             }
@@ -254,7 +254,7 @@ public class MainTest {
         }
         return result.toArray(new Object[][]{});
     }
-    
+
     private File outFile;
 
     @Test

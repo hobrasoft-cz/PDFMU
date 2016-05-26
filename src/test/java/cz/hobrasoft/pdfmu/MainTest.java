@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.Assertion;
@@ -101,12 +100,6 @@ public class MainTest {
         });
         Main.main(new String[]{"--legal-notice"});
         assert false;
-    }
-
-    @Ignore
-    @Test
-    public void testInspect() {
-        Assert.fail();
     }
 
     public enum PdfVersion {
@@ -301,24 +294,6 @@ public class MainTest {
         });
         Main.main(argsList.toArray(new String[]{}));
         assert false;
-    }
-
-    @Ignore
-    @Test
-    public void testUpdateProperties() {
-        Assert.fail();
-    }
-
-    @Ignore
-    @Test
-    public void testAttach() {
-        Assert.fail();
-    }
-
-    @Ignore
-    @Test
-    public void testSign() {
-        Assert.fail();
     }
 
 }

@@ -64,12 +64,12 @@ public class MainUpdateVersionTest extends MainTest {
             return String.format("1.%1$c", toChar());
         }
 
-        public String resourceName() {
+        public String getBlankResourceName() {
             return String.format("blank-1%1$c.pdf", toChar());
         }
 
         public File getBlankFile(TemporaryFolder folder) throws IOException {
-            FileResource fileResource = new FileResource(resourceName());
+            FileResource fileResource = new FileResource(getBlankResourceName());
             return fileResource.getFile(folder);
         }
     }
@@ -111,13 +111,14 @@ public class MainUpdateVersionTest extends MainTest {
         public String toString() {
             List<String> argsList = new ArrayList<>();
             argsList.add("update-version");
-            argsList.add(inputVersion.resourceName());
+            final String inputFileName = inputVersion.getBlankResourceName();
+            argsList.add(inputFileName);
             if (force.toBoolean()) {
                 argsList.add("--force");
             } else {
                 argsList.add("--out");
                 final String outFileName = "out.pdf";
-                assert !outFileName.equals(inputVersion.resourceName());
+                assert !outFileName.equals(inputFileName);
                 argsList.add(outFileName);
             }
             if (requestedVersion != null) {
@@ -192,7 +193,7 @@ public class MainUpdateVersionTest extends MainTest {
         } else {
             argsList.add("--out");
             final String outFileName = "out.pdf";
-            assert !outFileName.equals(inputVersion.resourceName());
+            assert !outFileName.equals(inputVersion.getBlankResourceName());
             outFile = newFile(outFileName, false);
             assert !outFile.exists();
             argsList.add(outFile.getAbsolutePath());

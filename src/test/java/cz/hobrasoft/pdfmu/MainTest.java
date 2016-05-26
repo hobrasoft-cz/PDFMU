@@ -18,7 +18,11 @@ package cz.hobrasoft.pdfmu;
 
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemErrRule;
@@ -59,6 +63,35 @@ abstract public class MainTest {
         }
         assert file.exists() == exists;
         return file;
+    }
+
+    protected static class FileResource {
+
+        private final String resourceName;
+        private final String fileName;
+
+        public FileResource(final String resourceName, final String fileName) {
+            assert resourceName != null;
+            this.resourceName = resourceName;
+            this.fileName = fileName;
+        }
+
+        public FileResource(final String resourceName) {
+            this(resourceName, resourceName);
+        }
+
+        public File getFile(TemporaryFolder folder) throws IOException {
+            ClassLoader classLoader = this.getClass().getClassLoader();
+            assert resourceName != null;
+            InputStream in = classLoader.getResourceAsStream(resourceName);
+            assert in != null;
+            File document = newFile(folder, fileName, true);
+            assert document.exists();
+            OutputStream out = new FileOutputStream(document);
+            assert out != null;
+            IOUtils.copy(in, out);
+            return document;
+        }
     }
 
 }

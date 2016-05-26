@@ -44,6 +44,10 @@ abstract public class MainTest {
     @Rule
     public final TemporaryFolder folder = new TemporaryFolder();
 
+    protected File newFile(String fileName, boolean exists) throws IOException {
+        return newFile(folder, fileName, exists);
+    }
+
     protected static File newFile(TemporaryFolder folder, String fileName,
             boolean exists) throws IOException {
         // TODO: Check whether this works if fileName is null

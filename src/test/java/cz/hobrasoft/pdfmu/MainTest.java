@@ -40,6 +40,6 @@ abstract public class MainTest {
     public final SystemErrRule systemErrRule = new SystemErrRule().mute().enableLog();
 
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
 }

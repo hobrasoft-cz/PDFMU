@@ -22,13 +22,9 @@ import cz.hobrasoft.pdfmu.jackson.Inspect;
 import cz.hobrasoft.pdfmu.operation.OperationException;
 import cz.hobrasoft.pdfmu.operation.OperationInspect;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
@@ -73,17 +69,8 @@ public class MainUpdateVersionTest extends MainTest {
         }
 
         public File getFile(TemporaryFolder folder) throws IOException {
-            String resourceName = resourceName();
-            assert resourceName != null;
-            File document = folder.newFile(resourceName);
-            assert document.exists();
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            InputStream in = classLoader.getResourceAsStream(resourceName);
-            assert in != null;
-            OutputStream out = new FileOutputStream(document);
-            assert out != null;
-            IOUtils.copy(in, out);
-            return document;
+            FileResource fileResource = new FileResource(resourceName());
+            return fileResource.getFile(folder);
         }
     }
 

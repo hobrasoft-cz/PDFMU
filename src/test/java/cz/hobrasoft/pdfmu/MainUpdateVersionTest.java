@@ -68,7 +68,7 @@ public class MainUpdateVersionTest extends MainTest {
             return String.format("blank-1%1$c.pdf", toChar());
         }
 
-        public File getFile(TemporaryFolder folder) throws IOException {
+        public File getBlankFile(TemporaryFolder folder) throws IOException {
             FileResource fileResource = new FileResource(resourceName());
             return fileResource.getFile(folder);
         }
@@ -182,7 +182,7 @@ public class MainUpdateVersionTest extends MainTest {
         final PdfVersion inputVersion = updateVersionInput.inputVersion;
         final PdfVersion requestedVersion = updateVersionInput.requestedVersion;
         final OnlyIfLower onlyIfLower = updateVersionInput.onlyIfLower;
-        final File document = inputVersion.getFile(folder);
+        final File document = inputVersion.getBlankFile(folder);
         outFile = document;
         List<String> argsList = new ArrayList<>();
         argsList.add("update-version");

@@ -45,8 +45,20 @@ abstract public class MainTest {
     @Rule
     public final SystemErrRule systemErrRule = new SystemErrRule().mute().enableLog();
 
+    /**
+     * Ensures that the directory is deleted after it has been used.
+     */
+    private static class StrictTemporaryFolder extends TemporaryFolder {
+
+        @Override
+        protected void after() {
+            super.after();
+            assert !getRoot().exists();
+        }
+    }
+
     @Rule
-    public final TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new StrictTemporaryFolder();
 
     protected File newFile(String fileName, boolean exists) throws IOException {
         return newFile(folder, fileName, exists);

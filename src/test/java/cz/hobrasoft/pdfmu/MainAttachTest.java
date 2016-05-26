@@ -25,7 +25,8 @@ import org.junit.Test;
 /**
  * Since {@link cz.hobrasoft.pdfmu.operation.OperationInspect} does not inspect
  * the attachments, we cannot test the {@code attach} operation properly. We
- * only test a single basic call.
+ * cannot compare the result bit-by-bit either because it differs in ModDate. We
+ * only test whether a single basic call succeeds.
  *
  * @author Filip Bartek
  */

@@ -206,11 +206,7 @@ public class MainUpdateVersionTest extends MainTest {
             argsList.add("--out");
             final String outFileName = "out.pdf";
             assert !outFileName.equals(inputVersion.resourceName());
-            outFile = folder.newFile(outFileName);
-            { // success
-                final boolean success = outFile.delete();
-                assert success;
-            }
+            outFile = newFile(outFileName, false);
             assert !outFile.exists();
             argsList.add(outFile.getAbsolutePath());
         }

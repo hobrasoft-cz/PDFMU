@@ -17,6 +17,8 @@
 package cz.hobrasoft.pdfmu;
 
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import java.io.File;
+import java.io.IOException;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemErrRule;
@@ -41,5 +43,18 @@ abstract public class MainTest {
 
     @Rule
     public final TemporaryFolder folder = new TemporaryFolder();
+
+    protected static File newFile(TemporaryFolder folder, String fileName,
+            boolean exists) throws IOException {
+        // TODO: Check whether this works if fileName is null
+        final File file = folder.newFile(fileName);
+        assert file.exists();
+        if (!exists) {
+            final boolean success = file.delete();
+            assert success;
+        }
+        assert file.exists() == exists;
+        return file;
+    }
 
 }

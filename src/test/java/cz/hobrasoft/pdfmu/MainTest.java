@@ -81,16 +81,25 @@ abstract public class MainTest {
         }
 
         public File getFile(TemporaryFolder folder) throws IOException {
+            File file;
+            try (InputStream in = getStream()) {
+                assert in != null;
+                file = newFile(folder, fileName, true);
+                assert file.exists();
+                try (OutputStream out = new FileOutputStream(file)) {
+                    assert out != null;
+                    IOUtils.copy(in, out);
+                }
+            }
+            return file;
+        }
+
+        public InputStream getStream() {
             ClassLoader classLoader = this.getClass().getClassLoader();
             assert resourceName != null;
             InputStream in = classLoader.getResourceAsStream(resourceName);
             assert in != null;
-            File document = newFile(folder, fileName, true);
-            assert document.exists();
-            OutputStream out = new FileOutputStream(document);
-            assert out != null;
-            IOUtils.copy(in, out);
-            return document;
+            return in;
         }
     }
 

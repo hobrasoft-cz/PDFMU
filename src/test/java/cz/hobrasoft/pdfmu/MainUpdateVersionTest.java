@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
 import org.junit.rules.TemporaryFolder;
@@ -171,7 +170,9 @@ public class MainUpdateVersionTest extends MainTest {
             if (onlyIfLower.toBoolean() && inputVersion.compareTo(expectedVersion) > 0) {
                 expectedVersion = inputVersion;
             }
-            result.add(new Object[]{updateVersionInput, expectedVersion});
+            Inspect expectedInspect = newInspect();
+            expectedInspect.version = expectedVersion.toString();
+            result.add(new Object[]{updateVersionInput, expectedInspect});
         }
         return result.toArray(new Object[][]{});
     }
@@ -181,7 +182,7 @@ public class MainUpdateVersionTest extends MainTest {
     @Test
     @UseDataProvider
     public void testUpdateVersion(final UpdateVersionInput updateVersionInput,
-            final PdfVersion expectedVersion) throws IOException {
+            final Inspect expectedInspect) throws IOException {
         final Force force = updateVersionInput.force;
         final PdfVersion inputVersion = updateVersionInput.inputVersion;
         final PdfVersion requestedVersion = updateVersionInput.requestedVersion;
@@ -212,8 +213,8 @@ public class MainUpdateVersionTest extends MainTest {
         exit.checkAssertionAfterwards(new Assertion() {
             @Override
             public void checkAssertion() throws OperationException, IOException {
-                Inspect inspect = OperationInspect.getInstance().execute(outFile);
-                Assert.assertEquals(expectedVersion.toString(), inspect.version);
+                final Inspect actualInspect = OperationInspect.getInstance().execute(outFile);
+                assertEquals(expectedInspect, actualInspect);
             }
         });
         Main.main(argsList.toArray(new String[]{}));

@@ -16,12 +16,22 @@
  */
 package cz.hobrasoft.pdfmu;
 
+import cz.hobrasoft.pdfmu.jackson.Inspect;
+import cz.hobrasoft.pdfmu.jackson.SignatureDisplay;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemErrRule;
@@ -111,6 +121,40 @@ abstract public class MainTest {
             assert in != null;
             return in;
         }
+    }
+
+    private static final List<String> IGNORED_PROPERTIES
+            = Arrays.asList(new String[]{"Producer", "ModDate", "CreationDate"});
+
+    protected static Inspect newInspect() {
+        Inspect inspect = new Inspect();
+        inspect.properties = new HashMap<>();
+        for (String property : IGNORED_PROPERTIES) {
+            inspect.properties.put(property, null);
+        }
+        inspect.signatures = new SignatureDisplay();
+        inspect.signatures.nRevisions = 0;
+        inspect.signatures.signatures = new ArrayList<>();
+        return inspect;
+    }
+
+    private static void assertEqualsProperties(
+            final Map<String, String> expected,
+            final Map<String, String> actual) {
+        Assert.assertNotNull(expected);
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected.keySet(), actual.keySet());
+        Set<String> keySet = new HashSet<>(expected.keySet());
+        keySet.removeAll(IGNORED_PROPERTIES);
+        for (String key : keySet) {
+            Assert.assertEquals(expected.get(key), actual.get(key));
+        }
+    }
+
+    protected static void assertEquals(final Inspect expected, final Inspect actual) {
+        Assert.assertEquals(expected.version, actual.version);
+        assertEqualsProperties(expected.properties, actual.properties);
+        Assert.assertEquals(expected.signatures, actual.signatures);
     }
 
 }

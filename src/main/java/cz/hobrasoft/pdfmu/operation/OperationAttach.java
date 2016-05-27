@@ -94,11 +94,13 @@ public class OperationAttach extends OperationCommon {
             fileDisplay = file.getName();
         }
 
-        inout.open();
-
-        execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);
-
-        inout.close();
+        try {
+            inout.open();
+            execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);
+            inout.close(true);
+        } finally {
+            inout.close(false);
+        }
 
         writeResult(new EmptyResult());
     }

@@ -87,7 +87,11 @@ public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     @Override
     public void close() throws OperationException {
-        out.close();
+        close(false);
+    }
+
+    public void close(boolean success) throws OperationException {
+        out.close(success);
         in.close();
     }
 

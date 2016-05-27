@@ -62,14 +62,15 @@ public class OperationMetadataSet extends OperationCommon {
     }
 
     private static void set(InOutPdfArgs inout, MetadataParameters metadataParameters) throws OperationException {
-        inout.open();
-
-        PdfReader reader = inout.getPdfReader();
-        PdfStamper stp = inout.getPdfStamper();
-
-        set(reader, stp, metadataParameters);
-
-        inout.close();
+        try {
+            inout.open();
+            PdfReader reader = inout.getPdfReader();
+            PdfStamper stp = inout.getPdfStamper();
+            set(reader, stp, metadataParameters);
+            inout.close(true);
+        } finally {
+            inout.close(false);
+        }
     }
 
     private static void set(PdfReader reader, PdfStamper stamper, MetadataParameters metadataParameters) {

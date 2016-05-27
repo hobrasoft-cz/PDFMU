@@ -99,17 +99,21 @@ public class InPdfArgs implements ArgsConfiguration, AutoCloseable {
 
     @Override
     public void close() throws OperationException {
-        // Close the PDF reader
-        pdfReader.close();
-        pdfReader = null;
-
-        // Close the input stream
-        try {
-            is.close(); // May throw IOException
-        } catch (IOException ex) {
-            throw new OperationException(INPUT_CLOSE, ex);
+        if (pdfReader != null) {
+            // Close the PDF reader
+            pdfReader.close();
+            pdfReader = null;
         }
-        is = null;
+
+        if (is != null) {
+            // Close the input stream
+            try {
+                is.close(); // May throw IOException
+            } catch (IOException ex) {
+                throw new OperationException(INPUT_CLOSE, ex);
+            }
+            is = null;
+        }
     }
 
     public PdfReader getPdfReader() {

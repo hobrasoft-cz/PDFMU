@@ -129,18 +129,23 @@ public class OperationSignatureAdd extends OperationCommon {
         writeResult(sign(inout, signatureParameters));
     }
 
-    private static SignatureAdd sign(InOutPdfArgs inout, SignatureParameters signatureParameters) throws OperationException {
-        inout.openSignature();
-        PdfStamper stp = inout.getPdfStamper();
-        SignatureAdd sa = sign(stp, signatureParameters);
-        inout.close();
+    private static SignatureAdd sign(InOutPdfArgs inout,
+            SignatureParameters signatureParameters) throws OperationException {
+        SignatureAdd sa;
+        try { // inout
+            inout.openSignature();
+            PdfStamper stp = inout.getPdfStamper();
+            sa = sign(stp, signatureParameters);
+            inout.close(true);
+        } finally {
+            inout.close(false);
+        }
         return sa;
     }
 
-    // Initialize the signature appearance
+    // Initialize and load the keystore
     private static SignatureAdd sign(PdfStamper stp,
             SignatureParameters signatureParameters) throws OperationException {
-        assert signatureParameters != null;
         // Unwrap the signature parameters
         SignatureAppearanceParameters signatureAppearanceParameters = signatureParameters.appearance;
         KeystoreParameters keystoreParameters = signatureParameters.keystore;
@@ -156,24 +161,25 @@ public class OperationSignatureAdd extends OperationCommon {
 
         MakeSignature.CryptoStandard sigtype = signatureParameters.format;
 
-        // Initialize the signature appearance
-        PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);
-        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method
-
-        return sign(sap, keystoreParameters, keyParameters, digestAlgorithm, tsaClient, sigtype);
-    }
-
-    // Initialize and load the keystore
-    private static SignatureAdd sign(PdfSignatureAppearance sap,
-            KeystoreParameters keystoreParameters,
-            KeyParameters keyParameters,
-            String digestAlgorithm,
-            TSAClient tsaClient,
-            MakeSignature.CryptoStandard sigtype) throws OperationException {
         assert keystoreParameters != null;
 
         // Initialize and load keystore
         KeyStore ks = keystoreParameters.loadKeystore();
+
+        return sign(stp, signatureAppearanceParameters, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);
+    }
+
+    // Initialize the signature appearance
+    private static SignatureAdd sign(PdfStamper stp,
+            SignatureAppearanceParameters signatureAppearanceParameters,
+            KeyStore ks,
+            KeyParameters keyParameters,
+            String digestAlgorithm,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype) throws OperationException {
+        // Initialize the signature appearance
+        PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);
+        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method
 
         return sign(sap, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);
     }

@@ -203,44 +203,56 @@ public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {
      */
     @Override
     public void close() throws OperationException {
-        try {
-            stp.close();
-        } catch (DocumentException | IOException ex) {
-            throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,
-                    PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-        }
-        stp = null;
+        close(false);
+    }
 
-        assert file != null;
-        logger.info(String.format("Writing the output of the operation to the output file: %s", file));
-
-        // Save the content of `os` to `file`.
-        { // fileOs
-            OutputStream fileOs = null;
-            try {
-                fileOs = new FileOutputStream(file);
-            } catch (FileNotFoundException ex) {
-                throw new OperationException(OUTPUT_OPEN, ex,
-                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-
+    public void close(boolean success) throws OperationException {
+        if (stp != null) {
+            // Only attempt to close the stamper if the operation has succeeded.
+            if (success) {
+                try {
+                    stp.close();
+                } catch (DocumentException | IOException ex) {
+                    throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,
+                            PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+                }
             }
-            assert fileOs != null;
-            try {
-                assert os != null;
-                os.writeTo(fileOs);
-            } catch (IOException ex) {
-                throw new OperationException(OUTPUT_WRITE, ex,
-                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-            }
-            try {
-                fileOs.close();
-            } catch (IOException ex) {
-                throw new OperationException(OUTPUT_CLOSE, ex,
-                        PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
-            }
+            stp = null;
         }
 
-        os = null;
+        if (os != null) {
+            if (success) {
+                assert file != null;
+                logger.info(String.format("Writing the output of the operation to the output file: %s", file));
+
+                // Save the content of `os` to `file`.
+                { // fileOs
+                    OutputStream fileOs = null;
+                    try {
+                        fileOs = new FileOutputStream(file);
+                    } catch (FileNotFoundException ex) {
+                        throw new OperationException(OUTPUT_OPEN, ex,
+                                PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+
+                    }
+                    assert fileOs != null;
+                    try {
+                        assert os != null;
+                        os.writeTo(fileOs);
+                    } catch (IOException ex) {
+                        throw new OperationException(OUTPUT_WRITE, ex,
+                                PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+                    }
+                    try {
+                        fileOs.close();
+                    } catch (IOException ex) {
+                        throw new OperationException(OUTPUT_CLOSE, ex,
+                                PdfmuUtils.sortedMap(new SimpleEntry<String, Object>("outputFile", file)));
+                    }
+                }
+            }
+            os = null;
+        }
     }
 
     public PdfStamper getPdfStamper() {

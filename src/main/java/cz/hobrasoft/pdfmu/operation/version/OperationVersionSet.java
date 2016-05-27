@@ -86,37 +86,43 @@ public class OperationVersionSet extends OperationCommon {
     }
 
     private static VersionSet execute(InPdfArgs in, OutPdfArgs out, PdfVersion outVersion, boolean onlyIfLower) throws OperationException {
-        in.open();
+        try { // in
+            in.open();
+            PdfReader pdfReader = in.getPdfReader();
 
-        PdfReader pdfReader = in.getPdfReader();
+            // Fetch the PDF version of the input PDF document
+            PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
+            logger.info(String.format("Input PDF document version: %s", inVersion));
 
-        // Fetch the PDF version of the input PDF document
-        PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());
-        logger.info(String.format("Input PDF document version: %s", inVersion));
+            // Commence to set the PDF version of the output PDF document
+            // Determine the desired PDF version
+            assert outVersion != null; // The argument "version" has a default value
+            logger.info(String.format("Desired output PDF version: %s", outVersion));
 
-        // Commence to set the PDF version of the output PDF document
-        // Determine the desired PDF version
-        assert outVersion != null; // The argument "version" has a default value
-        logger.info(String.format("Desired output PDF version: %s", outVersion));
-
-        boolean set = true;
-        if (outVersion.compareTo(inVersion) <= 0) {
-            // The desired version is lower than the current version.
-            if (onlyIfLower) {
-                set = false;
-                logger.info("The input PDF version is not lower than the desired version. No modification will be performed.");
-            } else {
-                logger.warning("Setting the PDF version to a lower value.");
+            boolean set = true;
+            if (outVersion.compareTo(inVersion) <= 0) {
+                // The desired version is lower than the current version.
+                if (onlyIfLower) {
+                    set = false;
+                    logger.info("The input PDF version is not lower than the desired version. No modification will be performed.");
+                } else {
+                    logger.warning("Setting the PDF version to a lower value.");
+                }
             }
-        }
 
-        if (set) {
-            out.open(pdfReader, false, outVersion.toChar());
-            out.close();
-        }
-        in.close();
+            if (set) {
+                try { // out
+                    out.open(pdfReader, false, outVersion.toChar());
+                    out.close(true);
+                } finally {
+                    out.close(false);
+                }
+            }
 
-        return new VersionSet(inVersion.toString(), outVersion.toString(), set);
+            return new VersionSet(inVersion.toString(), outVersion.toString(), set);
+        } finally {
+            in.close();
+        }
     }
 
     private static Operation instance = null;

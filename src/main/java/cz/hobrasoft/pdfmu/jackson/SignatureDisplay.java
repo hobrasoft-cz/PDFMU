@@ -18,6 +18,7 @@ package cz.hobrasoft.pdfmu.jackson;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -30,4 +31,26 @@ public class SignatureDisplay extends Result {
 
     @JsonPropertyDescription("Signatures")
     public List<Signature> signatures = null;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SignatureDisplay other = (SignatureDisplay) obj;
+        if (!Objects.equals(this.nRevisions, other.nRevisions)) {
+            return false;
+        }
+        if (!Objects.equals(this.signatures, other.signatures)) {
+            return false;
+        }
+        return true;
+    }
+
 }

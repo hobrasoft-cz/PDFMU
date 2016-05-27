@@ -12,6 +12,7 @@
         <menu>
             <item name="README" href="README.html" />
             <item name="Development HOWTO" href="development.html" />
+            <item name="JaCoCo Report" href="jacoco/index.html" />
         </menu>
     </body>
 </project>

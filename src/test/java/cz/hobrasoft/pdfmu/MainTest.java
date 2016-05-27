@@ -65,6 +65,7 @@ abstract public class MainTest {
             boolean exists) throws IOException {
         // TODO: Check whether this works if fileName is null
         final File file = folder.newFile(fileName);
+        assert file != null;
         assert file.exists();
         if (!exists) {
             final boolean success = file.delete();

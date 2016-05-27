@@ -16,7 +16,6 @@
  */
 package cz.hobrasoft.pdfmu;
 
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,12 +27,10 @@ import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemErrRule;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 
 /**
  * @author Filip Bartek
  */
-@RunWith(DataProviderRunner.class)
 abstract public class MainTest {
 
     @Rule

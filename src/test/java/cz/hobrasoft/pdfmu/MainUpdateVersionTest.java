@@ -17,6 +17,7 @@
 package cz.hobrasoft.pdfmu;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import cz.hobrasoft.pdfmu.jackson.Inspect;
 import cz.hobrasoft.pdfmu.operation.OperationException;
@@ -29,10 +30,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 
 /**
  * @author Filip Bartek
  */
+@RunWith(DataProviderRunner.class)
 public class MainUpdateVersionTest extends MainTest {
 
     public enum PdfVersion {

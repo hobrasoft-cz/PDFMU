@@ -78,7 +78,7 @@ abstract public class MainTest {
     protected static class FileResource {
 
         private final String resourceName;
-        private final String fileName;
+        public final String fileName;
 
         public FileResource(final String resourceName, final String fileName) {
             assert resourceName != null;

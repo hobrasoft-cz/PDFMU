@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.Assertion;
 
 /**
  * Since {@link cz.hobrasoft.pdfmu.operation.OperationInspect} does not inspect
@@ -46,6 +48,12 @@ public class MainAttachTest extends MainTest {
         final File outFile = newFile("out.pdf", false);
         argsList.add(outFile.getAbsolutePath());
         exit.expectSystemExitWithStatus(0);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertTrue(outFile.exists());
+            }
+        });
         Main.main(argsList.toArray(new String[]{}));
         assert false;
     }

@@ -8,6 +8,20 @@
         <author email="filip.bartek@hobrasoft.cz">Filip Bártek</author>
     </properties>
     <body>
+        <release version="1.1.1" date="2016-06-01" description="Minor bug fixes">
+            <action dev="filip.bartek" type="add" date="2016-05-25">
+                If some required arguments are missing, pdfmu returns the exit status 14.
+            </action>
+            <action dev="filip.bartek" type="fix" date="2016-05-27">
+                Close input and output files consistently.
+                Only write to the output file if the operation succeeds.
+                The Operation objects may now be reused,
+                which is useful in tests.
+            </action>
+            <action dev="filip.bartek" type="add" date="2016-06-01">
+                Add some tests along with Surefire and JaCoCo reports.
+            </action>
+        </release>
         <release version="1.1" date="2016-04-24" description="Accept diacritics in key alias">
             <action dev="filip.bartek" type="fix" date="2016-02-24">
                 Added support for key aliases with non-ASCII characters in Windows certificate strore.

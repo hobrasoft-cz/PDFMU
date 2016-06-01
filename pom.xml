@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.hobrasoft</groupId>
     <artifactId>pdfmu</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     
     <name>PDF Manipulation Utility</name>
@@ -46,7 +46,7 @@
         <exeLocation>exe</exeLocation>
         <exeFilename>${project.artifactId}</exeFilename>
         <!-- exeVersion must be four dot-separated digits. -->
-        <exeVersion>1.1.0.0</exeVersion>
+        <exeVersion>1.1.1.0</exeVersion>
         <exeJarLocation>lib</exeJarLocation>
         <projectVersion>${project.version}</projectVersion>
         <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>

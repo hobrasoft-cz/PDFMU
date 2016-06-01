@@ -82,26 +82,4 @@ public class PdfmuUtils {
         }
         return result;
     }
-
-    public static int countMatches(String regex, String message) {
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(message);
-        int count = 0;
-        while (m.find()) {
-            count++;
-        }
-        return count;
-    }
-
-    public static byte[] objectToBytes(Object obj) throws IOException {
-        ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        ObjectOutputStream so = new ObjectOutputStream(bo);
-        so.writeObject(obj);
-        so.flush();
-        return bo.toByteArray();
-    }
-
-    public static String encodeHexString(Object obj) throws IOException {
-        return Hex.encodeHexString(objectToBytes(obj));
-    }
 }

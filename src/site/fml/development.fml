@@ -18,6 +18,7 @@
                         <tt>project.properties.exeVersion</tt>
                     </li>
                 </ul>
+                <p>Add a <tt>release</tt> entry in <tt>src/changes/changes.xml</tt>.</p>
             </answer>
         </faq>
         

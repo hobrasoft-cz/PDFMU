@@ -41,12 +41,12 @@ public class RpcResponse {
             + "This member MUST NOT exist if there was an error invoking the method.\n"
             + "The value of this member is determined by the method invoked on the Server.")
     @JsonInclude(Include.NON_NULL)
-    private Result result = null;
+    private Result result;
 
     @JsonPropertyDescription("This member is REQUIRED on error.\n"
             + "This member MUST NOT exist if there was no error triggered during invocation.")
     @JsonInclude(Include.NON_NULL)
-    private RpcError error = null;
+    private RpcError error;
 
     public RpcResponse(Result result) {
         assert result != null;

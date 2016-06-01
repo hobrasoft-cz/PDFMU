@@ -40,20 +40,20 @@ public class RpcError {
     public static class Data {
 
         @JsonInclude(Include.NON_NULL)
-        public Class causeClass = null;
+        public Class causeClass;
 
         @JsonInclude(Include.NON_NULL)
-        public String causeMessage = null;
+        public String causeMessage;
 
         @JsonInclude(Include.NON_NULL)
-        public Map<String, Object> arguments = null;
+        public Map<String, Object> arguments;
     }
 
     @JsonPropertyDescription("A Primitive or Structured value that contains additional information about the error.\n"
             + "This may be omitted.\n"
             + "The value of this member is defined by the Server (e.g. detailed error information, nested errors etc.).")
     @JsonInclude(Include.NON_NULL)
-    public Data data = null;
+    public Data data;
 
     public RpcError(int code, String message) {
         this.code = code;

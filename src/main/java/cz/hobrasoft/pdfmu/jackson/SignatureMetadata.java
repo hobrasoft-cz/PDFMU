@@ -25,14 +25,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 public class SignatureMetadata {
 
     @JsonPropertyDescription("Signature name")
-    public String name = null;
+    public String name;
 
     @JsonPropertyDescription("The reason for signing")
-    public String reason = null;
+    public String reason;
 
     @JsonPropertyDescription("The location of signing")
-    public String location = null;
+    public String location;
 
     @JsonPropertyDescription("The date signed")
-    public String date = null;
+    public String date;
 }

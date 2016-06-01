@@ -26,17 +26,17 @@ import java.util.List;
 public class Signature {
 
     @JsonPropertyDescription("AcroForm field name")
-    public String id = null;
+    public String id;
 
     @JsonPropertyDescription("Does the signature cover the whole document?")
-    public Boolean coversWholeDocument = null;
+    public Boolean coversWholeDocument;
 
     @JsonPropertyDescription("Document revision associated with this signature")
-    public Integer revision = null;
+    public Integer revision;
 
     @JsonPropertyDescription("Metadata")
-    public SignatureMetadata metadata = null;
+    public SignatureMetadata metadata;
 
     @JsonPropertyDescription("Certificate chain. The certificate used for signing the document is the first in the array.")
-    public List<CertificateResult> certificates = null;
+    public List<CertificateResult> certificates;
 }

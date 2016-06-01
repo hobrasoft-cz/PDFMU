@@ -27,10 +27,10 @@ import java.util.Objects;
 public class SignatureDisplay extends Result {
 
     @JsonPropertyDescription("Number of revisions of the document")
-    public Integer nRevisions = null;
+    public Integer nRevisions;
 
     @JsonPropertyDescription("Signatures")
-    public List<Signature> signatures = null;
+    public List<Signature> signatures;
 
     @Override
     public boolean equals(Object obj) {

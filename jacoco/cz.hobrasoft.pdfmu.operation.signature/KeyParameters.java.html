@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>KeyParameters.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.signature</a> &gt; <span class="el_source">KeyParameters.java</span></div><h1>KeyParameters.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.signature;
+
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIASES;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_EMPTY;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Enumeration;
+import java.util.logging.Logger;
+import net.sourceforge.argparse4j.inf.Argument;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
+/**
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">class KeyParameters implements ArgsConfiguration {</span>
+
+<span class="fc" id="L50">    public String alias = null;</span>
+<span class="fc" id="L51">    public char[] password = null;</span>
+
+    // TODO: Replace with Console
+<span class="fc" id="L54">    private static final Logger logger = Logger.getLogger(KeyParameters.class.getName());</span>
+
+<span class="fc" id="L56">    public PasswordArgs passwordArgs = new PasswordArgs(&quot;key password&quot;);</span>
+
+    private Argument keyAliasArgument;
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L62">        keyAliasArgument = parser.addArgument(&quot;--key-alias&quot;)</span>
+<span class="fc" id="L63">                .help(&quot;key keystore entry alias (default: &lt;first entry in the keystore&gt;)&quot;)</span>
+<span class="fc" id="L64">                .type(String.class);</span>
+
+<span class="fc" id="L66">        passwordArgs.passwordArgument = parser.addArgument(&quot;--key-password&quot;)</span>
+<span class="fc" id="L67">                .help(&quot;key password (default: &lt;empty&gt;)&quot;);</span>
+<span class="fc" id="L68">        passwordArgs.environmentVariableArgument = parser.addArgument(&quot;--key-password-envvar&quot;)</span>
+<span class="fc" id="L69">                .help(&quot;key password environment variable&quot;)</span>
+<span class="fc" id="L70">                .setDefault(&quot;PDFMU_KEYPASS&quot;);</span>
+<span class="fc" id="L71">        passwordArgs.finalizeArguments();</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) {
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        assert keyAliasArgument != null;</span>
+<span class="fc" id="L77">        alias = namespace.getString(keyAliasArgument.getDest());</span>
+
+        // Set password
+<span class="pc bpc" id="L80" title="2 of 4 branches missed.">        assert passwordArgs != null;</span>
+<span class="fc" id="L81">        passwordArgs.setFromNamespace(namespace);</span>
+<span class="fc" id="L82">        password = passwordArgs.getPasswordCharArray();</span>
+        // TODO?: Use keystore password by default
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Encodes the alias using ISO-8859-1 and replaces it with the longest
+     * prefix of itself that is an actual alias in the keystore. The shortening
+     * is a necessary magic necessary for strings with some non-ASCII
+     * characters.
+     */
+    private void fixAliasWcs(KeyStore ks) throws OperationException {
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        assert &quot;Windows-MY&quot;.equals(ks.getType());</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (alias != null) {</span>
+<span class="nc" id="L95">            logger.info(String.format(&quot;WCS alias correction will be applied. Original alias: %s&quot;, alias));</span>
+<span class="nc" id="L96">            alias = new String(alias.getBytes(), StandardCharsets.ISO_8859_1);</span>
+
+<span class="nc" id="L98">            Enumeration&lt;String&gt; aliases = null;</span>
+            try {
+<span class="nc" id="L100">                aliases = ks.aliases();</span>
+<span class="nc" id="L101">            } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L102">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIASES, ex);</span>
+<span class="nc" id="L103">            }</span>
+<span class="nc" id="L104">            String aliasBest = null;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            while (aliases.hasMoreElements()) {</span>
+<span class="nc" id="L106">                String aliasCandidate = aliases.nextElement();</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">                if (alias.startsWith(aliasCandidate)</span>
+                        &amp;&amp; (aliasBest == null
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                        || aliasCandidate.length() &gt; aliasBest.length())) {</span>
+<span class="nc" id="L110">                    aliasBest = aliasCandidate;</span>
+                }
+<span class="nc" id="L112">            }</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (aliasBest != null) {</span>
+<span class="nc" id="L114">                alias = aliasBest;</span>
+            }
+        }
+<span class="nc" id="L117">    }</span>
+
+    public void fixAlias(KeyStore ks) throws OperationException {
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (alias == null) {</span>
+            // Get the first alias in the keystore
+<span class="fc" id="L122">            logger.info(&quot;Keystore entry alias not set. Using the first entry in the keystore.&quot;);</span>
+            Enumeration&lt;String&gt; aliases;
+            try {
+<span class="fc" id="L125">                aliases = ks.aliases();</span>
+<span class="nc" id="L126">            } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L127">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIASES, ex);</span>
+<span class="fc" id="L128">            }</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            if (!aliases.hasMoreElements()) {</span>
+<span class="fc" id="L130">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_EMPTY);</span>
+            }
+<span class="fc" id="L132">            alias = aliases.nextElement();</span>
+<span class="pc bpc" id="L133" title="2 of 4 branches missed.">            assert alias != null;</span>
+<span class="pc bnc" id="L134" title="All 2 branches missed.">        } else if (&quot;Windows-MY&quot;.equals(ks.getType())) {</span>
+<span class="nc" id="L135">            fixAliasWcs(ks);</span>
+        }
+<span class="fc" id="L137">        logger.info(String.format(&quot;Keystore entry alias: %s&quot;, alias));</span>
+
+        // Make sure the entry `alias` is present in the keystore
+        try {
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (!ks.containsAlias(alias)) {</span>
+<span class="nc" id="L142">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,</span>
+                        new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+            }
+<span class="nc" id="L145">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L146">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="fc" id="L148">        }</span>
+
+        // Make sure `alias` is a key entry
+        try {
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (!ks.isKeyEntry(alias)) {</span>
+<span class="nc" id="L153">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY,</span>
+                        new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+            }
+<span class="nc" id="L156">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L157">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="fc" id="L159">        }</span>
+<span class="fc" id="L160">    }</span>
+
+    public void fixPassword(KeyStore ks) {
+<span class="pc bpc" id="L163" title="4 of 6 branches missed.">        switch (ks.getType()) {</span>
+            case &quot;Windows-MY&quot;:
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                if (password != null) {</span>
+<span class="nc" id="L166">                    logger.info(&quot;The keystore Windows-MY does not accept key password.&quot;);</span>
+<span class="nc" id="L167">                    password = null;</span>
+                }
+                break;
+            default:
+                // Set key password to empty string if not set from command line
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">                if (password == null) {</span>
+<span class="fc" id="L173">                    logger.info(&quot;Key password not set. Using an empty password.&quot;);</span>
+<span class="fc" id="L174">                    password = &quot;&quot;.toCharArray();</span>
+                }
+        }
+<span class="fc" id="L177">    }</span>
+
+    public void fix(KeyStore ks) throws OperationException {
+<span class="fc" id="L180">        fixAlias(ks);</span>
+<span class="fc" id="L181">        fixPassword(ks);</span>
+<span class="fc" id="L182">    }</span>
+
+    public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {
+        // Get private key from keystore
+        PrivateKey pk;
+        try {
+<span class="fc" id="L188">            pk = (PrivateKey) ks.getKey(alias, password);</span>
+<span class="nc" id="L189">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L190">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="nc" id="L192">        } catch (NoSuchAlgorithmException ex) {</span>
+<span class="nc" id="L193">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="nc" id="L195">        } catch (UnrecoverableKeyException ex) {</span>
+            // Incorrect key password? Incorrect keystore type?
+<span class="nc" id="L197">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="fc" id="L199">        }</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (pk == null) {</span>
+            // Incorrect alias?
+<span class="nc" id="L202">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+        }
+<span class="fc" id="L205">        return pk;</span>
+    }
+
+    public Certificate[] getCertificateChain(KeyStore ks) throws OperationException {
+        Certificate[] chain;
+        try {
+<span class="fc" id="L211">            chain = ks.getCertificateChain(alias);</span>
+<span class="nc" id="L212">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L213">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,</span>
+                    new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
+<span class="fc" id="L215">        }</span>
+<span class="fc" id="L216">        return chain;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

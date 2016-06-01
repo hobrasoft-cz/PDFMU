@@ -211,55 +211,67 @@
 <span class="sourceLineNo">203</span>     */<a name="line.203"></a>
 <span class="sourceLineNo">204</span>    @Override<a name="line.204"></a>
 <span class="sourceLineNo">205</span>    public void close() throws OperationException {<a name="line.205"></a>
-<span class="sourceLineNo">206</span>        try {<a name="line.206"></a>
-<span class="sourceLineNo">207</span>            stp.close();<a name="line.207"></a>
-<span class="sourceLineNo">208</span>        } catch (DocumentException | IOException ex) {<a name="line.208"></a>
-<span class="sourceLineNo">209</span>            throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,<a name="line.209"></a>
-<span class="sourceLineNo">210</span>                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.210"></a>
-<span class="sourceLineNo">211</span>        }<a name="line.211"></a>
-<span class="sourceLineNo">212</span>        stp = null;<a name="line.212"></a>
-<span class="sourceLineNo">213</span><a name="line.213"></a>
-<span class="sourceLineNo">214</span>        assert file != null;<a name="line.214"></a>
-<span class="sourceLineNo">215</span>        logger.info(String.format("Writing the output of the operation to the output file: %s", file));<a name="line.215"></a>
-<span class="sourceLineNo">216</span><a name="line.216"></a>
-<span class="sourceLineNo">217</span>        // Save the content of `os` to `file`.<a name="line.217"></a>
-<span class="sourceLineNo">218</span>        { // fileOs<a name="line.218"></a>
-<span class="sourceLineNo">219</span>            OutputStream fileOs = null;<a name="line.219"></a>
-<span class="sourceLineNo">220</span>            try {<a name="line.220"></a>
-<span class="sourceLineNo">221</span>                fileOs = new FileOutputStream(file);<a name="line.221"></a>
-<span class="sourceLineNo">222</span>            } catch (FileNotFoundException ex) {<a name="line.222"></a>
-<span class="sourceLineNo">223</span>                throw new OperationException(OUTPUT_OPEN, ex,<a name="line.223"></a>
-<span class="sourceLineNo">224</span>                        PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.224"></a>
-<span class="sourceLineNo">225</span><a name="line.225"></a>
-<span class="sourceLineNo">226</span>            }<a name="line.226"></a>
-<span class="sourceLineNo">227</span>            assert fileOs != null;<a name="line.227"></a>
-<span class="sourceLineNo">228</span>            try {<a name="line.228"></a>
-<span class="sourceLineNo">229</span>                assert os != null;<a name="line.229"></a>
-<span class="sourceLineNo">230</span>                os.writeTo(fileOs);<a name="line.230"></a>
-<span class="sourceLineNo">231</span>            } catch (IOException ex) {<a name="line.231"></a>
-<span class="sourceLineNo">232</span>                throw new OperationException(OUTPUT_WRITE, ex,<a name="line.232"></a>
-<span class="sourceLineNo">233</span>                        PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.233"></a>
-<span class="sourceLineNo">234</span>            }<a name="line.234"></a>
-<span class="sourceLineNo">235</span>            try {<a name="line.235"></a>
-<span class="sourceLineNo">236</span>                fileOs.close();<a name="line.236"></a>
-<span class="sourceLineNo">237</span>            } catch (IOException ex) {<a name="line.237"></a>
-<span class="sourceLineNo">238</span>                throw new OperationException(OUTPUT_CLOSE, ex,<a name="line.238"></a>
-<span class="sourceLineNo">239</span>                        PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.239"></a>
-<span class="sourceLineNo">240</span>            }<a name="line.240"></a>
-<span class="sourceLineNo">241</span>        }<a name="line.241"></a>
-<span class="sourceLineNo">242</span><a name="line.242"></a>
-<span class="sourceLineNo">243</span>        os = null;<a name="line.243"></a>
-<span class="sourceLineNo">244</span>    }<a name="line.244"></a>
-<span class="sourceLineNo">245</span><a name="line.245"></a>
-<span class="sourceLineNo">246</span>    public PdfStamper getPdfStamper() {<a name="line.246"></a>
-<span class="sourceLineNo">247</span>        return stp;<a name="line.247"></a>
-<span class="sourceLineNo">248</span>    }<a name="line.248"></a>
-<span class="sourceLineNo">249</span><a name="line.249"></a>
-<span class="sourceLineNo">250</span>    public File getFile() {<a name="line.250"></a>
-<span class="sourceLineNo">251</span>        return file;<a name="line.251"></a>
-<span class="sourceLineNo">252</span>    }<a name="line.252"></a>
-<span class="sourceLineNo">253</span><a name="line.253"></a>
-<span class="sourceLineNo">254</span>}<a name="line.254"></a>
+<span class="sourceLineNo">206</span>        close(false);<a name="line.206"></a>
+<span class="sourceLineNo">207</span>    }<a name="line.207"></a>
+<span class="sourceLineNo">208</span><a name="line.208"></a>
+<span class="sourceLineNo">209</span>    public void close(boolean success) throws OperationException {<a name="line.209"></a>
+<span class="sourceLineNo">210</span>        if (stp != null) {<a name="line.210"></a>
+<span class="sourceLineNo">211</span>            // Only attempt to close the stamper if the operation has succeeded.<a name="line.211"></a>
+<span class="sourceLineNo">212</span>            if (success) {<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                try {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                    stp.close();<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                } catch (DocumentException | IOException ex) {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                    throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                            PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                }<a name="line.218"></a>
+<span class="sourceLineNo">219</span>            }<a name="line.219"></a>
+<span class="sourceLineNo">220</span>            stp = null;<a name="line.220"></a>
+<span class="sourceLineNo">221</span>        }<a name="line.221"></a>
+<span class="sourceLineNo">222</span><a name="line.222"></a>
+<span class="sourceLineNo">223</span>        if (os != null) {<a name="line.223"></a>
+<span class="sourceLineNo">224</span>            if (success) {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                assert file != null;<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                logger.info(String.format("Writing the output of the operation to the output file: %s", file));<a name="line.226"></a>
+<span class="sourceLineNo">227</span><a name="line.227"></a>
+<span class="sourceLineNo">228</span>                // Save the content of `os` to `file`.<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                { // fileOs<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                    OutputStream fileOs = null;<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                    try {<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                        fileOs = new FileOutputStream(file);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                    } catch (FileNotFoundException ex) {<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                        throw new OperationException(OUTPUT_OPEN, ex,<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.235"></a>
+<span class="sourceLineNo">236</span><a name="line.236"></a>
+<span class="sourceLineNo">237</span>                    }<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                    assert fileOs != null;<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                    try {<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                        assert os != null;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                        os.writeTo(fileOs);<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                    } catch (IOException ex) {<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                        throw new OperationException(OUTPUT_WRITE, ex,<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                    }<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                    try {<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                        fileOs.close();<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                    } catch (IOException ex) {<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                        throw new OperationException(OUTPUT_CLOSE, ex,<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;("outputFile", file)));<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                    }<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                }<a name="line.252"></a>
+<span class="sourceLineNo">253</span>            }<a name="line.253"></a>
+<span class="sourceLineNo">254</span>            os = null;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>        }<a name="line.255"></a>
+<span class="sourceLineNo">256</span>    }<a name="line.256"></a>
+<span class="sourceLineNo">257</span><a name="line.257"></a>
+<span class="sourceLineNo">258</span>    public PdfStamper getPdfStamper() {<a name="line.258"></a>
+<span class="sourceLineNo">259</span>        return stp;<a name="line.259"></a>
+<span class="sourceLineNo">260</span>    }<a name="line.260"></a>
+<span class="sourceLineNo">261</span><a name="line.261"></a>
+<span class="sourceLineNo">262</span>    public File getFile() {<a name="line.262"></a>
+<span class="sourceLineNo">263</span>        return file;<a name="line.263"></a>
+<span class="sourceLineNo">264</span>    }<a name="line.264"></a>
+<span class="sourceLineNo">265</span><a name="line.265"></a>
+<span class="sourceLineNo">266</span>}<a name="line.266"></a>
 
 
 

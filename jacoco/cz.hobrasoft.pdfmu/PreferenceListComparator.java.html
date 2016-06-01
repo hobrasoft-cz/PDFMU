@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PreferenceListComparator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu</a> &gt; <span class="el_source">PreferenceListComparator.java</span></div><h1>PreferenceListComparator.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.collections.IteratorUtils;
+
+/**
+ * Orders the items by a preference list.
+ *
+ * &lt;p&gt;
+ * The items at the start of the preference list are placed before (that is
+ * deemed smaller than) the other items. The items that appear in the preference
+ * list are placed before the items that do not appear in the preference list.
+ * The order of items that do not appear in the preference list is not specified
+ * (and is application specific in practice). Thus the induced order is not
+ * guaranteed to be linear.
+ *
+ * &lt;p&gt;
+ * Usage example:
+ * &lt;pre&gt;
+ * {@code
+ * import java.util.Comparator;
+ * import java.util.List;
+ * import java.util.Map;
+ * import java.util.SortedMap;
+ * import java.util.TreeMap;
+ * }
+ * &lt;/pre&gt;
+ * &lt;pre&gt;
+ * {@code
+ * Map&lt;K, V&gt; unsorted;
+ * List&lt;K&gt; preferenceList;
+ * Comparator&lt;K&gt; comparator = new PreferenceListComparator&lt;&gt;(preferenceList);
+ * SortedMap&lt;K, V&gt; sorted = new TreeMap&lt;&gt;(comparator);
+ * sorted.putAll(unsorted);
+ * }
+ * &lt;/pre&gt;
+ *
+ * @param &lt;T&gt; the type of objects that may be compared by this comparator
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">public class PreferenceListComparator&lt;T&gt; implements Comparator&lt;T&gt;, MapSorter&lt;T&gt; {</span>
+
+    private final List&lt;T&gt; preferred;
+
+    /**
+     * Creates a new comparator.
+     *
+     * @param preferred the preference list
+     */
+<span class="fc" id="L73">    public PreferenceListComparator(List&lt;T&gt; preferred) {</span>
+<span class="fc" id="L74">        this.preferred = preferred;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Creates a new comparator.
+     *
+     * @param preferred the preference list specified by an array
+     */
+    public PreferenceListComparator(T[] preferred) {
+<span class="fc" id="L83">        this(Arrays.asList(preferred));</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Creates a new comparator.
+     *
+     * @param preferredIterator an iterator that iterates over the items in the
+     * order of preference
+     */
+    public PreferenceListComparator(Iterator&lt;T&gt; preferredIterator) {
+<span class="fc" id="L93">        this(IteratorUtils.toList(preferredIterator));</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Compares its two arguments for order. Returns a negative integer, zero,
+     * or a positive integer as the first argument is less than, equal to, or
+     * greater than the second.
+     *
+     * &lt;p&gt;
+     * Note that this implementation violates some of the requirements imposed
+     * by the {@link Comparator} interface, so care should be taken when using
+     * it. In practice, it at least allows a {@link TreeMap} initialized by a
+     * {@link Comparator} to be used for one-time ordering of elements of a
+     * {@link Map} (using the method {@link TreeMap#putAll(Map)}). Other uses of
+     * the comparator have not been tested.
+     *
+     * @param o1 the first object to be compared.
+     * @param o2 the second object to be compared.
+     * @return a negative integer, zero, or a positive integer as the first
+     * argument is less than, equal to, or greater than the second.
+     */
+    @Override
+    public int compare(T o1, T o2) {
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (o1.equals(o2)) {</span>
+<span class="fc" id="L117">            return 0;</span>
+        }
+
+<span class="fc" id="L120">        int i1 = preferred.indexOf(o1);</span>
+<span class="fc" id="L121">        int i2 = preferred.indexOf(o2);</span>
+
+<span class="pc bpc" id="L123" title="3 of 4 branches missed.">        if (i1 == -1 &amp;&amp; i2 != -1) {</span>
+            // `o1` is not in `preferred` but `o2` is.
+            // &quot;Prefer&quot; `o2`, that is claim it smaller than `o1`.
+<span class="nc" id="L126">            return 1;</span>
+        }
+<span class="pc bpc" id="L128" title="3 of 4 branches missed.">        if (i2 == -1 &amp;&amp; i1 != -1) {</span>
+<span class="nc" id="L129">            return -1;</span>
+        }
+<span class="pc bpc" id="L131" title="3 of 4 branches missed.">        if (i1 == -1 &amp;&amp; i2 == -1) {</span>
+            // HACK:
+            // None of `o1` and `o2` is in `preferred`.
+            // Prefer `o1` (the former), preserving the order.
+            // With this hack, it may happen that `a &lt; b` and `b &lt; a`,
+            // so the comparator does not provide a &lt;em&gt;linear&lt;/em&gt; order.
+<span class="nc" id="L137">            return -1;</span>
+        }
+
+        // `i1 == i2` can only occur if `o1.equals(o1)`
+        // or when none of `o1` and `o2` is in `preferred`.
+<span class="pc bpc" id="L142" title="2 of 4 branches missed.">        assert i1 != i2;</span>
+
+        // If `o1` comes before `o1` in `preferred`, the result will be negative.
+<span class="fc" id="L145">        return i1 - i2;</span>
+    }
+
+    /**
+     * Sorts a map by its keys using a comparator.
+     *
+     * @param &lt;K&gt; the type of keys
+     * @param &lt;V&gt; the type of values
+     * @param unsorted the original (unsorted) map
+     * @param comparator a comparator on K
+     * @return a sorted map
+     */
+    public static &lt;K, V&gt; SortedMap&lt;K, V&gt; sort(Map&lt;K, V&gt; unsorted, Comparator&lt;K&gt; comparator) {
+<span class="fc" id="L158">        SortedMap&lt;K, V&gt; sorted = new TreeMap&lt;&gt;(comparator);</span>
+<span class="fc" id="L159">        sorted.putAll(unsorted);</span>
+<span class="fc" id="L160">        return sorted;</span>
+    }
+
+    @Override
+    public &lt;V&gt; SortedMap&lt;T, V&gt; sort(Map&lt;T, V&gt; unsorted) {
+<span class="fc" id="L165">        return sort(unsorted, this);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

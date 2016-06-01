@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>OperationInspect.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation</a> &gt; <span class="el_source">OperationInspect.java</span></div><h1>OperationInspect.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation;
+
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.security.CertificateInfo;
+import com.itextpdf.text.pdf.security.CertificateInfo.X500Name;
+import com.itextpdf.text.pdf.security.PdfPKCS7;
+import cz.hobrasoft.pdfmu.MapSorter;
+import cz.hobrasoft.pdfmu.PreferenceListComparator;
+import cz.hobrasoft.pdfmu.jackson.CertificateResult;
+import cz.hobrasoft.pdfmu.jackson.Inspect;
+import cz.hobrasoft.pdfmu.jackson.Signature;
+import cz.hobrasoft.pdfmu.jackson.SignatureDisplay;
+import cz.hobrasoft.pdfmu.jackson.SignatureMetadata;
+import cz.hobrasoft.pdfmu.operation.args.InPdfArgs;
+import cz.hobrasoft.pdfmu.operation.metadata.MetadataParameters;
+import cz.hobrasoft.pdfmu.operation.version.PdfVersion;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import javax.security.auth.x500.X500Principal;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ *
+ * @author Filip Bartek
+ */
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">public class OperationInspect extends OperationCommon {</span>
+
+<span class="fc" id="L59">    private final InPdfArgs in = new InPdfArgs();</span>
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
+<span class="fc" id="L63">        String help = &quot;Display PDF version, properties and signatures of a PDF document&quot;;</span>
+
+        // Configure the subparser
+<span class="fc" id="L66">        subparser.help(help)</span>
+<span class="fc" id="L67">                .description(help)</span>
+<span class="fc" id="L68">                .defaultHelp(true);</span>
+
+<span class="fc" id="L70">        in.addArguments(subparser);</span>
+
+<span class="fc" id="L72">        return subparser;</span>
+    }
+
+    @Override
+    public void execute(Namespace namespace) throws OperationException {
+<span class="nc" id="L77">        in.setFromNamespace(namespace);</span>
+<span class="nc" id="L78">        in.open();</span>
+<span class="nc" id="L79">        PdfReader pdfReader = in.getPdfReader();</span>
+        Inspect result;
+        try {
+<span class="nc" id="L82">            result = execute(pdfReader);</span>
+        } finally {
+<span class="nc" id="L84">            in.close();</span>
+<span class="nc" id="L85">        }</span>
+<span class="nc" id="L86">        writeResult(result);</span>
+<span class="nc" id="L87">    }</span>
+
+    public Inspect execute(File file) throws OperationException, IOException {
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">        assert file != null;</span>
+        Inspect result;
+<span class="pc" id="L92">        try (InputStream is = new FileInputStream(file)) {</span>
+<span class="fc" id="L93">            PdfReader pdfReader = new PdfReader(is);</span>
+            try {
+<span class="fc" id="L95">                result = execute(pdfReader);</span>
+            } finally {
+<span class="pc" id="L97">                pdfReader.close();</span>
+<span class="fc" id="L98">            }</span>
+<span class="pc bpc" id="L99" title="6 of 8 branches missed.">        }</span>
+<span class="fc" id="L100">        return result;</span>
+    }
+
+    private Inspect execute(PdfReader pdfReader) throws OperationException {
+<span class="fc" id="L104">        Inspect result = new Inspect();</span>
+
+        // Fetch the PDF version of the input PDF document
+<span class="fc" id="L107">        PdfVersion inVersion = new PdfVersion(pdfReader.getPdfVersion());</span>
+<span class="fc" id="L108">        to.println(String.format(&quot;PDF version: %s&quot;, inVersion));</span>
+<span class="fc" id="L109">        result.version = inVersion.toString();</span>
+
+<span class="fc" id="L111">        result.properties = get(pdfReader);</span>
+
+<span class="fc" id="L113">        result.signatures = display(pdfReader);</span>
+
+<span class="fc" id="L115">        return result;</span>
+    }
+
+    private SortedMap&lt;String, String&gt; get(PdfReader pdfReader) {
+<span class="fc" id="L119">        Map&lt;String, String&gt; properties = pdfReader.getInfo();</span>
+
+<span class="fc" id="L121">        MetadataParameters mp = new MetadataParameters();</span>
+<span class="fc" id="L122">        mp.setFromInfo(properties);</span>
+
+<span class="fc" id="L124">        SortedMap&lt;String, String&gt; propertiesSorted = mp.getSorted();</span>
+
+        {
+<span class="fc" id="L127">            to.indentMore(&quot;Properties:&quot;);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            for (Map.Entry&lt;String, String&gt; property : propertiesSorted.entrySet()) {</span>
+<span class="fc" id="L129">                String key = property.getKey();</span>
+<span class="fc" id="L130">                String value = property.getValue();</span>
+<span class="fc" id="L131">                to.println(String.format(&quot;%s: %s&quot;, key, value));</span>
+<span class="fc" id="L132">            }</span>
+<span class="fc" id="L133">            to.indentLess();</span>
+        }
+
+<span class="fc" id="L136">        return propertiesSorted;</span>
+    }
+
+    public SignatureDisplay display(PdfReader pdfReader) {
+        // digitalsignatures20130304.pdf : Code sample 5.1
+<span class="fc" id="L141">        AcroFields fields = pdfReader.getAcroFields();</span>
+<span class="fc" id="L142">        return display(fields);</span>
+    }
+
+    private SignatureDisplay display(AcroFields fields) {
+<span class="fc" id="L146">        SignatureDisplay result = new SignatureDisplay();</span>
+
+        // digitalsignatures20130304.pdf : Code sample 5.1
+<span class="fc" id="L149">        ArrayList&lt;String&gt; names = fields.getSignatureNames();</span>
+
+        // Print number of signatures
+<span class="fc" id="L152">        to.println(String.format(&quot;Number of signatures: %d&quot;, names.size()));</span>
+<span class="fc" id="L153">        to.println(String.format(&quot;Number of document revisions: %d&quot;, fields.getTotalRevisions()));</span>
+<span class="fc" id="L154">        result.nRevisions = fields.getTotalRevisions();</span>
+
+<span class="fc" id="L156">        List&lt;Signature&gt; signatures = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        for (String name : names) {</span>
+<span class="fc" id="L159">            to.println(String.format(&quot;Signature field name: %s&quot;, name));</span>
+
+<span class="fc" id="L161">            to.indentMore();</span>
+            Signature signature;
+            try {
+<span class="fc" id="L164">                signature = display(fields, name); // May throw OperationException</span>
+            } finally {
+<span class="pc" id="L166">                to.indentLess();</span>
+<span class="fc" id="L167">            }</span>
+<span class="fc" id="L168">            signature.id = name;</span>
+<span class="fc" id="L169">            signatures.add(signature);</span>
+<span class="fc" id="L170">        }</span>
+
+<span class="fc" id="L172">        result.signatures = signatures;</span>
+
+<span class="fc" id="L174">        return result;</span>
+    }
+
+    private Signature display(AcroFields fields, String name) {
+        // digitalsignatures20130304.pdf : Code sample 5.2
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        to.println(String.format(&quot;Signature covers the whole document: %s&quot;, (fields.signatureCoversWholeDocument(name) ? &quot;Yes&quot; : &quot;No&quot;)));</span>
+<span class="fc" id="L180">        to.println(String.format(&quot;Document revision: %d of %d&quot;, fields.getRevision(name), fields.getTotalRevisions()));</span>
+
+<span class="fc" id="L182">        PdfPKCS7 pkcs7 = fields.verifySignature(name);</span>
+<span class="fc" id="L183">        Signature signature = display(pkcs7);</span>
+<span class="fc" id="L184">        signature.coversWholeDocument = fields.signatureCoversWholeDocument(name);</span>
+<span class="fc" id="L185">        signature.revision = fields.getRevision(name);</span>
+<span class="fc" id="L186">        return signature;</span>
+    }
+
+    private Signature display(PdfPKCS7 pkcs7) {
+<span class="fc" id="L190">        Signature signature = new Signature();</span>
+
+        // digitalsignatures20130304.pdf : Code sample 5.3
+<span class="fc" id="L193">        to.println(&quot;Signature metadata:&quot;);</span>
+        {
+<span class="fc" id="L195">            SignatureMetadata metadata = new SignatureMetadata();</span>
+
+<span class="fc" id="L197">            to.indentMore();</span>
+
+            // Only name may be null.
+            // The values are set in {@link PdfPKCS7#verifySignature}.
+            { // name
+<span class="fc" id="L202">                String name = pkcs7.getSignName(); // May be null</span>
+<span class="fc" id="L203">                metadata.name = name;</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                if (name == null) {</span>
+<span class="fc" id="L205">                    to.println(&quot;Name is not set.&quot;);</span>
+                } else {
+<span class="nc" id="L207">                    to.println(String.format(&quot;Name: %s&quot;, name));</span>
+                }
+            }
+
+            // TODO?: Print &quot;N/A&quot; if the value is an empty string
+            // TODO?: Determine whether the value is set in the signature
+<span class="fc" id="L213">            to.println(String.format(&quot;Reason: %s&quot;, pkcs7.getReason()));</span>
+<span class="fc" id="L214">            metadata.reason = pkcs7.getReason();</span>
+<span class="fc" id="L215">            to.println(String.format(&quot;Location: %s&quot;, pkcs7.getLocation()));</span>
+<span class="fc" id="L216">            metadata.location = pkcs7.getLocation();</span>
+
+            { // Date
+<span class="fc" id="L219">                Date date = pkcs7.getSignDate().getTime();</span>
+<span class="fc" id="L220">                to.println(String.format(&quot;Date and time: %s&quot;, date));</span>
+<span class="fc" id="L221">                metadata.date = date.toString();</span>
+            }
+
+<span class="fc" id="L224">            to.indentLess();</span>
+
+<span class="fc" id="L226">            signature.metadata = metadata;</span>
+        }
+        { // Certificate chain
+<span class="fc" id="L229">            to.indentMore(&quot;Certificate chain:&quot;);</span>
+<span class="fc" id="L230">            Certificate[] certificates = pkcs7.getSignCertificateChain();</span>
+<span class="fc" id="L231">            to.println(String.format(&quot;Number of certificates: %d&quot;, certificates.length));</span>
+<span class="fc" id="L232">            int i = 0;</span>
+<span class="fc" id="L233">            List&lt;CertificateResult&gt; certificatesResult = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            for (Certificate certificate : certificates) {</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                to.indentMore(String.format(&quot;Certificate %d%s:&quot;, i, (i == 0 ? &quot; (the signing certificate)&quot; : &quot;&quot;)));</span>
+                CertificateResult certRes;
+<span class="fc" id="L237">                String type = certificate.getType();</span>
+<span class="fc" id="L238">                to.println(String.format(&quot;Type: %s&quot;, type));</span>
+                // http://docs.oracle.com/javase/1.5.0/docs/guide/security/CryptoSpec.html#AppA
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                if (&quot;X.509&quot;.equals(type)) {</span>
+<span class="fc" id="L241">                    X509Certificate certificateX509 = (X509Certificate) certificate;</span>
+<span class="fc" id="L242">                    certRes = showCertInfo(certificateX509);</span>
+<span class="fc" id="L243">                } else {</span>
+<span class="nc" id="L244">                    certRes = new CertificateResult();</span>
+                }
+<span class="fc" id="L246">                certRes.type = type;</span>
+<span class="fc" id="L247">                to.indentLess();</span>
+<span class="fc" id="L248">                certificatesResult.add(certRes);</span>
+<span class="fc" id="L249">                ++i;</span>
+            }
+<span class="fc" id="L251">            signature.certificates = certificatesResult;</span>
+<span class="fc" id="L252">            to.indentLess();</span>
+        }
+
+<span class="fc" id="L255">        return signature;</span>
+    }
+
+    private CertificateResult showCertInfo(X509Certificate cert) {
+<span class="fc" id="L259">        CertificateResult certRes = new CertificateResult();</span>
+
+        { // Self-signed?
+<span class="fc" id="L262">            X500Principal principalSubject = cert.getSubjectX500Principal();</span>
+<span class="fc" id="L263">            X500Principal principalIssuer = cert.getIssuerX500Principal();</span>
+<span class="fc" id="L264">            boolean selfSigned = principalSubject.equals(principalIssuer);</span>
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">            to.println(String.format(&quot;Self-signed: %s&quot;, (selfSigned ? &quot;Yes&quot; : &quot;No&quot;)));</span>
+<span class="fc" id="L266">            certRes.selfSigned = selfSigned;</span>
+        }
+
+        // Note: More attributes may be available by more direct processing of `cert`
+        // than by using `CertificateInfo.get*Fields`.
+        { // Subject
+<span class="fc" id="L272">            to.indentMore(&quot;Subject:&quot;);</span>
+<span class="fc" id="L273">            certRes.subject = showX500Name(CertificateInfo.getSubjectFields(cert));</span>
+<span class="fc" id="L274">            to.indentLess();</span>
+        }
+        { // Issuer
+<span class="fc" id="L277">            to.indentMore(&quot;Issuer:&quot;);</span>
+<span class="fc" id="L278">            certRes.issuer = showX500Name(CertificateInfo.getIssuerFields(cert));</span>
+<span class="fc" id="L279">            to.indentLess();</span>
+        }
+
+<span class="fc" id="L282">        return certRes;</span>
+    }
+
+    // The desired order of DN attributes by their type
+<span class="fc" id="L286">    private static final MapSorter&lt;String&gt; dnTypeSorter = new PreferenceListComparator(new String[]{</span>
+        &quot;CN&quot;, &quot;E&quot;, &quot;OU&quot;, &quot;O&quot;, &quot;STREET&quot;, &quot;L&quot;, &quot;ST&quot;, &quot;C&quot;});
+
+    /**
+     * The returned map is ordered by keys by {@link dnTypeSorter}.
+     */
+    private SortedMap&lt;String, List&lt;String&gt;&gt; showX500Name(X500Name name) {
+<span class="fc" id="L293">        Map&lt;String, ArrayList&lt;String&gt;&gt; fields = name.getFields();</span>
+
+        // Convert to Map&lt;String, List&lt;String&gt;&gt;
+<span class="fc" id="L296">        Map&lt;String, List&lt;String&gt;&gt; fieldsLists = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L297">        fieldsLists.putAll(fields);</span>
+
+        // Sort by dnTypeSorter
+<span class="fc" id="L300">        SortedMap&lt;String, List&lt;String&gt;&gt; fieldsSorted = dnTypeSorter.sort(fieldsLists);</span>
+
+        // Print
+<span class="fc bfc" id="L303" title="All 2 branches covered.">        for (Entry&lt;String, List&lt;String&gt;&gt; field : fieldsSorted.entrySet()) {</span>
+<span class="fc" id="L304">            String type = field.getKey();</span>
+<span class="fc" id="L305">            type = niceX500AttributeType(type);</span>
+<span class="fc" id="L306">            List&lt;String&gt; values = field.getValue();</span>
+<span class="fc" id="L307">            String valuesString = StringUtils.join(values, &quot;, &quot;);</span>
+<span class="fc" id="L308">            to.println(String.format(&quot;%s: %s&quot;, type, valuesString));</span>
+<span class="fc" id="L309">        }</span>
+
+<span class="fc" id="L311">        return fieldsSorted;</span>
+    }
+
+<span class="fc" id="L314">    private static final Map&lt;String, String&gt; attributeTypeAliases = new HashMap&lt;&gt;();</span>
+
+    static {
+        // Alias sources:
+        // http://www.ietf.org/rfc/rfc2253.txt : Section 2.3
+        // http://api.itextpdf.com/itext/com/itextpdf/text/pdf/security/CertificateInfo.X500Name.html
+<span class="fc" id="L320">        attributeTypeAliases.put(&quot;CN&quot;, &quot;Common name&quot;);</span>
+<span class="fc" id="L321">        attributeTypeAliases.put(&quot;L&quot;, &quot;Locality&quot;);</span>
+<span class="fc" id="L322">        attributeTypeAliases.put(&quot;ST&quot;, &quot;State or province&quot;);</span>
+<span class="fc" id="L323">        attributeTypeAliases.put(&quot;O&quot;, &quot;Organization&quot;);</span>
+<span class="fc" id="L324">        attributeTypeAliases.put(&quot;OU&quot;, &quot;Organizational unit&quot;);</span>
+<span class="fc" id="L325">        attributeTypeAliases.put(&quot;C&quot;, &quot;Country code&quot;);</span>
+<span class="fc" id="L326">        attributeTypeAliases.put(&quot;STREET&quot;, &quot;Street address&quot;);</span>
+<span class="fc" id="L327">        attributeTypeAliases.put(&quot;DC&quot;, &quot;Domain component&quot;);</span>
+<span class="fc" id="L328">        attributeTypeAliases.put(&quot;UID&quot;, &quot;User ID&quot;);</span>
+<span class="fc" id="L329">        attributeTypeAliases.put(&quot;E&quot;, &quot;Email address&quot;);</span>
+<span class="fc" id="L330">        attributeTypeAliases.put(&quot;SN&quot;, &quot;Serial number&quot;);</span>
+<span class="fc" id="L331">        attributeTypeAliases.put(&quot;T&quot;, &quot;Title&quot;);</span>
+    }
+
+    private static String niceX500AttributeType(String type) {
+<span class="fc" id="L335">        String nice = attributeTypeAliases.get(type);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">        if (nice != null) {</span>
+<span class="fc" id="L337">            type = nice;</span>
+        } else {
+<span class="nc" id="L339">            return String.format(&quot;&lt;%s&gt;&quot;, type);</span>
+        }
+
+<span class="fc" id="L342">        return type;</span>
+    }
+
+<span class="fc" id="L345">    private static OperationInspect instance = null;</span>
+
+    public static OperationInspect getInstance() {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L349">            instance = new OperationInspect();</span>
+        }
+<span class="fc" id="L351">        return instance;</span>
+    }
+
+<span class="fc" id="L354">    private OperationInspect() {</span>
+        // Singleton
+<span class="fc" id="L356">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

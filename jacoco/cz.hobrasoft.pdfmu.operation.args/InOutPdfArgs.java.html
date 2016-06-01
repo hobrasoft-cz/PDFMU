@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InOutPdfArgs.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.args</a> &gt; <span class="el_source">InOutPdfArgs.java</span></div><h1>InOutPdfArgs.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.args;
+
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
+// Handle unset output file (in-place change)
+public class InOutPdfArgs implements ArgsConfiguration, AutoCloseable {
+
+    private InPdfArgs in;
+    private OutPdfArgs out;
+
+    public InOutPdfArgs() {
+        // Allow append by default
+<span class="fc" id="L33">        this(true);</span>
+<span class="fc" id="L34">    }</span>
+
+    public InOutPdfArgs(boolean allowAppend) {
+<span class="fc" id="L37">        this(&quot;IN.pdf&quot;, allowAppend);</span>
+<span class="fc" id="L38">    }</span>
+
+    public InOutPdfArgs(String metavarIn) {
+        // Allow append by default
+<span class="fc" id="L42">        this(metavarIn, true);</span>
+<span class="fc" id="L43">    }</span>
+
+<span class="fc" id="L45">    public InOutPdfArgs(String metavarIn, boolean allowAppend) {</span>
+<span class="fc" id="L46">        in = new InPdfArgs(metavarIn);</span>
+<span class="fc" id="L47">        out = new OutPdfArgs(metavarIn, allowAppend);</span>
+<span class="fc" id="L48">    }</span>
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L52">        in.addArguments(parser);</span>
+<span class="fc" id="L53">        out.addArguments(parser);</span>
+<span class="fc" id="L54">    }</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) {
+<span class="fc" id="L58">        in.setFromNamespace(namespace);</span>
+<span class="fc" id="L59">        out.setFromNamespace(namespace);</span>
+<span class="fc" id="L60">        out.setDefaultFile(in.getFile());</span>
+<span class="fc" id="L61">    }</span>
+
+    public void open() throws OperationException {
+<span class="fc" id="L64">        open(false);</span>
+<span class="fc" id="L65">    }</span>
+
+    public void openSignature() throws OperationException {
+<span class="fc" id="L68">        open(true);</span>
+<span class="fc" id="L69">    }</span>
+
+    public void open(boolean signature) throws OperationException {
+<span class="fc" id="L72">        open(signature, '\0');</span>
+<span class="fc" id="L73">    }</span>
+
+    public void open(boolean signature, char pdfVersion) throws OperationException {
+<span class="fc" id="L76">        PdfReader reader = in.open();</span>
+<span class="fc" id="L77">        out.open(reader, signature, pdfVersion);</span>
+<span class="fc" id="L78">    }</span>
+
+    public PdfReader getPdfReader() {
+<span class="nc" id="L81">        return in.getPdfReader();</span>
+    }
+
+    public PdfStamper getPdfStamper() {
+<span class="fc" id="L85">        return out.getPdfStamper();</span>
+    }
+
+    @Override
+    public void close() throws OperationException {
+<span class="nc" id="L90">        close(false);</span>
+<span class="nc" id="L91">    }</span>
+
+    public void close(boolean success) throws OperationException {
+<span class="fc" id="L94">        out.close(success);</span>
+<span class="fc" id="L95">        in.close();</span>
+<span class="fc" id="L96">    }</span>
+
+    public InPdfArgs getIn() {
+<span class="fc" id="L99">        return in;</span>
+    }
+
+    // :)
+    public OutPdfArgs getOut() {
+<span class="fc" id="L104">        return out;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

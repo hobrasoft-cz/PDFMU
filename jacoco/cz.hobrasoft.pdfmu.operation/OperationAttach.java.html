@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>OperationAttach.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation</a> &gt; <span class="el_source">OperationAttach.java</span></div><h1>OperationAttach.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation;
+
+import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.ErrorType.ATTACH_ATTACHMENT_EQUALS_OUTPUT;
+import static cz.hobrasoft.pdfmu.error.ErrorType.ATTACH_FAIL;
+import cz.hobrasoft.pdfmu.jackson.EmptyResult;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
+import java.io.File;
+import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+
+/**
+ * Attaches one or more files to a PDF document
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">public class OperationAttach extends OperationCommon {</span>
+
+<span class="fc" id="L42">    private static final Logger logger = Logger.getLogger(OperationAttach.class.getName());</span>
+
+<span class="fc" id="L44">    private final String metavarIn = &quot;IN.pdf&quot;;</span>
+<span class="fc" id="L45">    private final InOutPdfArgs inout = new InOutPdfArgs(metavarIn);</span>
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
+<span class="fc" id="L49">        String help = &quot;Attach a file to a PDF document&quot;;</span>
+
+<span class="fc" id="L51">        subparser.help(help)</span>
+<span class="fc" id="L52">                .description(help)</span>
+<span class="fc" id="L53">                .defaultHelp(true);</span>
+
+<span class="fc" id="L55">        inout.addArguments(subparser);</span>
+
+<span class="fc" id="L57">        String metavarAttachment = &quot;ATTACHMENT&quot;;</span>
+
+        // TODO: Try to reuse InPdfArgs
+<span class="fc" id="L60">        subparser.addArgument(&quot;attachment&quot;)</span>
+<span class="fc" id="L61">                .help(String.format(&quot;file to attach to %s&quot;, metavarIn))</span>
+<span class="fc" id="L62">                .metavar(metavarAttachment)</span>
+<span class="fc" id="L63">                .type(Arguments.fileType().acceptSystemIn());</span>
+<span class="fc" id="L64">        subparser.addArgument(&quot;-r&quot;, &quot;--rename&quot;)</span>
+<span class="fc" id="L65">                .help(String.format(&quot;attachment filename shown in the output PDF document (default: &lt;%s&gt;)&quot;, metavarAttachment))</span>
+<span class="fc" id="L66">                .metavar(&quot;FILENAME&quot;)</span>
+<span class="fc" id="L67">                .type(String.class);</span>
+<span class="fc" id="L68">        subparser.addArgument(&quot;-d&quot;, &quot;--description&quot;)</span>
+<span class="fc" id="L69">                .help(&quot;attachment description shown in the output PDF document (default: &lt;none&gt;)&quot;)</span>
+<span class="fc" id="L70">                .type(String.class);</span>
+
+<span class="fc" id="L72">        return subparser;</span>
+    }
+
+    @Override
+    public void execute(Namespace namespace) throws OperationException {
+<span class="fc" id="L77">        inout.setFromNamespace(namespace);</span>
+
+<span class="fc" id="L79">        File file = namespace.get(&quot;attachment&quot;);</span>
+
+<span class="fc" id="L81">        File outFile = inout.getOut().getFile();</span>
+<span class="pc bpc" id="L82" title="2 of 4 branches missed.">        assert outFile != null;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (outFile.equals(file)) {</span>
+<span class="nc" id="L84">            throw new OperationException(ATTACH_ATTACHMENT_EQUALS_OUTPUT,</span>
+<span class="nc" id="L85">                    PdfmuUtils.sortedMap(</span>
+                            new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, outFile),
+                            new SimpleEntry&lt;String, Object&gt;(&quot;attachmentFile&quot;, file)));
+        }
+
+<span class="fc" id="L90">        String description = namespace.getString(&quot;description&quot;);</span>
+<span class="fc" id="L91">        String fileDisplay = namespace.getString(&quot;rename&quot;);</span>
+
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (fileDisplay == null) {</span>
+<span class="fc" id="L94">            fileDisplay = file.getName();</span>
+        }
+
+        try {
+<span class="fc" id="L98">            inout.open();</span>
+<span class="fc" id="L99">            execute(inout.getPdfStamper(), description, file.getPath(), fileDisplay);</span>
+<span class="fc" id="L100">            inout.close(true);</span>
+        } finally {
+<span class="pc" id="L102">            inout.close(false);</span>
+<span class="fc" id="L103">        }</span>
+
+<span class="fc" id="L105">        writeResult(new EmptyResult());</span>
+<span class="fc" id="L106">    }</span>
+
+<span class="fc" id="L108">    private static final Pattern filenameWithExtension = Pattern.compile(&quot;.*\\.[^\\.]+&quot;);</span>
+
+    private static void execute(PdfStamper stp, String description, String file, String fileDisplay) throws OperationException {
+        {
+<span class="pc bpc" id="L112" title="2 of 4 branches missed.">            assert stp != null;</span>
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">            assert file != null;</span>
+<span class="pc bpc" id="L114" title="2 of 4 branches missed.">            assert fileDisplay != null; // We use the attachment file name by default</span>
+
+<span class="fc" id="L116">            logger.info(String.format(&quot;Attached file: %s&quot;, file));</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">            logger.info(String.format(&quot;Description: %s&quot;, (description != null ? description : &quot;&lt;none&gt;&quot;)));</span>
+<span class="fc" id="L118">            logger.info(String.format(&quot;Display name: %s&quot;, fileDisplay));</span>
+            {
+<span class="fc" id="L120">                Matcher m = filenameWithExtension.matcher(fileDisplay);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                if (!m.matches()) {</span>
+<span class="nc" id="L122">                    logger.warning(&quot;Display name does not contain a file extension. Adobe Reader XI does not allow opening or saving such attachment.&quot;);</span>
+                }
+            }
+        }
+        try {
+<span class="fc" id="L127">            stp.addFileAttachment(description, null, file, fileDisplay);</span>
+<span class="nc" id="L128">        } catch (IOException ex) {</span>
+<span class="nc" id="L129">            throw new OperationException(ATTACH_FAIL, ex,</span>
+<span class="nc" id="L130">                    PdfmuUtils.sortedMap(new String[]{&quot;file&quot;}, new Object[]{file}));</span>
+<span class="fc" id="L131">        }</span>
+<span class="fc" id="L132">        logger.info(String.format(&quot;The file \&quot;%s\&quot; has been attached.&quot;, file));</span>
+<span class="fc" id="L133">    }</span>
+
+<span class="fc" id="L135">    private static Operation instance = null;</span>
+
+    public static Operation getInstance() {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L139">            instance = new OperationAttach();</span>
+        }
+<span class="fc" id="L141">        return instance;</span>
+    }
+
+<span class="fc" id="L144">    private OperationAttach() {</span>
+        // Singleton
+<span class="fc" id="L146">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

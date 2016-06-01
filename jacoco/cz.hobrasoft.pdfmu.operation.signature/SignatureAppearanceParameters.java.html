@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SignatureAppearanceParameters.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.signature</a> &gt; <span class="el_source">SignatureAppearanceParameters.java</span></div><h1>SignatureAppearanceParameters.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.signature;
+
+import com.itextpdf.text.pdf.PdfSignatureAppearance;
+import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import java.util.Calendar;
+import java.util.logging.Logger;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
+/**
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">class SignatureAppearanceParameters implements ArgsConfiguration {</span>
+
+<span class="fc" id="L34">    public String reason = null;</span>
+<span class="fc" id="L35">    public String location = null;</span>
+<span class="fc" id="L36">    public String contact = null;</span>
+<span class="fc" id="L37">    public Calendar signDate = null;</span>
+<span class="fc" id="L38">    public int certificationLevel = PdfSignatureAppearance.NOT_CERTIFIED;</span>
+
+<span class="fc" id="L40">    private static final Logger logger = Logger.getLogger(SignatureAppearanceParameters.class.getName());</span>
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L44">        ArgumentGroup group = parser.addArgumentGroup(&quot;signature metadata&quot;);</span>
+        // TODO: Add description
+
+        // The fields are explained in the following documents:
+        // digitalsignatures20130304.pdf : Section 2.3.3
+        // http://www.adobe.com/devnet-docs/acrobatetk/tools/DigSig/appearances.html
+        // https://www.pdfill.com/document_sign.html
+<span class="fc" id="L51">        group.addArgument(&quot;--reason&quot;)</span>
+<span class="fc" id="L52">                .help(&quot;What was the reason for signing? (default: &lt;none&gt;)&quot;)</span>
+<span class="fc" id="L53">                .type(String.class);</span>
+<span class="fc" id="L54">        group.addArgument(&quot;--location&quot;)</span>
+<span class="fc" id="L55">                .help(&quot;Where was the document signed? (default: &lt;none&gt;)&quot;)</span>
+<span class="fc" id="L56">                .type(String.class);</span>
+<span class="fc" id="L57">        group.addArgument(&quot;--contact&quot;)</span>
+<span class="fc" id="L58">                .help(&quot;signer contact information (defualt: &lt;none&gt;)&quot;)</span>
+<span class="fc" id="L59">                .type(String.class);</span>
+        // TODO: Unify the help strings
+<span class="fc" id="L61">    }</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) {
+<span class="fc" id="L65">        reason = namespace.getString(&quot;reason&quot;);</span>
+<span class="fc" id="L66">        location = namespace.getString(&quot;location&quot;);</span>
+<span class="fc" id="L67">        contact = namespace.getString(&quot;contact&quot;);</span>
+        // TODO?: Expose `signDate`
+        // Note: Argparse4j does not seem to support time
+        // (namely {@link Calendar}) natively.
+        // TODO?: Expose `certificationLevel`
+<span class="fc" id="L72">    }</span>
+
+    public void configureSignatureAppearance(PdfSignatureAppearance sap) {
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        assert sap != null;</span>
+        // Configure signature metadata
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (reason != null) {</span>
+<span class="nc" id="L78">            logger.info(String.format(&quot;Reason: %s&quot;, reason));</span>
+<span class="nc" id="L79">            sap.setReason(reason);</span>
+        }
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (location != null) {</span>
+<span class="nc" id="L82">            logger.info(String.format(&quot;Location: %s&quot;, location));</span>
+<span class="nc" id="L83">            sap.setLocation(location);</span>
+        }
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (contact != null) {</span>
+<span class="nc" id="L86">            logger.info(String.format(&quot;Contact: %s&quot;, contact));</span>
+<span class="nc" id="L87">            sap.setContact(contact);</span>
+        }
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (signDate != null) {</span>
+            // `setSignDate(null)` crashes
+<span class="nc" id="L91">            logger.info(String.format(&quot;Date: %s&quot;, signDate));</span>
+<span class="nc" id="L92">            sap.setSignDate(signDate);</span>
+        }
+<span class="fc" id="L94">        sap.setCertificationLevel(certificationLevel);</span>
+
+        // TODO?: Set signer's name
+        // digitalsignatures20130304.pdf : Code sample 2.12
+<span class="fc" id="L98">    }</span>
+
+    public PdfSignatureAppearance getSignatureAppearance(PdfStamper stp) {
+<span class="pc bpc" id="L101" title="2 of 4 branches missed.">        assert stp != null;</span>
+
+        // Initialize the signature appearance
+<span class="fc" id="L104">        PdfSignatureAppearance sap = stp.getSignatureAppearance();</span>
+<span class="fc" id="L105">        configureSignatureAppearance(sap);</span>
+
+<span class="fc" id="L107">        return sap;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

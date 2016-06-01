@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>OperationSignatureAdd.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.signature</a> &gt; <span class="el_source">OperationSignatureAdd.java</span></div><h1>OperationSignatureAdd.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.signature;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.ExceptionConverter;
+import com.itextpdf.text.pdf.PdfSignatureAppearance;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.security.BouncyCastleDigest;
+import com.itextpdf.text.pdf.security.CrlClient;
+import com.itextpdf.text.pdf.security.DigestAlgorithms;
+import com.itextpdf.text.pdf.security.ExternalDigest;
+import com.itextpdf.text.pdf.security.ExternalSignature;
+import com.itextpdf.text.pdf.security.MakeSignature;
+import com.itextpdf.text.pdf.security.OcspClient;
+import com.itextpdf.text.pdf.security.PrivateKeySignature;
+import com.itextpdf.text.pdf.security.TSAClient;
+import cz.hobrasoft.pdfmu.ExceptionMessagePattern;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_SIGNATURE_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_BAD_CERTIFICATE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_LOGIN_FAIL;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_FATAL_ALERT;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNAUTHORIZED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNREACHABLE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_UNTRUSTED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_EMPTY;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SSL_TRUSTSTORE_INCORRECT_TYPE;
+import cz.hobrasoft.pdfmu.jackson.SignatureAdd;
+import cz.hobrasoft.pdfmu.operation.Operation;
+import cz.hobrasoft.pdfmu.operation.OperationCommon;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.InOutPdfArgs;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.Security;
+import java.security.SignatureException;
+import java.security.cert.Certificate;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+/**
+ * Adds a digital signature to a PDF document
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">public class OperationSignatureAdd extends OperationCommon {</span>
+
+<span class="fc" id="L83">    private static final Logger logger = Logger.getLogger(OperationSignatureAdd.class.getName());</span>
+
+<span class="fc" id="L85">    private final InOutPdfArgs inout = new InOutPdfArgs();</span>
+
+    @Override
+    public Subparser configureSubparser(Subparser subparser) {
+<span class="fc" id="L89">        String help = &quot;Add a digital signature to a PDF document&quot;;</span>
+
+        // Configure the subparser
+<span class="fc" id="L92">        subparser.help(help)</span>
+<span class="fc" id="L93">                .description(help)</span>
+<span class="fc" id="L94">                .defaultHelp(true);</span>
+
+<span class="fc" id="L96">        inout.addArguments(subparser);</span>
+<span class="fc" id="L97">        signatureParameters.addArguments(subparser);</span>
+
+<span class="fc" id="L99">        return subparser;</span>
+    }
+
+    // digitalsignatures20130304.pdf : Code sample 1.6
+    // Initialize the security provider
+<span class="fc" id="L104">    private static final BouncyCastleProvider provider = new BouncyCastleProvider();</span>
+
+    static {
+        // We need to register the provider because it needs to be accessible by its name globally.
+        // {@link com.itextpdf.text.pdf.security.PrivateKeySignature#PrivateKeySignature(PrivateKey pk, String hashAlgorithm, String provider)}
+        // uses the provider name.
+<span class="fc" id="L110">        Security.addProvider(provider);</span>
+    }
+
+    // Initialize the digest algorithm
+<span class="fc" id="L114">    private static final ExternalDigest externalDigest = new BouncyCastleDigest();</span>
+
+    // `signatureParameters` is a member variable
+    // so that we can add the arguments to the parser in `configureSubparser`.
+    // We need an instance of {@link SignatureParameters} in `configureSubparser`
+    // because the interface `ArgsConfiguration` does not allow static methods.
+<span class="fc" id="L120">    private final SignatureParameters signatureParameters = new SignatureParameters();</span>
+
+    @Override
+    public void execute(Namespace namespace) throws OperationException {
+<span class="fc" id="L124">        inout.setFromNamespace(namespace);</span>
+
+        // Initialize signature parameters
+<span class="fc" id="L127">        signatureParameters.setFromNamespace(namespace);</span>
+
+<span class="fc" id="L129">        writeResult(sign(inout, signatureParameters));</span>
+<span class="fc" id="L130">    }</span>
+
+    private static SignatureAdd sign(InOutPdfArgs inout,
+            SignatureParameters signatureParameters) throws OperationException {
+        SignatureAdd sa;
+        try { // inout
+<span class="fc" id="L136">            inout.openSignature();</span>
+<span class="fc" id="L137">            PdfStamper stp = inout.getPdfStamper();</span>
+<span class="fc" id="L138">            sa = sign(stp, signatureParameters);</span>
+<span class="fc" id="L139">            inout.close(true);</span>
+        } finally {
+<span class="fc" id="L141">            inout.close(false);</span>
+<span class="fc" id="L142">        }</span>
+<span class="fc" id="L143">        return sa;</span>
+    }
+
+    // Initialize and load the keystore
+    private static SignatureAdd sign(PdfStamper stp,
+            SignatureParameters signatureParameters) throws OperationException {
+        // Unwrap the signature parameters
+<span class="fc" id="L150">        SignatureAppearanceParameters signatureAppearanceParameters = signatureParameters.appearance;</span>
+<span class="fc" id="L151">        KeystoreParameters keystoreParameters = signatureParameters.keystore;</span>
+<span class="fc" id="L152">        KeyParameters keyParameters = signatureParameters.key;</span>
+<span class="fc" id="L153">        String digestAlgorithm = signatureParameters.digestAlgorithm;</span>
+
+<span class="fc" id="L155">        TSAClient tsaClient = signatureParameters.timestamp.getTSAClient();</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (tsaClient != null) {</span>
+<span class="nc" id="L157">            logger.info(&quot;Using a timestamp authority to attach a timestamp.&quot;);</span>
+        } else {
+<span class="fc" id="L159">            logger.info(&quot;No timestamp authority was specified.&quot;);</span>
+        }
+
+<span class="fc" id="L162">        MakeSignature.CryptoStandard sigtype = signatureParameters.format;</span>
+
+<span class="pc bpc" id="L164" title="2 of 4 branches missed.">        assert keystoreParameters != null;</span>
+
+        // Initialize and load keystore
+<span class="fc" id="L167">        KeyStore ks = keystoreParameters.loadKeystore();</span>
+
+<span class="fc" id="L169">        return sign(stp, signatureAppearanceParameters, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
+    }
+
+    // Initialize the signature appearance
+    private static SignatureAdd sign(PdfStamper stp,
+            SignatureAppearanceParameters signatureAppearanceParameters,
+            KeyStore ks,
+            KeyParameters keyParameters,
+            String digestAlgorithm,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype) throws OperationException {
+        // Initialize the signature appearance
+<span class="fc" id="L181">        PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);</span>
+<span class="pc bpc" id="L182" title="2 of 4 branches missed.">        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method</span>
+
+<span class="fc" id="L184">        return sign(sap, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
+    }
+
+    // Get the private key and the certificate chain from the keystore
+    private static SignatureAdd sign(PdfSignatureAppearance sap,
+            KeyStore ks,
+            KeyParameters keyParameters,
+            String digestAlgorithm,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype) throws OperationException {
+<span class="pc bpc" id="L194" title="2 of 4 branches missed.">        assert keyParameters != null;</span>
+        // Fix the values, especially if they were not set at all
+<span class="fc" id="L196">        keyParameters.fix(ks);</span>
+<span class="fc" id="L197">        String alias = keyParameters.alias;</span>
+<span class="fc" id="L198">        SignatureAdd sa = new SignatureAdd(alias);</span>
+
+<span class="fc" id="L200">        PrivateKey pk = keyParameters.getPrivateKey(ks);</span>
+<span class="fc" id="L201">        Certificate[] chain = keyParameters.getCertificateChain(ks);</span>
+
+        Provider signatureProvider;
+        { // ksProvider
+<span class="fc" id="L205">            Provider ksProvider = ks.getProvider();</span>
+            // &quot;SunMSCAPI&quot; provider must be used for signing if it was used for keystore loading.
+            // In case of other keystore providers,
+            // we use the default signature provider.
+            // https://community.oracle.com/thread/1528230
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (&quot;SunMSCAPI&quot;.equals(ksProvider.getName())) {</span>
+<span class="nc" id="L211">                signatureProvider = ksProvider;</span>
+            } else {
+<span class="fc" id="L213">                signatureProvider = provider;</span>
+            }
+        }
+
+<span class="fc" id="L217">        sign(sap, pk, digestAlgorithm, chain, tsaClient, sigtype, signatureProvider);</span>
+
+<span class="fc" id="L219">        return sa;</span>
+    }
+
+    // Initialize the signature algorithm
+    private static void sign(PdfSignatureAppearance sap,
+            PrivateKey pk,
+            String digestAlgorithm,
+            Certificate[] chain,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype,
+            Provider signatureProvider) throws OperationException {
+<span class="pc bpc" id="L230" title="2 of 4 branches missed.">        assert digestAlgorithm != null;</span>
+
+        // Initialize the signature algorithm
+<span class="fc" id="L233">        logger.info(String.format(&quot;Digest algorithm: %s&quot;, digestAlgorithm));</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">        if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {</span>
+<span class="nc" id="L235">            throw new OperationException(SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,</span>
+<span class="nc" id="L236">                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;digestAlgorithm&quot;, digestAlgorithm)));</span>
+        }
+
+<span class="fc" id="L239">        logger.info(String.format(&quot;Signature security provider: %s&quot;, signatureProvider.getName()));</span>
+<span class="fc" id="L240">        ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, signatureProvider.getName());</span>
+
+<span class="fc" id="L242">        sign(sap, externalSignature, chain, tsaClient, sigtype);</span>
+<span class="fc" id="L243">    }</span>
+
+    // Set the &quot;external digest&quot; algorithm
+    private static void sign(PdfSignatureAppearance sap,
+            ExternalSignature externalSignature,
+            Certificate[] chain,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype) throws OperationException {
+        // Use the static BouncyCastleDigest instance
+<span class="fc" id="L252">        sign(sap, externalDigest, externalSignature, chain, tsaClient, sigtype);</span>
+<span class="fc" id="L253">    }</span>
+
+    // Sign the document
+    private static void sign(PdfSignatureAppearance sap,
+            ExternalDigest externalDigest,
+            ExternalSignature externalSignature,
+            Certificate[] chain,
+            TSAClient tsaClient,
+            MakeSignature.CryptoStandard sigtype) throws OperationException {
+        // TODO?: Set some of the following parameters more sensibly
+
+        // Certificate Revocation List
+        // digitalsignatures20130304.pdf : Section 3.2
+<span class="fc" id="L266">        Collection&lt;CrlClient&gt; crlList = null;</span>
+
+        // Online Certificate Status Protocol
+        // digitalsignatures20130304.pdf : Section 3.2.4
+<span class="fc" id="L270">        OcspClient ocspClient = null;</span>
+
+        // digitalsignatures20130304.pdf : Section 3.5
+        // The value of 0 means &quot;try a generous educated guess&quot;.
+        // We need not change this unless we want to optimize the resulting PDF document size.
+<span class="fc" id="L275">        int estimatedSize = 0;</span>
+
+<span class="fc" id="L277">        logger.info(String.format(&quot;Cryptographic standard (signature format): %s&quot;, sigtype));</span>
+
+        try {
+<span class="fc" id="L280">            MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);</span>
+<span class="nc" id="L281">        } catch (ExceptionConverter ex) {</span>
+<span class="nc" id="L282">            Exception exInner = ex.getException();</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (exInner instanceof IOException) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (exInner instanceof SSLHandshakeException) {</span>
+<span class="nc" id="L285">                    Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
+
+                    // Untrusted
+<span class="nc" id="L288">                    patterns.add(new ExceptionMessagePattern(</span>
+                            SIGNATURE_ADD_TSA_UNTRUSTED,
+                            &quot;sun\\.security\\.validator\\.ValidatorException: PKIX path building failed: sun\\.security\\.provider\\.certpath\\.SunCertPathBuilderException: unable to find valid certification path to requested target&quot;,
+                            new ArrayList&lt;String&gt;()));
+
+                    // Bad certificate
+<span class="nc" id="L294">                    patterns.add(new ExceptionMessagePattern(</span>
+                            SIGNATURE_ADD_TSA_BAD_CERTIFICATE,
+                            &quot;Received fatal alert: bad_certificate&quot;,
+                            new ArrayList&lt;String&gt;()));
+
+                    // Handshake failure
+<span class="nc" id="L300">                    patterns.add(new ExceptionMessagePattern(</span>
+                            SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE,
+                            &quot;Received fatal alert: handshake_failure&quot;,
+                            new ArrayList&lt;String&gt;()));
+
+<span class="nc" id="L305">                    OperationException oe = null;</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                    for (ExceptionMessagePattern p : patterns) {</span>
+<span class="nc" id="L307">                        oe = p.getOperationException(exInner);</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                        if (oe != null) {</span>
+<span class="nc" id="L309">                            break;</span>
+                        }
+<span class="nc" id="L311">                    }</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                    if (oe == null) {</span>
+<span class="nc" id="L313">                        ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+                                SIGNATURE_ADD_TSA_SSL_FATAL_ALERT,
+                                &quot;Received fatal alert: (?&lt;alert&gt;.*)&quot;,
+<span class="nc" id="L316">                                Arrays.asList(new String[]{&quot;alert&quot;}));</span>
+<span class="nc" id="L317">                        oe = emp.getOperationException(exInner);</span>
+
+<span class="nc bnc" id="L319" title="All 2 branches missed.">                        if (oe == null) {</span>
+                            // Unknown exception
+<span class="nc" id="L321">                            oe = new OperationException(SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION, exInner);</span>
+                        }
+                    }
+<span class="nc bnc" id="L324" title="All 4 branches missed.">                    assert oe != null;</span>
+<span class="nc" id="L325">                    throw oe;</span>
+                }
+
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                if (exInner instanceof SSLException) {</span>
+<span class="nc" id="L329">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+                            SSL_TRUSTSTORE_EMPTY,
+                            &quot;java\\.lang\\.RuntimeException: Unexpected error: java\\.security\\.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty&quot;,
+                            new ArrayList&lt;String&gt;());
+<span class="nc" id="L333">                    OperationException oe = emp.getOperationException(exInner);</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                    if (oe != null) {</span>
+<span class="nc" id="L335">                        throw oe;</span>
+                    }
+<span class="nc" id="L337">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+                }
+
+<span class="nc bnc" id="L340" title="All 4 branches missed.">                if (exInner instanceof UnknownHostException</span>
+                        || exInner instanceof FileNotFoundException) {
+<span class="nc" id="L342">                    String host = exInner.getMessage();</span>
+<span class="nc" id="L343">                    throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,</span>
+                            exInner,
+                            new SimpleEntry&lt;String, Object&gt;(&quot;host&quot;, host));
+                }
+
+<span class="nc bnc" id="L348" title="All 2 branches missed.">                if (exInner instanceof SocketException) {</span>
+<span class="nc" id="L349">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+                            SSL_TRUSTSTORE_INCORRECT_TYPE,
+                            &quot;java\\.security\\.NoSuchAlgorithmException: Error constructing implementation \\(algorithm: (?&lt;algorithm&gt;.*), provider: (?&lt;provider&gt;.*), class: (?&lt;class&gt;.*)\\)&quot;,
+<span class="nc" id="L352">                            Arrays.asList(new String[]{&quot;algorithm&quot;, &quot;provider&quot;, &quot;class&quot;}));</span>
+<span class="nc" id="L353">                    OperationException oe = emp.getOperationException(exInner);</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">                    if (oe != null) {</span>
+<span class="nc" id="L355">                        throw oe;</span>
+                    }
+<span class="nc" id="L357">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+                }
+
+<span class="nc" id="L360">                Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
+
+                // No username
+                // May also be returned if the username and password are incorrect.
+<span class="nc" id="L364">                patterns.add(new ExceptionMessagePattern(</span>
+                        SIGNATURE_ADD_TSA_UNAUTHORIZED,
+                        &quot;Server returned HTTP response code: 401 for URL: (?&lt;url&gt;.*)&quot;,
+<span class="nc" id="L367">                        Arrays.asList(new String[]{&quot;url&quot;})));</span>
+
+                // Incorrect username or incorrect password
+<span class="nc" id="L370">                patterns.add(new ExceptionMessagePattern(</span>
+                        SIGNATURE_ADD_TSA_LOGIN_FAIL,
+                        &quot;Invalid TSA '(?&lt;url&gt;.*)' response, code (?&lt;code&gt;\\d+)&quot;,
+<span class="nc" id="L373">                        Arrays.asList(new String[]{&quot;url&quot;, &quot;code&quot;})));</span>
+
+<span class="nc" id="L375">                OperationException oe = null;</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">                for (ExceptionMessagePattern p : patterns) {</span>
+<span class="nc" id="L377">                    oe = p.getOperationException(exInner);</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">                    if (oe != null) {</span>
+<span class="nc" id="L379">                        break;</span>
+                    }
+<span class="nc" id="L381">                }</span>
+<span class="nc bnc" id="L382" title="All 2 branches missed.">                if (oe == null) {</span>
+                    // Unknown exception
+<span class="nc" id="L384">                    oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+                }
+<span class="nc bnc" id="L386" title="All 4 branches missed.">                assert oe != null;</span>
+<span class="nc" id="L387">                throw oe;</span>
+            }
+<span class="nc" id="L389">            throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+<span class="nc" id="L390">        } catch (SignatureException ex) {</span>
+<span class="nc" id="L391">            throw new OperationException(SIGNATURE_ADD_SIGNATURE_EXCEPTION, ex);</span>
+<span class="nc" id="L392">        } catch (IOException | DocumentException | GeneralSecurityException ex) {</span>
+<span class="nc" id="L393">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
+<span class="nc" id="L394">        } catch (NullPointerException ex) {</span>
+            // Invalid digest algorithm?
+<span class="nc" id="L396">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
+<span class="fc" id="L397">        }</span>
+<span class="fc" id="L398">        logger.info(&quot;Document successfully signed.&quot;);</span>
+<span class="fc" id="L399">    }</span>
+
+<span class="fc" id="L401">    private static Operation instance = null;</span>
+
+    public static Operation getInstance() {
+<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L405">            instance = new OperationSignatureAdd();</span>
+        }
+<span class="fc" id="L407">        return instance;</span>
+    }
+
+    // Singleton
+    private OperationSignatureAdd() {
+<span class="fc" id="L412">        super();</span>
+<span class="fc" id="L413">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

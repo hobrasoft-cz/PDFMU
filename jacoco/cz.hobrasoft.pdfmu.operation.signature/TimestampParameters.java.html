@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TimestampParameters.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.signature</a> &gt; <span class="el_source">TimestampParameters.java</span></div><h1>TimestampParameters.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.signature;
+
+import com.itextpdf.text.pdf.security.TSAClient;
+import com.itextpdf.text.pdf.security.TSAClientBouncyCastle;
+import static cz.hobrasoft.pdfmu.error.ErrorType.SIGNATURE_ADD_TSA_INVALID_URL;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import cz.hobrasoft.pdfmu.operation.args.PasswordArgs;
+import java.util.logging.Logger;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.commons.validator.routines.UrlValidator;
+
+/**
+ * Parameters of timestamping process.
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">public class TimestampParameters implements ArgsConfiguration {</span>
+
+<span class="fc" id="L38">    private static final Logger LOGGER = Logger.getLogger(TimestampParameters.class.getName());</span>
+
+    /**
+     * Timestamp authority URL.
+     */
+    public String url;
+
+    /**
+     * Timestamp authority login username.
+     */
+    public String username;
+
+<span class="fc" id="L50">    private final PasswordArgs passwordArgs = new PasswordArgs(&quot;TSA password&quot;);</span>
+
+<span class="fc" id="L52">    private final KeystoreParameters sslKeystore = new KeystoreParameters(SslKeystore.PRIVATE.getName());</span>
+<span class="fc" id="L53">    private final KeystoreParameters sslTruststore = new KeystoreParameters(SslKeystore.TRUSTSTORE.getName());</span>
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L57">        ArgumentGroup group = parser.addArgumentGroup(&quot;timestamp&quot;);</span>
+        // TODO: Add description
+
+<span class="fc" id="L60">        group.addArgument(&quot;--tsa-url&quot;)</span>
+<span class="fc" id="L61">                .help(&quot;timestamp authority URL (set to enable timestamp)&quot;)</span>
+<span class="fc" id="L62">                .type(String.class);</span>
+
+<span class="fc" id="L64">        group.addArgument(&quot;--tsa-username&quot;)</span>
+<span class="fc" id="L65">                .help(&quot;timestamp authority username (set to enable TSA authorization)&quot;)</span>
+<span class="fc" id="L66">                .type(String.class);</span>
+
+<span class="fc" id="L68">        passwordArgs.passwordArgument = group.addArgument(&quot;--tsa-password&quot;)</span>
+<span class="fc" id="L69">                .help(&quot;timestamp authority password (default: &lt;none&gt;)&quot;);</span>
+<span class="fc" id="L70">        passwordArgs.environmentVariableArgument = group.addArgument(&quot;--tsa-password-envvar&quot;)</span>
+<span class="fc" id="L71">                .help(&quot;timestamp authority password environment variable&quot;)</span>
+<span class="fc" id="L72">                .setDefault(&quot;PDFMU_TSA_PASSWORD&quot;);</span>
+<span class="fc" id="L73">        passwordArgs.finalizeArguments();</span>
+
+<span class="fc" id="L75">        sslKeystore.fileArgument = group.addArgument(&quot;--ssl-keystore&quot;)</span>
+<span class="fc" id="L76">                .help(&quot;The keystore file that contains the private keys used for SSL authorization. Must be protected by a non-empty password.&quot;);</span>
+<span class="fc" id="L77">        sslKeystore.typeArgument = group.addArgument(&quot;--ssl-keystore-type&quot;)</span>
+<span class="fc" id="L78">                .help(&quot;SSL KeyStore type&quot;)</span>
+<span class="fc" id="L79">                .choices(new String[]{&quot;jks&quot;, &quot;jceks&quot;, &quot;pkcs12&quot;});</span>
+<span class="fc" id="L80">        sslKeystore.passwordArgs.passwordArgument = group.addArgument(&quot;--ssl-keystore-password&quot;)</span>
+<span class="fc" id="L81">                .help(&quot;SSL KeyStore password (default: &lt;none&gt;)&quot;);</span>
+<span class="fc" id="L82">        sslKeystore.passwordArgs.environmentVariableArgument = group.addArgument(&quot;--ssl-keystore-password-envvar&quot;)</span>
+<span class="fc" id="L83">                .help(&quot;SSL KeyStore password environment variable&quot;)</span>
+<span class="fc" id="L84">                .setDefault(&quot;PDFMU_SSL_KEYSTORE_PASSWORD&quot;);</span>
+<span class="fc" id="L85">        sslKeystore.finalizeArguments();</span>
+
+<span class="fc" id="L87">        sslTruststore.fileArgument = group.addArgument(&quot;--ssl-truststore&quot;)</span>
+<span class="fc" id="L88">                .help(&quot;The keystore file that contains the certificates of the trusted certificate authorities&quot;);</span>
+        // TODO: Add support for type &quot;pkcs12&quot;
+<span class="fc" id="L90">        sslTruststore.typeArgument = group.addArgument(&quot;--ssl-truststore-type&quot;)</span>
+<span class="fc" id="L91">                .help(&quot;SSL TrustStore type&quot;)</span>
+<span class="fc" id="L92">                .choices(new String[]{&quot;jks&quot;, &quot;jceks&quot;});</span>
+<span class="fc" id="L93">        sslTruststore.passwordArgs.passwordArgument = group.addArgument(&quot;--ssl-truststore-password&quot;)</span>
+<span class="fc" id="L94">                .help(&quot;SSL TrustStore password (default: &lt;none&gt;)&quot;);</span>
+<span class="fc" id="L95">        sslTruststore.passwordArgs.environmentVariableArgument = group.addArgument(&quot;--ssl-truststore-password-envvar&quot;)</span>
+<span class="fc" id="L96">                .help(&quot;SSL TrustStore password environment variable&quot;)</span>
+<span class="fc" id="L97">                .setDefault(&quot;PDFMU_SSL_TRUSTSTORE_PASSWORD&quot;);</span>
+<span class="fc" id="L98">        sslTruststore.finalizeArguments();</span>
+<span class="fc" id="L99">    }</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) throws OperationException {
+<span class="fc" id="L103">        url = namespace.get(&quot;tsa_url&quot;);</span>
+
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (url != null) {</span>
+<span class="nc" id="L106">            UrlValidator urlValidator = new UrlValidator();</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            if (!urlValidator.isValid(url)) {</span>
+<span class="nc" id="L108">                throw new OperationException(SIGNATURE_ADD_TSA_INVALID_URL);</span>
+            }
+        }
+
+<span class="fc" id="L112">        username = namespace.getString(&quot;tsa_username&quot;);</span>
+
+<span class="fc" id="L114">        passwordArgs.setFromNamespace(namespace);</span>
+
+<span class="fc" id="L116">        sslKeystore.setFromNamespace(namespace);</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (sslKeystore.file != null) {</span>
+<span class="nc" id="L118">            String password = sslKeystore.getPassword();</span>
+<span class="nc bnc" id="L119" title="All 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
+<span class="nc" id="L120">                LOGGER.warning(&quot;SSL KeyStore: Location has been set but password has not. Only KeyStores protected by a non-empty password are supported.&quot;);</span>
+            }
+        }
+<span class="fc" id="L123">        sslKeystore.setSystemProperties(SslKeystore.PRIVATE);</span>
+
+<span class="fc" id="L125">        sslTruststore.setFromNamespace(namespace);</span>
+<span class="fc" id="L126">        sslTruststore.setSystemProperties(SslKeystore.TRUSTSTORE);</span>
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Returns the {@link TSAClient} that corresponds to these parameters.
+     *
+     * @return null if the timestamp authority has not been configured
+     */
+    public TSAClient getTSAClient() {
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (url == null) {</span>
+<span class="fc" id="L136">            return null;</span>
+        }
+<span class="nc" id="L138">        LOGGER.info(&quot;TSA URL has been set. Will attempt to attach a timestamp to the signature.&quot;);</span>
+<span class="nc" id="L139">        String password = getPassword();</span>
+<span class="nc bnc" id="L140" title="All 4 branches missed.">        if (username != null &amp;&amp; password == null) {</span>
+<span class="nc" id="L141">            LOGGER.warning(&quot;TSA username has been set but password has not.&quot;);</span>
+        }
+<span class="nc bnc" id="L143" title="All 4 branches missed.">        if (password != null &amp;&amp; username == null) {</span>
+<span class="nc" id="L144">            LOGGER.warning(&quot;TSA password has been set but username has not.&quot;);</span>
+        }
+<span class="nc" id="L146">        return new TSAClientBouncyCastle(url, username, password);</span>
+    }
+
+    private String getPassword() {
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        assert passwordArgs != null;</span>
+<span class="nc" id="L151">        return passwordArgs.getPassword();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>OutPdfArgs.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.args</a> &gt; <span class="el_source">OutPdfArgs.java</span></div><h1>OutPdfArgs.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.args;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_CLOSE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_EXISTS_FORCE_NOT_SET;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_NOT_SPECIFIED;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_OPEN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_STAMPER_CLOSE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_STAMPER_OPEN;
+import static cz.hobrasoft.pdfmu.error.ErrorType.OUTPUT_WRITE;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.logging.Logger;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
+/**
+ * The methods must be called in the following order:
+ * &lt;ol&gt;
+ * &lt;li&gt;{@link #addArguments(ArgumentParser)}
+ * &lt;li&gt;{@link #setFromNamespace(Namespace)}
+ * &lt;li&gt;{@link #setDefaultFile(File)} (optional)
+ * &lt;li&gt;{@link #open(PdfReader, boolean, char)}
+ * &lt;li&gt;{@link #close()}
+ * &lt;/ol&gt;
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">public class OutPdfArgs implements ArgsConfiguration, AutoCloseable {</span>
+
+<span class="fc" id="L57">    private static final Logger logger = Logger.getLogger(OutPdfArgs.class.getName());</span>
+
+    private final String metavarIn;
+<span class="fc" id="L60">    private final String metavarOut = &quot;OUT.pdf&quot;;</span>
+    private final boolean allowAppend;
+
+<span class="fc" id="L63">    public OutPdfArgs(String metavarIn, boolean allowAppend) {</span>
+<span class="fc" id="L64">        this.metavarIn = metavarIn;</span>
+<span class="fc" id="L65">        this.allowAppend = allowAppend;</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L70">        parser.addArgument(&quot;-o&quot;, &quot;--out&quot;)</span>
+<span class="fc" id="L71">                .help(String.format(&quot;output PDF document (default: &lt;%s&gt;)&quot;, metavarIn))</span>
+<span class="fc" id="L72">                .metavar(metavarOut)</span>
+<span class="fc" id="L73">                .type(Arguments.fileType());</span>
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (allowAppend) {</span>
+<span class="fc" id="L76">            parser.addArgument(&quot;--append&quot;)</span>
+<span class="fc" id="L77">                    .help(&quot;append to the document, creating a new revision. If this option is disabled, the operation invalidates all the existing signatures.&quot;)</span>
+<span class="fc" id="L78">                    .type(boolean.class)</span>
+<span class="fc" id="L79">                    .setDefault(true);</span>
+        }
+
+<span class="fc" id="L82">        parser.addArgument(&quot;-f&quot;, &quot;--force&quot;)</span>
+<span class="fc" id="L83">                .help(String.format(&quot;overwrite %s if it exists&quot;, metavarOut))</span>
+<span class="fc" id="L84">                .type(boolean.class)</span>
+<span class="fc" id="L85">                .action(Arguments.storeTrue());</span>
+<span class="fc" id="L86">    }</span>
+
+<span class="fc" id="L88">    private File file = null;</span>
+<span class="fc" id="L89">    private boolean overwrite = false;</span>
+<span class="fc" id="L90">    private boolean append = false;</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) {
+<span class="fc" id="L94">        file = namespace.get(&quot;out&quot;);</span>
+<span class="fc" id="L95">        overwrite = namespace.getBoolean(&quot;force&quot;);</span>
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (allowAppend) {</span>
+<span class="fc" id="L98">            append = namespace.getBoolean(&quot;append&quot;);</span>
+        } else {
+<span class="fc" id="L100">            append = false;</span>
+        }
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Set the target file if it has not been set by
+     * {@link #setFromNamespace(Namespace)}.
+     *
+     * @param file the default file to be used in case none was specified by
+     * {@link #setFromNamespace(Namespace)}
+     */
+    public void setDefaultFile(File file) {
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (this.file == null) {</span>
+<span class="fc" id="L113">            logger.info(&quot;Output file has not been specified. Assuming in-place operation.&quot;);</span>
+<span class="fc" id="L114">            this.file = file;</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+    private ByteArrayOutputStream os;
+    private PdfStamper stp;
+
+    private void openOs() throws OperationException {
+<span class="pc bpc" id="L122" title="2 of 4 branches missed.">        assert os == null;</span>
+
+        // Initialize the array length to the file size
+        // because the whole file will have to fit in the array anyway.
+<span class="fc" id="L126">        os = new ByteArrayOutputStream((int) file.length());</span>
+<span class="fc" id="L127">    }</span>
+
+    private void openStpSignature(PdfReader pdfReader, char pdfVersion) throws OperationException {
+<span class="pc bpc" id="L130" title="2 of 4 branches missed.">        assert os != null;</span>
+<span class="pc bpc" id="L131" title="2 of 4 branches missed.">        assert stp == null;</span>
+
+        try {
+            // digitalsignatures20130304.pdf : Code sample 2.17
+            // TODO?: Make sure version is high enough
+<span class="fc" id="L136">            stp = PdfStamper.createSignature(pdfReader, os, pdfVersion, null, append);</span>
+<span class="nc" id="L137">        } catch (DocumentException | IOException ex) {</span>
+<span class="nc" id="L138">            throw new OperationException(OUTPUT_STAMPER_OPEN, ex,</span>
+<span class="nc" id="L139">                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+<span class="fc" id="L140">        }</span>
+<span class="fc" id="L141">    }</span>
+
+    private void openStpNew(PdfReader pdfReader, char pdfVersion) throws OperationException {
+<span class="pc bpc" id="L144" title="2 of 4 branches missed.">        assert os != null;</span>
+<span class="pc bpc" id="L145" title="2 of 4 branches missed.">        assert stp == null;</span>
+
+        // Open the PDF stamper
+        try {
+<span class="fc" id="L149">            stp = new PdfStamper(pdfReader, os, pdfVersion, append);</span>
+<span class="nc" id="L150">        } catch (DocumentException | IOException ex) {</span>
+<span class="nc" id="L151">            throw new OperationException(OUTPUT_STAMPER_OPEN, ex,</span>
+<span class="nc" id="L152">                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+<span class="fc" id="L153">        }</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Returns a {@link PdfStamper} associated with the internal buffer. Using a
+     * buffer instead of an actual file means that the operation can be rolled
+     * back completely, leaving the output file untouched. Call {@link #close}
+     * to save the content of the buffer to the output file.
+     *
+     * @param pdfReader the input {@link PdfReader} to operate on
+     * @param signature shall we be signing the document?
+     * @param pdfVersion the last character of the PDF version number ('2' to
+     * '7'), or '\0' to keep the original version
+     * @return a {@link PdfStamper} that uses pdfReader as the source
+     *
+     * @throws OperationException if an error occurs
+     */
+    public PdfStamper open(PdfReader pdfReader, boolean signature, char pdfVersion) throws OperationException {
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if (file == null) {</span>
+<span class="nc" id="L172">            throw new OperationException(OUTPUT_NOT_SPECIFIED);</span>
+        }
+<span class="pc bpc" id="L174" title="2 of 4 branches missed.">        assert file != null;</span>
+
+<span class="fc" id="L176">        logger.info(String.format(&quot;Output file: %s&quot;, file));</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (file.exists()) {</span>
+<span class="fc" id="L178">            logger.info(&quot;Output file already exists.&quot;);</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            if (overwrite) {</span>
+<span class="fc" id="L180">                logger.info(&quot;Will overwrite the output file (--force flag is set).&quot;);</span>
+            } else {
+<span class="nc" id="L182">                throw new OperationException(OUTPUT_EXISTS_FORCE_NOT_SET,</span>
+<span class="nc" id="L183">                        PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+            }
+        }
+
+<span class="fc" id="L187">        openOs();</span>
+
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (signature) {</span>
+<span class="fc" id="L190">            openStpSignature(pdfReader, pdfVersion);</span>
+        } else {
+<span class="fc" id="L192">            openStpNew(pdfReader, pdfVersion);</span>
+        }
+
+<span class="fc" id="L195">        return stp;</span>
+    }
+
+    /**
+     * Writes the content of the internal buffer to the output file.
+     *
+     * @throws OperationException if an error occurs when closing the
+     * {@link PdfStamper} or when writing to the output file
+     */
+    @Override
+    public void close() throws OperationException {
+<span class="nc" id="L206">        close(false);</span>
+<span class="nc" id="L207">    }</span>
+
+    public void close(boolean success) throws OperationException {
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (stp != null) {</span>
+            // Only attempt to close the stamper if the operation has succeeded.
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            if (success) {</span>
+                try {
+<span class="fc" id="L214">                    stp.close();</span>
+<span class="nc" id="L215">                } catch (DocumentException | IOException ex) {</span>
+<span class="nc" id="L216">                    throw new OperationException(OUTPUT_STAMPER_CLOSE, ex,</span>
+<span class="nc" id="L217">                            PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+<span class="fc" id="L218">                }</span>
+            }
+<span class="fc" id="L220">            stp = null;</span>
+        }
+
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (os != null) {</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">            if (success) {</span>
+<span class="pc bpc" id="L225" title="2 of 4 branches missed.">                assert file != null;</span>
+<span class="fc" id="L226">                logger.info(String.format(&quot;Writing the output of the operation to the output file: %s&quot;, file));</span>
+
+                // Save the content of `os` to `file`.
+                { // fileOs
+<span class="fc" id="L230">                    OutputStream fileOs = null;</span>
+                    try {
+<span class="fc" id="L232">                        fileOs = new FileOutputStream(file);</span>
+<span class="nc" id="L233">                    } catch (FileNotFoundException ex) {</span>
+<span class="nc" id="L234">                        throw new OperationException(OUTPUT_OPEN, ex,</span>
+<span class="nc" id="L235">                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+
+<span class="fc" id="L237">                    }</span>
+<span class="pc bpc" id="L238" title="2 of 4 branches missed.">                    assert fileOs != null;</span>
+                    try {
+<span class="pc bpc" id="L240" title="2 of 4 branches missed.">                        assert os != null;</span>
+<span class="fc" id="L241">                        os.writeTo(fileOs);</span>
+<span class="nc" id="L242">                    } catch (IOException ex) {</span>
+<span class="nc" id="L243">                        throw new OperationException(OUTPUT_WRITE, ex,</span>
+<span class="nc" id="L244">                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+<span class="fc" id="L245">                    }</span>
+                    try {
+<span class="fc" id="L247">                        fileOs.close();</span>
+<span class="nc" id="L248">                    } catch (IOException ex) {</span>
+<span class="nc" id="L249">                        throw new OperationException(OUTPUT_CLOSE, ex,</span>
+<span class="nc" id="L250">                                PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;outputFile&quot;, file)));</span>
+<span class="fc" id="L251">                    }</span>
+                }
+            }
+<span class="fc" id="L254">            os = null;</span>
+        }
+<span class="fc" id="L256">    }</span>
+
+    public PdfStamper getPdfStamper() {
+<span class="fc" id="L259">        return stp;</span>
+    }
+
+    public File getFile() {
+<span class="fc" id="L263">        return file;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

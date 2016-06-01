@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InPdfArgs.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.args</a> &gt; <span class="el_source">InPdfArgs.java</span></div><h1>InPdfArgs.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.args;
+
+import com.itextpdf.text.pdf.PdfReader;
+import cz.hobrasoft.pdfmu.PdfmuUtils;
+import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_CLOSE;
+import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_VALID_PDF;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">public class InPdfArgs implements ArgsConfiguration, AutoCloseable {</span>
+
+<span class="fc" id="L37">    private final String name = &quot;in&quot;;</span>
+<span class="fc" id="L38">    private final String help = &quot;input PDF document&quot;;</span>
+    private final String metavar;
+
+<span class="fc" id="L41">    private static final Logger logger = Logger.getLogger(InPdfArgs.class.getName());</span>
+
+<span class="fc" id="L43">    public InPdfArgs(String metavar) {</span>
+<span class="fc" id="L44">        this.metavar = metavar;</span>
+<span class="fc" id="L45">    }</span>
+
+    public InPdfArgs() {
+<span class="fc" id="L48">        this(&quot;IN.pdf&quot;);</span>
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L53">        parser.addArgument(name)</span>
+<span class="fc" id="L54">                .help(help)</span>
+<span class="fc" id="L55">                .metavar(metavar)</span>
+<span class="fc" id="L56">                .type(Arguments.fileType().acceptSystemIn());</span>
+<span class="fc" id="L57">    }</span>
+
+<span class="fc" id="L59">    private File file = null;</span>
+
+    public File getFile() {
+<span class="fc" id="L62">        return file;</span>
+    }
+
+<span class="fc" id="L65">    private InputStream is = null;</span>
+<span class="fc" id="L66">    private PdfReader pdfReader = null;</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) {
+<span class="fc" id="L70">        file = namespace.get(name);</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">        assert file != null; // Required argument (because it is positional)</span>
+<span class="fc" id="L72">    }</span>
+
+    public PdfReader open() throws OperationException {
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        assert file != null;</span>
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        assert is == null;</span>
+<span class="pc bpc" id="L77" title="2 of 4 branches missed.">        assert pdfReader == null;</span>
+
+<span class="fc" id="L79">        logger.info(String.format(&quot;Input file: %s&quot;, file));</span>
+
+        // Open the input stream
+        try {
+<span class="fc" id="L83">            is = new FileInputStream(file);</span>
+<span class="nc" id="L84">        } catch (FileNotFoundException ex) {</span>
+<span class="nc" id="L85">            throw new OperationException(INPUT_NOT_FOUND, ex,</span>
+<span class="nc" id="L86">                    PdfmuUtils.sortedMap(new String[]{&quot;file&quot;}, new Object[]{file}));</span>
+<span class="fc" id="L87">        }</span>
+
+        // Open the PDF reader
+        try {
+<span class="fc" id="L91">            pdfReader = new PdfReader(is);</span>
+<span class="nc" id="L92">        } catch (IOException ex) {</span>
+<span class="nc" id="L93">            throw new OperationException(INPUT_NOT_VALID_PDF, ex,</span>
+<span class="nc" id="L94">                    PdfmuUtils.sortedMap(new String[]{&quot;file&quot;}, new Object[]{file}));</span>
+<span class="fc" id="L95">        }</span>
+
+<span class="fc" id="L97">        return pdfReader;</span>
+    }
+
+    @Override
+    public void close() throws OperationException {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (pdfReader != null) {</span>
+            // Close the PDF reader
+<span class="fc" id="L104">            pdfReader.close();</span>
+<span class="fc" id="L105">            pdfReader = null;</span>
+        }
+
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (is != null) {</span>
+            // Close the input stream
+            try {
+<span class="fc" id="L111">                is.close(); // May throw IOException</span>
+<span class="nc" id="L112">            } catch (IOException ex) {</span>
+<span class="nc" id="L113">                throw new OperationException(INPUT_CLOSE, ex);</span>
+<span class="fc" id="L114">            }</span>
+<span class="fc" id="L115">            is = null;</span>
+        }
+<span class="fc" id="L117">    }</span>
+
+    public PdfReader getPdfReader() {
+<span class="fc" id="L120">        return pdfReader;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

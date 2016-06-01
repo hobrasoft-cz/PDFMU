@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SignatureParameters.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu.operation.signature</a> &gt; <span class="el_source">SignatureParameters.java</span></div><h1>SignatureParameters.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu.operation.signature;
+
+import com.itextpdf.text.pdf.security.MakeSignature;
+import cz.hobrasoft.pdfmu.operation.OperationException;
+import cz.hobrasoft.pdfmu.operation.args.ArgsConfiguration;
+import net.sourceforge.argparse4j.inf.Argument;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">class SignatureParameters implements ArgsConfiguration {</span>
+
+<span class="fc" id="L33">    public SignatureAppearanceParameters appearance = new SignatureAppearanceParameters();</span>
+<span class="fc" id="L34">    public KeystoreParameters keystore = new KeystoreParameters(&quot;signing keystore&quot;);</span>
+<span class="fc" id="L35">    public KeyParameters key = new KeyParameters();</span>
+<span class="fc" id="L36">    public TimestampParameters timestamp = new TimestampParameters();</span>
+
+<span class="fc" id="L38">    private final ArgsConfiguration[] configurations = {appearance, keystore, key, timestamp};</span>
+
+    // digitalsignatures20130304.pdf : Code sample 2.19; Section 2.1.4; Code sample 2.2
+<span class="fc" id="L41">    public String digestAlgorithm = &quot;SHA256&quot;;</span>
+<span class="fc" id="L42">    public MakeSignature.CryptoStandard format = MakeSignature.CryptoStandard.CMS;</span>
+
+<span class="fc" id="L44">    private static final String[] digestAlgorithmChoices = {</span>
+        // Source: {@link DigestAlgorithms#digestNames}
+        // Alternative source:
+        // digitalsignatures20130304.pdf : Section 1.2.2; Code sample 1.5
+        // TODO?: Add dashes in the algorithm names
+        &quot;MD2&quot;,
+        &quot;MD5&quot;,
+        &quot;SHA1&quot;,
+        &quot;SHA224&quot;,
+        &quot;SHA256&quot;,
+        &quot;SHA384&quot;,
+        &quot;SHA512&quot;,
+        &quot;RIPEMD128&quot;,
+        &quot;RIPEMD160&quot;,
+        &quot;RIPEMD256&quot;,
+        &quot;GOST3411&quot;
+    };
+
+    private Argument digestAlgorithmArgument;
+    private Argument formatArgument;
+
+    @Override
+    public void addArguments(ArgumentParser parser) {
+<span class="fc" id="L67">        keystore.fileArgument = parser.addArgument(&quot;--keystore&quot;)</span>
+<span class="fc" id="L68">                .help(&quot;keystore file that contains the signing private key&quot;);</span>
+        // Valid types:
+        // https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyStore
+        // Type &quot;pkcs12&quot; file extensions: P12, PFX
+        // Source: https://en.wikipedia.org/wiki/PKCS_12
+        // Another type: &quot;Windows-MY&quot; - Windows Certificate Store
+        // TODO?: Guess type from file extension by default
+        // TODO?: Default to &quot;pkcs12&quot;
+        // TODO: Do not allow &quot;Windows-MY&quot; when running in a different OS than Windows
+<span class="fc" id="L77">        keystore.typeArgument = parser.addArgument(&quot;--keystore-type&quot;)</span>
+<span class="fc" id="L78">                .help(&quot;type of the signing keystore&quot;)</span>
+<span class="fc" id="L79">                .choices(new String[]{&quot;jceks&quot;, &quot;jks&quot;, &quot;pkcs12&quot;, &quot;Windows-MY&quot;});</span>
+<span class="fc" id="L80">        keystore.passwordArgs.passwordArgument = parser.addArgument(&quot;--keystore-password&quot;)</span>
+<span class="fc" id="L81">                .help(&quot;signing keystore password (default: &lt;empty&gt;)&quot;);</span>
+<span class="fc" id="L82">        keystore.passwordArgs.environmentVariableArgument = parser.addArgument(&quot;--keystore-password-envvar&quot;)</span>
+<span class="fc" id="L83">                .help(&quot;signing keystore password environment variable&quot;)</span>
+<span class="fc" id="L84">                .setDefault(&quot;PDFMU_STOREPASS&quot;);</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        for (ArgsConfiguration configuration : configurations) {</span>
+<span class="fc" id="L87">            configuration.addArguments(parser);</span>
+        }
+
+        // Possible names:
+        // - digest algorithm
+        // - Hash Algorithm
+        // - hash algorithm for making the signature
+<span class="fc" id="L94">        digestAlgorithmArgument = parser.addArgument(&quot;--digest-algorithm&quot;)</span>
+<span class="fc" id="L95">                .help(&quot;hash algorithm for making the signature&quot;)</span>
+                // Java 8 (using `String.join`):
+                //.metavar(String.format(&quot;{%s}&quot;, String.join(&quot;,&quot;, digestAlgorithmChoices)))
+                // Java 7 (using `org.apache.commons.lang3.StringUtils.join`):
+<span class="fc" id="L99">                .metavar(String.format(&quot;{%s}&quot;, StringUtils.join(digestAlgorithmChoices, &quot;,&quot;)))</span>
+                // TODO?: Limit the choices to `digestAlgorithmChoices`
+<span class="fc" id="L101">                .type(String.class)</span>
+<span class="fc" id="L102">                .setDefault(digestAlgorithm);</span>
+
+<span class="fc" id="L104">        formatArgument = parser.addArgument(&quot;--format&quot;)</span>
+<span class="fc" id="L105">                .help(&quot;signature format (CMS: adbe.pkcs7.detached, CADES: ETSI.CAdES.detached)&quot;)</span>
+<span class="fc" id="L106">                .type(MakeSignature.CryptoStandard.class)</span>
+<span class="fc" id="L107">                .choices(MakeSignature.CryptoStandard.values())</span>
+<span class="fc" id="L108">                .setDefault(format);</span>
+<span class="fc" id="L109">    }</span>
+
+    @Override
+    public void setFromNamespace(Namespace namespace) throws OperationException {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        for (ArgsConfiguration configuration : configurations) {</span>
+<span class="fc" id="L114">            configuration.setFromNamespace(namespace);</span>
+        }
+
+<span class="pc bpc" id="L117" title="2 of 4 branches missed.">        assert digestAlgorithmArgument != null;</span>
+<span class="fc" id="L118">        digestAlgorithm = namespace.getString(digestAlgorithmArgument.getDest());</span>
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">        assert formatArgument != null;</span>
+<span class="fc" id="L120">        format = namespace.get(formatArgument.getDest());</span>
+<span class="fc" id="L121">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

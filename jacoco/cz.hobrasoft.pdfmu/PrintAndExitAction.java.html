@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PrintAndExitAction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu</a> &gt; <span class="el_source">PrintAndExitAction.java</span></div><h1>PrintAndExitAction.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu;
+
+import java.util.Map;
+import net.sourceforge.argparse4j.inf.Argument;
+import net.sourceforge.argparse4j.inf.ArgumentAction;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+
+/**
+ * Argument action to print a message and exit program. Inspired by
+ * {@link net.sourceforge.argparse4j.impl.action.VersionArgumentAction}.
+ *
+ * @author Filip Bartek
+ */
+public class PrintAndExitAction implements ArgumentAction {
+
+    private final String message;
+
+<span class="fc" id="L34">    public PrintAndExitAction(String message) {</span>
+<span class="fc" id="L35">        this.message = message;</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * Prints the message to {@link System#out} and terminates the program with
+     * the exit code 0. All the parameters are ignored.
+     */
+    @Override
+    public void run(ArgumentParser parser, Argument arg,
+            Map&lt;String, Object&gt; attrs, String flag, Object value) {
+<span class="fc" id="L45">        System.out.print(message);</span>
+<span class="nc" id="L46">        System.exit(0);</span>
+<span class="nc" id="L47">    }</span>
+
+    @Override
+    public void onAttach(Argument arg) {
+        // Do nothing
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * @return always false because this action does not consume and argument
+     */
+    @Override
+    public boolean consumeArgument() {
+<span class="fc" id="L59">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TextOutput.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Manipulation Utility</a> &gt; <a href="index.source.html" class="el_package">cz.hobrasoft.pdfmu</a> &gt; <span class="el_source">TextOutput.java</span></div><h1>TextOutput.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright (C) 2016 Hobrasoft s.r.o.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package cz.hobrasoft.pdfmu;
+
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.PrintStream;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Prints indented messages to a {@link PrintStream}
+ *
+ * &lt;p&gt;
+ * The indentation level starts at 0 and can be changed using
+ * {@link #indentMore} and {@link #indentLess}.
+ *
+ * &lt;p&gt;
+ * Example of usage:
+ * &lt;pre&gt;
+ * {@code
+ * TextOutput to = new TextOutput(System.out);
+ * to.println(&quot;Hello!&quot;);
+ * to.indentMore(&quot;My favorite fruits:&quot;);
+ * to.println(&quot;Banana&quot;);
+ * to.println(&quot;Apple&quot;);
+ * to.indentLess();
+ * to.flush();
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
+ */
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">public class TextOutput implements Flushable {</span>
+
+    private final PrintStream ps;
+<span class="fc" id="L50">    private int indentLevel = 0;</span>
+    private static final String indentString = &quot;  &quot;;
+
+    /**
+     * Creates a {@link TextOutput} bound to a {@link PrintStream}
+     *
+     * @param ps the {@link PrintStream} to print messages to
+     */
+<span class="fc" id="L58">    public TextOutput(PrintStream ps) {</span>
+        // ps may be null
+<span class="fc" id="L60">        this.ps = ps;</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Creates a {@link TextOutput} that discards all the messages
+     */
+    public TextOutput() {
+<span class="fc" id="L67">        this(null);</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Prints a message on a separate line
+     *
+     * &lt;p&gt;
+     * The message is indented by the current indentation level (starting at 0)
+     * and printed using the specified {@link PrintStream}.
+     *
+     * &lt;p&gt;
+     * Mimics {@link PrintStream#println(String x)}.
+     *
+     * @param x message to print
+     */
+    public void println(String x) {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (ps != null) {</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">            assert indentLevel &gt;= 0;</span>
+<span class="nc" id="L85">            String prefix = StringUtils.repeat(indentString, indentLevel);</span>
+<span class="nc" id="L86">            ps.println(String.format(&quot;%s%s&quot;, prefix, x));</span>
+        }
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Increments the indentation level
+     *
+     * &lt;p&gt;
+     * If the code between {@link #indentMore} and {@link #indentLess} may throw
+     * a (checked) exception, surround the code with a
+     * {@code try}-{@code finally} block like this to maintain consistency:
+     * &lt;pre&gt;
+     * {@code
+     * TextOutput to;
+     * to.indentMore();
+     * try {
+     *   // Do stuff, possibly throwing an exception
+     * // Possibly catch the exception
+     * } finally {
+     *   to.indentLess();
+     * }
+     * }
+     * &lt;/pre&gt;
+     */
+    public void indentMore() {
+<span class="fc" id="L111">        ++indentLevel;</span>
+<span class="fc" id="L112">    }</span>
+
+    /**
+     * Prints a message and increments the indentation level
+     *
+     * @param message message to print
+     */
+    public void indentMore(String message) {
+<span class="fc" id="L120">        println(message);</span>
+<span class="fc" id="L121">        indentMore();</span>
+<span class="fc" id="L122">    }</span>
+
+    /**
+     * Decrements the indentation level
+     */
+    public void indentLess() {
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (indentLevel &gt; 0) {</span>
+<span class="fc" id="L129">            --indentLevel;</span>
+        }
+<span class="pc bpc" id="L131" title="2 of 4 branches missed.">        assert indentLevel &gt;= 0;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Flushes the underlying {@link PrintStream}
+     *
+     * @throws IOException if the underlying {@link PrintStream#flush} throws an
+     * {@link IOException}
+     */
+    @Override
+    public void flush() throws IOException {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (ps != null) {</span>
+<span class="nc" id="L143">            ps.flush();</span>
+        }
+<span class="nc" id="L145">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

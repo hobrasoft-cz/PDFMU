@@ -19,6 +19,7 @@
                     </li>
                 </ul>
                 <p>Add a <tt>release</tt> entry in <tt>src/changes/changes.xml</tt>.</p>
+                <p>The version should follow the <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning 2.0.0</a> guidelines.</p>
             </answer>
         </faq>
         

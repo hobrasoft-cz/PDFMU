@@ -170,8 +170,7 @@ public class MainUpdateVersionTest extends MainTest {
             if (onlyIfLower.toBoolean() && inputVersion.compareTo(expectedVersion) > 0) {
                 expectedVersion = inputVersion;
             }
-            Inspect expectedInspect = newInspect();
-            expectedInspect.version = expectedVersion.toString();
+            Inspect expectedInspect = newInspect(expectedVersion.toString());
             result.add(new Object[]{updateVersionInput, expectedInspect});
         }
         return result.toArray(new Object[][]{});

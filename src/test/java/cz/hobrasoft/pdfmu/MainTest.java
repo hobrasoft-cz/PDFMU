@@ -88,8 +88,9 @@ abstract public class MainTest {
     private static final List<String> IGNORED_PROPERTIES
             = Arrays.asList(new String[]{"Producer", "ModDate", "CreationDate"});
 
-    protected static Inspect newInspect() {
+    protected static Inspect newInspect(String version) {
         Inspect inspect = new Inspect();
+        inspect.version = version;
         inspect.properties = new HashMap<>();
         for (String property : IGNORED_PROPERTIES) {
             inspect.properties.put(property, null);

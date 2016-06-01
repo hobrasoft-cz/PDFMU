@@ -116,4 +116,6 @@ abstract public class MainTest {
         Assert.assertEquals(expected.signatures, actual.signatures);
     }
 
+    protected static final PdfFileResource BLANK_12_PDF
+            = new PdfFileResource("blank-12.pdf", "1.2", "D:20160525204745+02'00'");
 }

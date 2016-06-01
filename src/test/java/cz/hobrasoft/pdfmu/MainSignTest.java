@@ -46,7 +46,7 @@ public class MainSignTest extends MainTest {
 
     @Test
     public void testNoKeystore() throws IOException {
-        File inFile = new FileResource("blank-12.pdf").getFile(folder);
+        File inFile = BLANK_12_PDF.getFile(folder);
         final File outFile = newFile("out.pdf", false);
 
         String[] args = new String[]{
@@ -81,7 +81,7 @@ public class MainSignTest extends MainTest {
     @UseDataProvider
     public void testEmpty(String keystoreFileName, String keystoreType)
             throws IOException {
-        File inFile = new FileResource("blank-12.pdf").getFile(folder);
+        File inFile = BLANK_12_PDF.getFile(folder);
         File keystoreFile = new FileResource(keystoreFileName).getFile(folder);
         final File outFile = newFile("out.pdf", false);
 

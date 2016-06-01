@@ -38,8 +38,7 @@ public class MainAttachTest extends MainTest {
     public void testAttach() throws IOException {
         List<String> argsList = new ArrayList<>();
         argsList.add("attach");
-        FileResource inputFileResource = new FileResource("blank-12.pdf");
-        File inputFile = inputFileResource.getFile(folder);
+        File inputFile = BLANK_12_PDF.getFile(folder);
         argsList.add(inputFile.getAbsolutePath());
         FileResource attachmentFileResource = new FileResource("blank.txt");
         File attachmentFile = attachmentFileResource.getFile(folder);

@@ -71,7 +71,7 @@ abstract public class MainTest {
         return newFile(folder, fileName, exists);
     }
 
-    protected static File newFile(TemporaryFolder folder, String fileName,
+    public static File newFile(TemporaryFolder folder, String fileName,
             boolean exists) throws IOException {
         // TODO: Check whether this works if fileName is null
         final File file = folder.newFile(fileName);
@@ -83,44 +83,6 @@ abstract public class MainTest {
         }
         assert file.exists() == exists;
         return file;
-    }
-
-    protected static class FileResource {
-
-        private final String resourceName;
-        public final String fileName;
-
-        public FileResource(final String resourceName, final String fileName) {
-            assert resourceName != null;
-            this.resourceName = resourceName;
-            this.fileName = fileName;
-        }
-
-        public FileResource(final String resourceName) {
-            this(resourceName, resourceName);
-        }
-
-        public File getFile(TemporaryFolder folder) throws IOException {
-            File file;
-            try (InputStream in = getStream()) {
-                assert in != null;
-                file = newFile(folder, fileName, true);
-                assert file.exists();
-                try (OutputStream out = new FileOutputStream(file)) {
-                    assert out != null;
-                    IOUtils.copy(in, out);
-                }
-            }
-            return file;
-        }
-
-        public InputStream getStream() {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            assert resourceName != null;
-            InputStream in = classLoader.getResourceAsStream(resourceName);
-            assert in != null;
-            return in;
-        }
     }
 
     private static final List<String> IGNORED_PROPERTIES

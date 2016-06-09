@@ -16,20 +16,37 @@
  */
 package cz.hobrasoft.pdfmu;
 
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import cz.hobrasoft.pdfmu.error.ErrorType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
+import org.junit.runner.RunWith;
 
 /**
  * @author Filip Bartek
  */
+@RunWith(DataProviderRunner.class)
 public class MainBasicTest extends MainTest {
 
+    @DataProvider
+    public static Object[][] dataProviderParserError() {
+        return new Object[][]{
+            new Object[]{new String[]{"--unrecognized-argument"}, ErrorType.PARSER_UNRECOGNIZED_ARGUMENT.getCode()},
+            new Object[]{new String[]{"--output-format", "invalid-format"}, ErrorType.PARSER_INVALID_CHOICE.getCode()},
+            new Object[]{new String[]{"unrecognized-command"}, ErrorType.PARSER_UNRECOGNIZED_COMMAND.getCode()},
+            new Object[]{new String[]{}, ErrorType.PARSER_TOO_FEW_ARGUMENTS.getCode()},
+            new Object[]{new String[]{"--output-format"}, ErrorType.PARSER_EXPECTED_ONE_ARGUMENT.getCode()}
+        };
+    }
+
     @Test
-    public void testTooFewArguments() {
-        exit.expectSystemExitWithStatus(ErrorType.PARSER_TOO_FEW_ARGUMENTS.getCode());
-        Main.main(new String[]{});
+    @UseDataProvider
+    public void testParserError(String[] args, int exitStatus) {
+        exit.expectSystemExitWithStatus(exitStatus);
+        Main.main(args);
         assert false;
     }
 

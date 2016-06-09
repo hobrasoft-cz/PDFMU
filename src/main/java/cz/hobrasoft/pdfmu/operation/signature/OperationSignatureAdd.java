@@ -372,6 +372,11 @@ public class OperationSignatureAdd extends OperationCommon {
                         "Invalid TSA '(?<url>.*)' response, code (?<code>\\d+)",
                         Arrays.asList(new String[]{"url", "code"})));
 
+                patterns.add(new ExceptionMessagePattern(
+                        SIGNATURE_ADD_FAIL,
+                        "unknown tag (?<tag>\\d+) encountered",
+                        Arrays.asList(new String[]{"tag"})));
+
                 OperationException oe = null;
                 for (ExceptionMessagePattern p : patterns) {
                     oe = p.getOperationException(exInner);

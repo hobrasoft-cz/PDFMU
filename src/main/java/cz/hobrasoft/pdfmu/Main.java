@@ -17,6 +17,7 @@
 package cz.hobrasoft.pdfmu;
 
 import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_EXPECTED_ONE_ARGUMENT;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_INVALID_CHOICE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_TOO_FEW_ARGUMENTS;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNKNOWN;
@@ -216,6 +217,10 @@ public class Main {
         patterns.add(new ExceptionMessagePattern(PARSER_TOO_FEW_ARGUMENTS,
                 "too few arguments",
                 new ArrayList<String>()));
+
+        patterns.add(new ExceptionMessagePattern(PARSER_EXPECTED_ONE_ARGUMENT,
+                "argument (?<argument>.*): expected one argument",
+                Arrays.asList(new String[]{"argument"})));
 
         OperationException oe = null;
         for (ExceptionMessagePattern p : patterns) {

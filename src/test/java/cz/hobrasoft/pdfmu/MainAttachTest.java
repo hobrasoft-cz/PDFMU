@@ -38,7 +38,7 @@ public class MainAttachTest extends MainTest {
     public void testAttach() throws IOException {
         List<String> argsList = new ArrayList<>();
         argsList.add("attach");
-        File inputFile = BLANK_12_PDF.getFile(folder);
+        final File inputFile = BLANK_12_PDF.getFile(folder);
         argsList.add(inputFile.getAbsolutePath());
         FileResource attachmentFileResource = new FileResource("blank.txt");
         File attachmentFile = attachmentFileResource.getFile(folder);
@@ -51,6 +51,7 @@ public class MainAttachTest extends MainTest {
             @Override
             public void checkAssertion() {
                 Assert.assertTrue(outFile.exists());
+                Assert.assertTrue(outFile.length() > inputFile.length());
             }
         });
         Main.main(argsList.toArray(new String[]{}));

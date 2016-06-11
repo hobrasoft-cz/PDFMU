@@ -491,6 +491,15 @@
                                     </tag>
                                 </tags>
                             </tagClass>
+                            <tagClass>
+                                <displayName>TEMP</displayName>
+                                <tags>
+                                    <tag>
+                                        <matchString>TEMP</matchString>
+                                        <matchType>exact</matchType>
+                                    </tag>
+                                </tags>
+                            </tagClass>
                         </tagClasses>
                     </tagListOptions>
                 </configuration>

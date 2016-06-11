@@ -230,4 +230,60 @@ public class MainSignTest extends MainTest {
         Main.main(argsList.toArray(new String[]{}));
         assert false;
     }
+
+    @Test
+    public void testKeyIncorrect() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--key-alias");
+        argsList.add("incorrect-alias");
+
+        exit.expectSystemExitWithStatus(52);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertFalse(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testKeyCorrect() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--key-alias");
+        argsList.add("cn1");
+
+        exit.expectSystemExitWithStatus(0);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertTrue(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
 }

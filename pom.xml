@@ -498,6 +498,14 @@
             </plugin>
             
             <plugin>
+                <!-- http://www.mojohaus.org/taglist-maven-plugin/faq.html#Why_do_I_get_an_error_stating_the_Taglist_plugin_must_must_be_exeucted_after_the_JXR_plugin -->
+                <!-- the JXR plugin must be listed before the Taglist plugin in the POM or inherited POM reporting section. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+            
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
                 <version>2.4</version>

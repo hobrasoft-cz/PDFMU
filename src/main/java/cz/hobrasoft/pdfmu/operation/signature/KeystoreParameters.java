@@ -155,12 +155,13 @@ class KeystoreParameters implements ArgsConfiguration {
             throw new OperationException(SIGNATURE_ADD_KEYSTORE_LOAD, ex,
                     new SimpleEntry<String, Object>("type", type),
                     new SimpleEntry<String, Object>("file", file));
-        }
-        try {
-            ksIs.close();
-        } catch (IOException ex) {
-            throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_CLOSE, ex,
-                    new SimpleEntry<String, Object>("file", file));
+        } finally {
+            try {
+                ksIs.close();
+            } catch (IOException ex) {
+                throw new OperationException(SIGNATURE_ADD_KEYSTORE_FILE_CLOSE, ex,
+                        new SimpleEntry<String, Object>("file", file));
+            }
         }
     }
 

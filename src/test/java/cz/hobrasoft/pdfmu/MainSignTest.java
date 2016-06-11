@@ -38,8 +38,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
+import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import org.junit.runner.RunWith;
 
 /**
@@ -47,6 +49,10 @@ import org.junit.runner.RunWith;
  */
 @RunWith(DataProviderRunner.class)
 public class MainSignTest extends MainTest {
+
+    @Rule
+    public final EnvironmentVariables environmentVariables
+            = new EnvironmentVariables();
 
     @Test
     public void testNoInput() throws IOException {
@@ -275,6 +281,156 @@ public class MainSignTest extends MainTest {
         argsList.add(keystoreFile.getAbsolutePath());
         argsList.add("--key-alias");
         argsList.add("cn1");
+
+        exit.expectSystemExitWithStatus(0);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertTrue(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testPasswordMissing() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1-changeit.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--keystore-type");
+        argsList.add("pkcs12");
+
+        exit.expectSystemExitWithStatus(43);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertFalse(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testPasswordIncorrect() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1-changeit.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--keystore-type");
+        argsList.add("pkcs12");
+        argsList.add("--keystore-password");
+        argsList.add("incorrect-password");
+
+        exit.expectSystemExitWithStatus(43);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertFalse(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testPasswordCmdlineSuccess() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1-changeit.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--keystore-type");
+        argsList.add("pkcs12");
+        argsList.add("--keystore-password");
+        argsList.add("changeit");
+
+        exit.expectSystemExitWithStatus(0);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertTrue(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testPasswordEnvvarDefaultSuccess() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1-changeit.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--keystore-type");
+        argsList.add("pkcs12");
+
+        environmentVariables.set("PDFMU_STOREPASS", "changeit");
+
+        exit.expectSystemExitWithStatus(0);
+        exit.checkAssertionAfterwards(new Assertion() {
+            @Override
+            public void checkAssertion() {
+                Assert.assertTrue(outFile.exists());
+            }
+        });
+        Main.main(argsList.toArray(new String[]{}));
+        assert false;
+    }
+
+    @Test
+    public void testPasswordEnvvarCustomSuccess() throws IOException {
+        final PdfFileResource inFileResource = BLANK_12_PDF;
+        File inFile = inFileResource.getFile(folder);
+        File keystoreFile = new FileResource("1-changeit.p12").getFile(folder);
+        final File outFile = newFile("out.pdf", false);
+
+        List<String> argsList = new ArrayList<>();
+        argsList.add("sign");
+        argsList.add(inFile.getAbsolutePath());
+        argsList.add("--out");
+        argsList.add(outFile.getAbsolutePath());
+        argsList.add("--keystore");
+        argsList.add(keystoreFile.getAbsolutePath());
+        argsList.add("--keystore-type");
+        argsList.add("pkcs12");
+        argsList.add("--keystore-password-envvar");
+        argsList.add("PDFMU_STOREPASS_CUSTOM_ENVVAR");
+
+        environmentVariables.set("PDFMU_STOREPASS_CUSTOM_ENVVAR", "changeit");
 
         exit.expectSystemExitWithStatus(0);
         exit.checkAssertionAfterwards(new Assertion() {

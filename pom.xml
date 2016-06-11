@@ -52,6 +52,8 @@
         <projectVersion>${project.version}</projectVersion>
         <copyright>Copyright (C) 2016 Hobrasoft s.r.o.</copyright>
         <javadocPluginVersion>2.10.3</javadocPluginVersion>
+        <surefire.argLine></surefire.argLine>
+        <failsafe.argLine></failsafe.argLine>
     </properties>
     
     <dependencies>

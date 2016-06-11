@@ -30,7 +30,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
-import org.junit.contrib.java.lang.system.SystemErrRule;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.TemporaryFolder;
 
@@ -44,9 +43,6 @@ abstract public class MainTest {
 
     @Rule
     public final SystemOutRule systemOutRule = new SystemOutRule().mute().enableLog();
-
-    @Rule
-    public final SystemErrRule systemErrRule = new SystemErrRule().mute().enableLog();
 
     /**
      * Ensures that the directory is deleted after it has been used.

@@ -21,8 +21,10 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import cz.hobrasoft.pdfmu.error.ErrorType;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
+import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runner.RunWith;
 
 /**
@@ -30,6 +32,10 @@ import org.junit.runner.RunWith;
  */
 @RunWith(DataProviderRunner.class)
 public class MainBasicTest extends MainTest {
+
+    @Rule
+    public final SystemOutRule systemOutRule
+            = new SystemOutRule().mute().enableLog();
 
     @DataProvider
     public static Object[][] dataProviderParserError() {

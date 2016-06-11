@@ -8,6 +8,25 @@
         <author email="filip.bartek@hobrasoft.cz">Filip Bártek</author>
     </properties>
     <body>
+        <release version="1.1.2" date="2016-06-11" description="Minor bug fixes">
+            <action dev="filip.bartek" type="fix" date="2016-06-11">
+                If keystore type is set to "pkcs12", keystore password is given
+                and no key password is given, attempt to use the keystore password
+                as the key password.
+            </action>
+            <action dev="filip.bartek" type="fix" date="2016-06-11">
+                Close the keystore file consistently.
+            </action>
+            <action dev="filip.bartek" type="add" date="2016-06-09">
+                If a required argument value is missing, pdfmu returns the exit status 15.
+            </action>
+            <action dev="filip.bartek" type="add" date="2016-06-09">
+                Recognize the exception "unknown tag" in PDF signing.
+            </action>
+            <action dev="filip.bartek" type="add" date="2016-06-11">
+                Add some unit and integration tests.
+            </action>
+        </release>
         <release version="1.1.1" date="2016-06-01" description="Minor bug fixes">
             <action dev="filip.bartek" type="add" date="2016-05-25">
                 If some required arguments are missing, pdfmu returns the exit status 14.

@@ -520,10 +520,6 @@
                                         <matchString>TODO[^\?]</matchString>
                                         <matchType>regEx</matchType>
                                     </tag>
-                                    <tag>
-                                        <matchString>@todo</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
                                 </tags>
                             </tagClass>
                             <tagClass>
@@ -531,15 +527,6 @@
                                 <tags>
                                     <tag>
                                         <matchString>TODO?</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                </tags>
-                            </tagClass>
-                            <tagClass>
-                                <displayName>@deprecated</displayName>
-                                <tags>
-                                    <tag>
-                                        <matchString>@deprecated</matchString>
                                         <matchType>exact</matchType>
                                     </tag>
                                 </tags>

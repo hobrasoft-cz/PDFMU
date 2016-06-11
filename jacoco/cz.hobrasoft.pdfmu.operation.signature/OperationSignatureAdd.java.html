@@ -153,8 +153,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 <span class="fc" id="L153">        String digestAlgorithm = signatureParameters.digestAlgorithm;</span>
 
 <span class="fc" id="L155">        TSAClient tsaClient = signatureParameters.timestamp.getTSAClient();</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (tsaClient != null) {</span>
-<span class="nc" id="L157">            logger.info(&quot;Using a timestamp authority to attach a timestamp.&quot;);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (tsaClient != null) {</span>
+<span class="fc" id="L157">            logger.info(&quot;Using a timestamp authority to attach a timestamp.&quot;);</span>
         } else {
 <span class="fc" id="L159">            logger.info(&quot;No timestamp authority was specified.&quot;);</span>
         }
@@ -166,7 +166,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
         // Initialize and load keystore
 <span class="fc" id="L167">        KeyStore ks = keystoreParameters.loadKeystore();</span>
 
-<span class="fc" id="L169">        return sign(stp, signatureAppearanceParameters, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
+        // Fix the values, especially if they were not set at all
+<span class="fc" id="L170">        keyParameters.fix(ks, keystoreParameters.getPassword());</span>
+
+<span class="fc" id="L172">        return sign(stp, signatureAppearanceParameters, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
     }
 
     // Initialize the signature appearance
@@ -178,10 +181,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
             TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Initialize the signature appearance
-<span class="fc" id="L181">        PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);</span>
-<span class="pc bpc" id="L182" title="2 of 4 branches missed.">        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method</span>
+<span class="fc" id="L184">        PdfSignatureAppearance sap = signatureAppearanceParameters.getSignatureAppearance(stp);</span>
+<span class="pc bpc" id="L185" title="2 of 4 branches missed.">        assert sap != null; // `stp` must have been created using `PdfStamper.createSignature` static method</span>
 
-<span class="fc" id="L184">        return sign(sap, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
+<span class="fc" id="L187">        return sign(sap, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);</span>
     }
 
     // Get the private key and the certificate chain from the keystore
@@ -191,32 +194,30 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
             String digestAlgorithm,
             TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
-<span class="pc bpc" id="L194" title="2 of 4 branches missed.">        assert keyParameters != null;</span>
-        // Fix the values, especially if they were not set at all
-<span class="fc" id="L196">        keyParameters.fix(ks);</span>
-<span class="fc" id="L197">        String alias = keyParameters.alias;</span>
-<span class="fc" id="L198">        SignatureAdd sa = new SignatureAdd(alias);</span>
+<span class="pc bpc" id="L197" title="2 of 4 branches missed.">        assert keyParameters != null;</span>
+<span class="fc" id="L198">        String alias = keyParameters.alias;</span>
+<span class="fc" id="L199">        SignatureAdd sa = new SignatureAdd(alias);</span>
 
-<span class="fc" id="L200">        PrivateKey pk = keyParameters.getPrivateKey(ks);</span>
-<span class="fc" id="L201">        Certificate[] chain = keyParameters.getCertificateChain(ks);</span>
+<span class="fc" id="L201">        PrivateKey pk = keyParameters.getPrivateKey(ks);</span>
+<span class="fc" id="L202">        Certificate[] chain = keyParameters.getCertificateChain(ks);</span>
 
         Provider signatureProvider;
         { // ksProvider
-<span class="fc" id="L205">            Provider ksProvider = ks.getProvider();</span>
+<span class="fc" id="L206">            Provider ksProvider = ks.getProvider();</span>
             // &quot;SunMSCAPI&quot; provider must be used for signing if it was used for keystore loading.
             // In case of other keystore providers,
             // we use the default signature provider.
             // https://community.oracle.com/thread/1528230
-<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (&quot;SunMSCAPI&quot;.equals(ksProvider.getName())) {</span>
-<span class="nc" id="L211">                signatureProvider = ksProvider;</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">            if (&quot;SunMSCAPI&quot;.equals(ksProvider.getName())) {</span>
+<span class="nc" id="L212">                signatureProvider = ksProvider;</span>
             } else {
-<span class="fc" id="L213">                signatureProvider = provider;</span>
+<span class="fc" id="L214">                signatureProvider = provider;</span>
             }
         }
 
-<span class="fc" id="L217">        sign(sap, pk, digestAlgorithm, chain, tsaClient, sigtype, signatureProvider);</span>
+<span class="fc" id="L218">        sign(sap, pk, digestAlgorithm, chain, tsaClient, sigtype, signatureProvider);</span>
 
-<span class="fc" id="L219">        return sa;</span>
+<span class="fc" id="L220">        return sa;</span>
     }
 
     // Initialize the signature algorithm
@@ -227,20 +228,20 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
             TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype,
             Provider signatureProvider) throws OperationException {
-<span class="pc bpc" id="L230" title="2 of 4 branches missed.">        assert digestAlgorithm != null;</span>
+<span class="pc bpc" id="L231" title="2 of 4 branches missed.">        assert digestAlgorithm != null;</span>
 
         // Initialize the signature algorithm
-<span class="fc" id="L233">        logger.info(String.format(&quot;Digest algorithm: %s&quot;, digestAlgorithm));</span>
-<span class="pc bpc" id="L234" title="1 of 2 branches missed.">        if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {</span>
-<span class="nc" id="L235">            throw new OperationException(SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,</span>
-<span class="nc" id="L236">                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;digestAlgorithm&quot;, digestAlgorithm)));</span>
+<span class="fc" id="L234">        logger.info(String.format(&quot;Digest algorithm: %s&quot;, digestAlgorithm));</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (DigestAlgorithms.getAllowedDigests(digestAlgorithm) == null) {</span>
+<span class="nc" id="L236">            throw new OperationException(SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,</span>
+<span class="nc" id="L237">                    PdfmuUtils.sortedMap(new SimpleEntry&lt;String, Object&gt;(&quot;digestAlgorithm&quot;, digestAlgorithm)));</span>
         }
 
-<span class="fc" id="L239">        logger.info(String.format(&quot;Signature security provider: %s&quot;, signatureProvider.getName()));</span>
-<span class="fc" id="L240">        ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, signatureProvider.getName());</span>
+<span class="fc" id="L240">        logger.info(String.format(&quot;Signature security provider: %s&quot;, signatureProvider.getName()));</span>
+<span class="fc" id="L241">        ExternalSignature externalSignature = new PrivateKeySignature(pk, digestAlgorithm, signatureProvider.getName());</span>
 
-<span class="fc" id="L242">        sign(sap, externalSignature, chain, tsaClient, sigtype);</span>
-<span class="fc" id="L243">    }</span>
+<span class="fc" id="L243">        sign(sap, externalSignature, chain, tsaClient, sigtype);</span>
+<span class="fc" id="L244">    }</span>
 
     // Set the &quot;external digest&quot; algorithm
     private static void sign(PdfSignatureAppearance sap,
@@ -249,8 +250,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
             TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         // Use the static BouncyCastleDigest instance
-<span class="fc" id="L252">        sign(sap, externalDigest, externalSignature, chain, tsaClient, sigtype);</span>
-<span class="fc" id="L253">    }</span>
+<span class="fc" id="L253">        sign(sap, externalDigest, externalSignature, chain, tsaClient, sigtype);</span>
+<span class="fc" id="L254">    }</span>
 
     // Sign the document
     private static void sign(PdfSignatureAppearance sap,
@@ -263,154 +264,159 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
         // Certificate Revocation List
         // digitalsignatures20130304.pdf : Section 3.2
-<span class="fc" id="L266">        Collection&lt;CrlClient&gt; crlList = null;</span>
+<span class="fc" id="L267">        Collection&lt;CrlClient&gt; crlList = null;</span>
 
         // Online Certificate Status Protocol
         // digitalsignatures20130304.pdf : Section 3.2.4
-<span class="fc" id="L270">        OcspClient ocspClient = null;</span>
+<span class="fc" id="L271">        OcspClient ocspClient = null;</span>
 
         // digitalsignatures20130304.pdf : Section 3.5
         // The value of 0 means &quot;try a generous educated guess&quot;.
         // We need not change this unless we want to optimize the resulting PDF document size.
-<span class="fc" id="L275">        int estimatedSize = 0;</span>
+<span class="fc" id="L276">        int estimatedSize = 0;</span>
 
-<span class="fc" id="L277">        logger.info(String.format(&quot;Cryptographic standard (signature format): %s&quot;, sigtype));</span>
+<span class="fc" id="L278">        logger.info(String.format(&quot;Cryptographic standard (signature format): %s&quot;, sigtype));</span>
 
         try {
-<span class="fc" id="L280">            MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);</span>
-<span class="nc" id="L281">        } catch (ExceptionConverter ex) {</span>
-<span class="nc" id="L282">            Exception exInner = ex.getException();</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (exInner instanceof IOException) {</span>
-<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (exInner instanceof SSLHandshakeException) {</span>
-<span class="nc" id="L285">                    Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L281">            MakeSignature.signDetached(sap, externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype);</span>
+<span class="fc" id="L282">        } catch (ExceptionConverter ex) {</span>
+<span class="fc" id="L283">            Exception exInner = ex.getException();</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">            if (exInner instanceof IOException) {</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (exInner instanceof SSLHandshakeException) {</span>
+<span class="nc" id="L286">                    Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
 
                     // Untrusted
-<span class="nc" id="L288">                    patterns.add(new ExceptionMessagePattern(</span>
+<span class="nc" id="L289">                    patterns.add(new ExceptionMessagePattern(</span>
                             SIGNATURE_ADD_TSA_UNTRUSTED,
                             &quot;sun\\.security\\.validator\\.ValidatorException: PKIX path building failed: sun\\.security\\.provider\\.certpath\\.SunCertPathBuilderException: unable to find valid certification path to requested target&quot;,
                             new ArrayList&lt;String&gt;()));
 
                     // Bad certificate
-<span class="nc" id="L294">                    patterns.add(new ExceptionMessagePattern(</span>
+<span class="nc" id="L295">                    patterns.add(new ExceptionMessagePattern(</span>
                             SIGNATURE_ADD_TSA_BAD_CERTIFICATE,
                             &quot;Received fatal alert: bad_certificate&quot;,
                             new ArrayList&lt;String&gt;()));
 
                     // Handshake failure
-<span class="nc" id="L300">                    patterns.add(new ExceptionMessagePattern(</span>
+<span class="nc" id="L301">                    patterns.add(new ExceptionMessagePattern(</span>
                             SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE,
                             &quot;Received fatal alert: handshake_failure&quot;,
                             new ArrayList&lt;String&gt;()));
 
-<span class="nc" id="L305">                    OperationException oe = null;</span>
-<span class="nc bnc" id="L306" title="All 2 branches missed.">                    for (ExceptionMessagePattern p : patterns) {</span>
-<span class="nc" id="L307">                        oe = p.getOperationException(exInner);</span>
-<span class="nc bnc" id="L308" title="All 2 branches missed.">                        if (oe != null) {</span>
-<span class="nc" id="L309">                            break;</span>
+<span class="nc" id="L306">                    OperationException oe = null;</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">                    for (ExceptionMessagePattern p : patterns) {</span>
+<span class="nc" id="L308">                        oe = p.getOperationException(exInner);</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                        if (oe != null) {</span>
+<span class="nc" id="L310">                            break;</span>
                         }
-<span class="nc" id="L311">                    }</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">                    if (oe == null) {</span>
-<span class="nc" id="L313">                        ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+<span class="nc" id="L312">                    }</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">                    if (oe == null) {</span>
+<span class="nc" id="L314">                        ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
                                 SIGNATURE_ADD_TSA_SSL_FATAL_ALERT,
                                 &quot;Received fatal alert: (?&lt;alert&gt;.*)&quot;,
-<span class="nc" id="L316">                                Arrays.asList(new String[]{&quot;alert&quot;}));</span>
-<span class="nc" id="L317">                        oe = emp.getOperationException(exInner);</span>
+<span class="nc" id="L317">                                Arrays.asList(new String[]{&quot;alert&quot;}));</span>
+<span class="nc" id="L318">                        oe = emp.getOperationException(exInner);</span>
 
-<span class="nc bnc" id="L319" title="All 2 branches missed.">                        if (oe == null) {</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                        if (oe == null) {</span>
                             // Unknown exception
-<span class="nc" id="L321">                            oe = new OperationException(SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION, exInner);</span>
+<span class="nc" id="L322">                            oe = new OperationException(SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION, exInner);</span>
                         }
                     }
-<span class="nc bnc" id="L324" title="All 4 branches missed.">                    assert oe != null;</span>
-<span class="nc" id="L325">                    throw oe;</span>
+<span class="nc bnc" id="L325" title="All 4 branches missed.">                    assert oe != null;</span>
+<span class="nc" id="L326">                    throw oe;</span>
                 }
 
-<span class="nc bnc" id="L328" title="All 2 branches missed.">                if (exInner instanceof SSLException) {</span>
-<span class="nc" id="L329">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">                if (exInner instanceof SSLException) {</span>
+<span class="nc" id="L330">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
                             SSL_TRUSTSTORE_EMPTY,
                             &quot;java\\.lang\\.RuntimeException: Unexpected error: java\\.security\\.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty&quot;,
                             new ArrayList&lt;String&gt;());
-<span class="nc" id="L333">                    OperationException oe = emp.getOperationException(exInner);</span>
-<span class="nc bnc" id="L334" title="All 2 branches missed.">                    if (oe != null) {</span>
-<span class="nc" id="L335">                        throw oe;</span>
+<span class="nc" id="L334">                    OperationException oe = emp.getOperationException(exInner);</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">                    if (oe != null) {</span>
+<span class="nc" id="L336">                        throw oe;</span>
                     }
-<span class="nc" id="L337">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+<span class="nc" id="L338">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
                 }
 
-<span class="nc bnc" id="L340" title="All 4 branches missed.">                if (exInner instanceof UnknownHostException</span>
+<span class="pc bpc" id="L341" title="2 of 4 branches missed.">                if (exInner instanceof UnknownHostException</span>
                         || exInner instanceof FileNotFoundException) {
-<span class="nc" id="L342">                    String host = exInner.getMessage();</span>
-<span class="nc" id="L343">                    throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,</span>
+<span class="nc" id="L343">                    String host = exInner.getMessage();</span>
+<span class="nc" id="L344">                    throw new OperationException(SIGNATURE_ADD_TSA_UNREACHABLE,</span>
                             exInner,
                             new SimpleEntry&lt;String, Object&gt;(&quot;host&quot;, host));
                 }
 
-<span class="nc bnc" id="L348" title="All 2 branches missed.">                if (exInner instanceof SocketException) {</span>
-<span class="nc" id="L349">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">                if (exInner instanceof SocketException) {</span>
+<span class="nc" id="L350">                    ExceptionMessagePattern emp = new ExceptionMessagePattern(</span>
                             SSL_TRUSTSTORE_INCORRECT_TYPE,
                             &quot;java\\.security\\.NoSuchAlgorithmException: Error constructing implementation \\(algorithm: (?&lt;algorithm&gt;.*), provider: (?&lt;provider&gt;.*), class: (?&lt;class&gt;.*)\\)&quot;,
-<span class="nc" id="L352">                            Arrays.asList(new String[]{&quot;algorithm&quot;, &quot;provider&quot;, &quot;class&quot;}));</span>
-<span class="nc" id="L353">                    OperationException oe = emp.getOperationException(exInner);</span>
-<span class="nc bnc" id="L354" title="All 2 branches missed.">                    if (oe != null) {</span>
-<span class="nc" id="L355">                        throw oe;</span>
+<span class="nc" id="L353">                            Arrays.asList(new String[]{&quot;algorithm&quot;, &quot;provider&quot;, &quot;class&quot;}));</span>
+<span class="nc" id="L354">                    OperationException oe = emp.getOperationException(exInner);</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">                    if (oe != null) {</span>
+<span class="nc" id="L356">                        throw oe;</span>
                     }
-<span class="nc" id="L357">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+<span class="nc" id="L358">                    throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
                 }
 
-<span class="nc" id="L360">                Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L361">                Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
 
                 // No username
                 // May also be returned if the username and password are incorrect.
-<span class="nc" id="L364">                patterns.add(new ExceptionMessagePattern(</span>
+<span class="fc" id="L365">                patterns.add(new ExceptionMessagePattern(</span>
                         SIGNATURE_ADD_TSA_UNAUTHORIZED,
                         &quot;Server returned HTTP response code: 401 for URL: (?&lt;url&gt;.*)&quot;,
-<span class="nc" id="L367">                        Arrays.asList(new String[]{&quot;url&quot;})));</span>
+<span class="fc" id="L368">                        Arrays.asList(new String[]{&quot;url&quot;})));</span>
 
                 // Incorrect username or incorrect password
-<span class="nc" id="L370">                patterns.add(new ExceptionMessagePattern(</span>
+<span class="fc" id="L371">                patterns.add(new ExceptionMessagePattern(</span>
                         SIGNATURE_ADD_TSA_LOGIN_FAIL,
                         &quot;Invalid TSA '(?&lt;url&gt;.*)' response, code (?&lt;code&gt;\\d+)&quot;,
-<span class="nc" id="L373">                        Arrays.asList(new String[]{&quot;url&quot;, &quot;code&quot;})));</span>
+<span class="fc" id="L374">                        Arrays.asList(new String[]{&quot;url&quot;, &quot;code&quot;})));</span>
 
-<span class="nc" id="L375">                OperationException oe = null;</span>
-<span class="nc bnc" id="L376" title="All 2 branches missed.">                for (ExceptionMessagePattern p : patterns) {</span>
-<span class="nc" id="L377">                    oe = p.getOperationException(exInner);</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">                    if (oe != null) {</span>
-<span class="nc" id="L379">                        break;</span>
+<span class="fc" id="L376">                patterns.add(new ExceptionMessagePattern(</span>
+                        SIGNATURE_ADD_FAIL,
+                        &quot;unknown tag (?&lt;tag&gt;\\d+) encountered&quot;,
+<span class="fc" id="L379">                        Arrays.asList(new String[]{&quot;tag&quot;})));</span>
+
+<span class="fc" id="L381">                OperationException oe = null;</span>
+<span class="pc bpc" id="L382" title="1 of 2 branches missed.">                for (ExceptionMessagePattern p : patterns) {</span>
+<span class="fc" id="L383">                    oe = p.getOperationException(exInner);</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">                    if (oe != null) {</span>
+<span class="fc" id="L385">                        break;</span>
                     }
-<span class="nc" id="L381">                }</span>
-<span class="nc bnc" id="L382" title="All 2 branches missed.">                if (oe == null) {</span>
+<span class="fc" id="L387">                }</span>
+<span class="pc bpc" id="L388" title="1 of 2 branches missed.">                if (oe == null) {</span>
                     // Unknown exception
-<span class="nc" id="L384">                    oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+<span class="nc" id="L390">                    oe = new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
                 }
-<span class="nc bnc" id="L386" title="All 4 branches missed.">                assert oe != null;</span>
-<span class="nc" id="L387">                throw oe;</span>
+<span class="pc bpc" id="L392" title="2 of 4 branches missed.">                assert oe != null;</span>
+<span class="fc" id="L393">                throw oe;</span>
             }
-<span class="nc" id="L389">            throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
-<span class="nc" id="L390">        } catch (SignatureException ex) {</span>
-<span class="nc" id="L391">            throw new OperationException(SIGNATURE_ADD_SIGNATURE_EXCEPTION, ex);</span>
-<span class="nc" id="L392">        } catch (IOException | DocumentException | GeneralSecurityException ex) {</span>
-<span class="nc" id="L393">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
-<span class="nc" id="L394">        } catch (NullPointerException ex) {</span>
+<span class="nc" id="L395">            throw new OperationException(SIGNATURE_ADD_FAIL, exInner);</span>
+<span class="nc" id="L396">        } catch (SignatureException ex) {</span>
+<span class="nc" id="L397">            throw new OperationException(SIGNATURE_ADD_SIGNATURE_EXCEPTION, ex);</span>
+<span class="nc" id="L398">        } catch (IOException | DocumentException | GeneralSecurityException ex) {</span>
+<span class="nc" id="L399">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
+<span class="nc" id="L400">        } catch (NullPointerException ex) {</span>
             // Invalid digest algorithm?
-<span class="nc" id="L396">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
-<span class="fc" id="L397">        }</span>
-<span class="fc" id="L398">        logger.info(&quot;Document successfully signed.&quot;);</span>
-<span class="fc" id="L399">    }</span>
+<span class="nc" id="L402">            throw new OperationException(SIGNATURE_ADD_FAIL, ex);</span>
+<span class="fc" id="L403">        }</span>
+<span class="fc" id="L404">        logger.info(&quot;Document successfully signed.&quot;);</span>
+<span class="fc" id="L405">    }</span>
 
-<span class="fc" id="L401">    private static Operation instance = null;</span>
+<span class="fc" id="L407">    private static Operation instance = null;</span>
 
     public static Operation getInstance() {
-<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (instance == null) {</span>
-<span class="fc" id="L405">            instance = new OperationSignatureAdd();</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L411">            instance = new OperationSignatureAdd();</span>
         }
-<span class="fc" id="L407">        return instance;</span>
+<span class="fc" id="L413">        return instance;</span>
     }
 
     // Singleton
     private OperationSignatureAdd() {
-<span class="fc" id="L412">        super();</span>
-<span class="fc" id="L413">    }</span>
+<span class="fc" id="L418">        super();</span>
+<span class="fc" id="L419">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

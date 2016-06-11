@@ -117,7 +117,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 <span class="nc" id="L117">    }</span>
 
     public void fixAlias(KeyStore ks) throws OperationException {
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (alias == null) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (alias == null) {</span>
             // Get the first alias in the keystore
 <span class="fc" id="L122">            logger.info(&quot;Keystore entry alias not set. Using the first entry in the keystore.&quot;);</span>
             Enumeration&lt;String&gt; aliases;
@@ -131,15 +131,15 @@ import net.sourceforge.argparse4j.inf.Namespace;
             }
 <span class="fc" id="L132">            alias = aliases.nextElement();</span>
 <span class="pc bpc" id="L133" title="2 of 4 branches missed.">            assert alias != null;</span>
-<span class="pc bnc" id="L134" title="All 2 branches missed.">        } else if (&quot;Windows-MY&quot;.equals(ks.getType())) {</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        } else if (&quot;Windows-MY&quot;.equals(ks.getType())) {</span>
 <span class="nc" id="L135">            fixAliasWcs(ks);</span>
         }
 <span class="fc" id="L137">        logger.info(String.format(&quot;Keystore entry alias: %s&quot;, alias));</span>
 
         // Make sure the entry `alias` is present in the keystore
         try {
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (!ks.containsAlias(alias)) {</span>
-<span class="nc" id="L142">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            if (!ks.containsAlias(alias)) {</span>
+<span class="fc" id="L142">                throw new OperationException(SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,</span>
                         new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
             }
 <span class="nc" id="L145">        } catch (KeyStoreException ex) {</span>
@@ -159,61 +159,75 @@ import net.sourceforge.argparse4j.inf.Namespace;
 <span class="fc" id="L159">        }</span>
 <span class="fc" id="L160">    }</span>
 
-    public void fixPassword(KeyStore ks) {
-<span class="pc bpc" id="L163" title="4 of 6 branches missed.">        switch (ks.getType()) {</span>
+    public void fixPassword(KeyStore ks, String ksPassword) {
+<span class="pc bpc" id="L163" title="5 of 10 branches missed.">        switch (ks.getType()) {</span>
             case &quot;Windows-MY&quot;:
 <span class="nc bnc" id="L165" title="All 2 branches missed.">                if (password != null) {</span>
 <span class="nc" id="L166">                    logger.info(&quot;The keystore Windows-MY does not accept key password.&quot;);</span>
 <span class="nc" id="L167">                    password = null;</span>
                 }
                 break;
+            case &quot;pkcs12&quot;:
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">                if (ksPassword != null) {</span>
+<span class="pc bpc" id="L172" title="3 of 4 branches missed.">                    if (password != null &amp;&amp; password != ksPassword.toCharArray()) {</span>
+<span class="nc" id="L173">                        logger.warning(&quot;In PKCS12 keystores, key password should not differ from the keystore password.&quot;);</span>
+                    }
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">                    if (password == null) {</span>
+<span class="fc" id="L176">                        logger.info(&quot;Key password not set. Using the keystore password.&quot;);</span>
+<span class="fc" id="L177">                        password = ksPassword.toCharArray();</span>
+                    }
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                } else if (password == null) {</span>
+<span class="nc" id="L180">                    logger.info(&quot;Key password not set. Using an empty password.&quot;);</span>
+<span class="nc" id="L181">                    password = &quot;&quot;.toCharArray();</span>
+                }
+                break;
             default:
                 // Set key password to empty string if not set from command line
-<span class="pc bpc" id="L172" title="1 of 2 branches missed.">                if (password == null) {</span>
-<span class="fc" id="L173">                    logger.info(&quot;Key password not set. Using an empty password.&quot;);</span>
-<span class="fc" id="L174">                    password = &quot;&quot;.toCharArray();</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">                if (password == null) {</span>
+<span class="fc" id="L187">                    logger.info(&quot;Key password not set. Using an empty password.&quot;);</span>
+<span class="fc" id="L188">                    password = &quot;&quot;.toCharArray();</span>
                 }
         }
-<span class="fc" id="L177">    }</span>
+<span class="fc" id="L191">    }</span>
 
-    public void fix(KeyStore ks) throws OperationException {
-<span class="fc" id="L180">        fixAlias(ks);</span>
-<span class="fc" id="L181">        fixPassword(ks);</span>
-<span class="fc" id="L182">    }</span>
+    public void fix(KeyStore ks, String ksPassword) throws OperationException {
+<span class="fc" id="L194">        fixAlias(ks);</span>
+<span class="fc" id="L195">        fixPassword(ks, ksPassword);</span>
+<span class="fc" id="L196">    }</span>
 
     public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {
         // Get private key from keystore
         PrivateKey pk;
         try {
-<span class="fc" id="L188">            pk = (PrivateKey) ks.getKey(alias, password);</span>
-<span class="nc" id="L189">        } catch (KeyStoreException ex) {</span>
-<span class="nc" id="L190">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="fc" id="L202">            pk = (PrivateKey) ks.getKey(alias, password);</span>
+<span class="nc" id="L203">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L204">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="nc" id="L192">        } catch (NoSuchAlgorithmException ex) {</span>
-<span class="nc" id="L193">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="nc" id="L206">        } catch (NoSuchAlgorithmException ex) {</span>
+<span class="nc" id="L207">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="nc" id="L195">        } catch (UnrecoverableKeyException ex) {</span>
+<span class="nc" id="L209">        } catch (UnrecoverableKeyException ex) {</span>
             // Incorrect key password? Incorrect keystore type?
-<span class="nc" id="L197">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="nc" id="L211">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="fc" id="L199">        }</span>
-<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (pk == null) {</span>
+<span class="fc" id="L213">        }</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (pk == null) {</span>
             // Incorrect alias?
-<span class="nc" id="L202">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
+<span class="nc" id="L216">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
         }
-<span class="fc" id="L205">        return pk;</span>
+<span class="fc" id="L219">        return pk;</span>
     }
 
     public Certificate[] getCertificateChain(KeyStore ks) throws OperationException {
         Certificate[] chain;
         try {
-<span class="fc" id="L211">            chain = ks.getCertificateChain(alias);</span>
-<span class="nc" id="L212">        } catch (KeyStoreException ex) {</span>
-<span class="nc" id="L213">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,</span>
+<span class="fc" id="L225">            chain = ks.getCertificateChain(alias);</span>
+<span class="nc" id="L226">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L227">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="fc" id="L215">        }</span>
-<span class="fc" id="L216">        return chain;</span>
+<span class="fc" id="L229">        }</span>
+<span class="fc" id="L230">        return chain;</span>
     }
 
 }

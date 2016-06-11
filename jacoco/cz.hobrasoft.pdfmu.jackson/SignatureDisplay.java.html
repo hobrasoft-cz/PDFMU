@@ -26,11 +26,11 @@ import java.util.Objects;
  */
 <span class="fc" id="L27">public class SignatureDisplay extends Result {</span>
 
-<span class="fc" id="L29">    @JsonPropertyDescription(&quot;Number of revisions of the document&quot;)</span>
-    public Integer nRevisions = null;
+    @JsonPropertyDescription(&quot;Number of revisions of the document&quot;)
+    public Integer nRevisions;
 
-<span class="fc" id="L32">    @JsonPropertyDescription(&quot;Signatures&quot;)</span>
-    public List&lt;Signature&gt; signatures = null;
+    @JsonPropertyDescription(&quot;Signatures&quot;)
+    public List&lt;Signature&gt; signatures;
 
     @Override
     public boolean equals(Object obj) {

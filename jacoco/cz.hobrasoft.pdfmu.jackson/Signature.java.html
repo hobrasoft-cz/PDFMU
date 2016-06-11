@@ -25,19 +25,19 @@ import java.util.List;
  */
 <span class="fc" id="L26">public class Signature {</span>
 
-<span class="fc" id="L28">    @JsonPropertyDescription(&quot;AcroForm field name&quot;)</span>
-    public String id = null;
+    @JsonPropertyDescription(&quot;AcroForm field name&quot;)
+    public String id;
 
-<span class="fc" id="L31">    @JsonPropertyDescription(&quot;Does the signature cover the whole document?&quot;)</span>
-    public Boolean coversWholeDocument = null;
+    @JsonPropertyDescription(&quot;Does the signature cover the whole document?&quot;)
+    public Boolean coversWholeDocument;
 
-<span class="fc" id="L34">    @JsonPropertyDescription(&quot;Document revision associated with this signature&quot;)</span>
-    public Integer revision = null;
+    @JsonPropertyDescription(&quot;Document revision associated with this signature&quot;)
+    public Integer revision;
 
-<span class="fc" id="L37">    @JsonPropertyDescription(&quot;Metadata&quot;)</span>
-    public SignatureMetadata metadata = null;
+    @JsonPropertyDescription(&quot;Metadata&quot;)
+    public SignatureMetadata metadata;
 
-<span class="fc" id="L40">    @JsonPropertyDescription(&quot;Certificate chain. The certificate used for signing the document is the first in the array.&quot;)</span>
-    public List&lt;CertificateResult&gt; certificates = null;
+    @JsonPropertyDescription(&quot;Certificate chain. The certificate used for signing the document is the first in the array.&quot;)
+    public List&lt;CertificateResult&gt; certificates;
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

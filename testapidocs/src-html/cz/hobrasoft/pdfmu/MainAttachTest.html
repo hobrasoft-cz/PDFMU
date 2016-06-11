@@ -46,7 +46,7 @@
 <span class="sourceLineNo">038</span>    public void testAttach() throws IOException {<a name="line.38"></a>
 <span class="sourceLineNo">039</span>        List&lt;String&gt; argsList = new ArrayList&lt;&gt;();<a name="line.39"></a>
 <span class="sourceLineNo">040</span>        argsList.add("attach");<a name="line.40"></a>
-<span class="sourceLineNo">041</span>        File inputFile = BLANK_12_PDF.getFile(folder);<a name="line.41"></a>
+<span class="sourceLineNo">041</span>        final File inputFile = BLANK_12_PDF.getFile(folder);<a name="line.41"></a>
 <span class="sourceLineNo">042</span>        argsList.add(inputFile.getAbsolutePath());<a name="line.42"></a>
 <span class="sourceLineNo">043</span>        FileResource attachmentFileResource = new FileResource("blank.txt");<a name="line.43"></a>
 <span class="sourceLineNo">044</span>        File attachmentFile = attachmentFileResource.getFile(folder);<a name="line.44"></a>
@@ -59,12 +59,13 @@
 <span class="sourceLineNo">051</span>            @Override<a name="line.51"></a>
 <span class="sourceLineNo">052</span>            public void checkAssertion() {<a name="line.52"></a>
 <span class="sourceLineNo">053</span>                Assert.assertTrue(outFile.exists());<a name="line.53"></a>
-<span class="sourceLineNo">054</span>            }<a name="line.54"></a>
-<span class="sourceLineNo">055</span>        });<a name="line.55"></a>
-<span class="sourceLineNo">056</span>        Main.main(argsList.toArray(new String[]{}));<a name="line.56"></a>
-<span class="sourceLineNo">057</span>        assert false;<a name="line.57"></a>
-<span class="sourceLineNo">058</span>    }<a name="line.58"></a>
-<span class="sourceLineNo">059</span>}<a name="line.59"></a>
+<span class="sourceLineNo">054</span>                Assert.assertTrue(outFile.length() &gt; inputFile.length());<a name="line.54"></a>
+<span class="sourceLineNo">055</span>            }<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        });<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        Main.main(argsList.toArray(new String[]{}));<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        assert false;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    }<a name="line.59"></a>
+<span class="sourceLineNo">060</span>}<a name="line.60"></a>
 
 
 

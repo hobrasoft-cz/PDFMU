@@ -37,27 +37,27 @@ public class RpcError {
     @JsonProperty(required = true)
     public String message;
 
-<span class="nc" id="L40">    public static class Data {</span>
+<span class="fc" id="L40">    public static class Data {</span>
 
-<span class="nc" id="L42">        @JsonInclude(Include.NON_NULL)</span>
-        public Class causeClass = null;
+        @JsonInclude(Include.NON_NULL)
+        public Class causeClass;
 
-<span class="nc" id="L45">        @JsonInclude(Include.NON_NULL)</span>
-        public String causeMessage = null;
+        @JsonInclude(Include.NON_NULL)
+        public String causeMessage;
 
-<span class="nc" id="L48">        @JsonInclude(Include.NON_NULL)</span>
-        public Map&lt;String, Object&gt; arguments = null;
+        @JsonInclude(Include.NON_NULL)
+        public Map&lt;String, Object&gt; arguments;
     }
 
-<span class="nc" id="L52">    @JsonPropertyDescription(&quot;A Primitive or Structured value that contains additional information about the error.\n&quot;</span>
+    @JsonPropertyDescription(&quot;A Primitive or Structured value that contains additional information about the error.\n&quot;
             + &quot;This may be omitted.\n&quot;
             + &quot;The value of this member is defined by the Server (e.g. detailed error information, nested errors etc.).&quot;)
     @JsonInclude(Include.NON_NULL)
-    public Data data = null;
+    public Data data;
 
-<span class="nc" id="L58">    public RpcError(int code, String message) {</span>
-<span class="nc" id="L59">        this.code = code;</span>
-<span class="nc" id="L60">        this.message = message;</span>
-<span class="nc" id="L61">    }</span>
+<span class="fc" id="L58">    public RpcError(int code, String message) {</span>
+<span class="fc" id="L59">        this.code = code;</span>
+<span class="fc" id="L60">        this.message = message;</span>
+<span class="fc" id="L61">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

@@ -24,8 +24,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
  */
 public class SignatureAdd extends Result {
 
-<span class="fc" id="L27">    @JsonPropertyDescription(&quot;Keystore entry alias&quot;)</span>
-    public String alias = null;
+    @JsonPropertyDescription(&quot;Keystore entry alias&quot;)
+    public String alias;
 
 <span class="fc" id="L30">    public SignatureAdd(String alias) {</span>
 <span class="fc" id="L31">        this.alias = alias;</span>

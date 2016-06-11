@@ -46,11 +46,11 @@ public class WritingMapper {
 <span class="nc" id="L46">        this.os = os;</span>
 <span class="nc" id="L47">    }</span>
 
-<span class="nc" id="L49">    public WritingMapper() {</span>
-<span class="nc" id="L50">        this.mapper = new ObjectMapper(); // Create a new mapper</span>
-<span class="nc" id="L51">        mapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable nice formatting</span>
-<span class="nc" id="L52">        this.os = System.err; // Bind to `System.err`</span>
-<span class="nc" id="L53">    }</span>
+<span class="fc" id="L49">    public WritingMapper() {</span>
+<span class="fc" id="L50">        this.mapper = new ObjectMapper(); // Create a new mapper</span>
+<span class="fc" id="L51">        mapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable nice formatting</span>
+<span class="fc" id="L52">        this.os = System.err; // Bind to `System.err`</span>
+<span class="fc" id="L53">    }</span>
 
     /**
      * Serializes a Java value as a JSON output, streaming it to the specified
@@ -62,7 +62,7 @@ public class WritingMapper {
      * {@link IOException}
      */
     public void writeValue(Object value) throws IOException {
-<span class="nc" id="L65">        mapper.writeValue(os, value);</span>
-<span class="nc" id="L66">    }</span>
+<span class="fc" id="L65">        mapper.writeValue(os, value);</span>
+<span class="fc" id="L66">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

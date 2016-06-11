@@ -61,47 +61,48 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
 <span class="fc" id="L61">    PARSER_UNRECOGNIZED_ARGUMENT,</span>
 <span class="fc" id="L62">    PARSER_INVALID_CHOICE,</span>
 <span class="fc" id="L63">    PARSER_TOO_FEW_ARGUMENTS,</span>
-<span class="fc" id="L64">    INPUT_NOT_VALID_PDF,</span>
-<span class="fc" id="L65">    INPUT_NOT_FOUND,</span>
-<span class="fc" id="L66">    INPUT_CLOSE,</span>
-<span class="fc" id="L67">    OUTPUT_NOT_SPECIFIED,</span>
-<span class="fc" id="L68">    OUTPUT_EXISTS_FORCE_NOT_SET,</span>
-<span class="fc" id="L69">    OUTPUT_OPEN,</span>
-<span class="fc" id="L70">    OUTPUT_STAMPER_OPEN,</span>
-<span class="fc" id="L71">    OUTPUT_STAMPER_CLOSE,</span>
-<span class="fc" id="L72">    OUTPUT_CLOSE,</span>
-<span class="fc" id="L73">    OUTPUT_WRITE,</span>
-<span class="fc" id="L74">    SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED,</span>
-<span class="fc" id="L75">    SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED,</span>
-<span class="fc" id="L76">    SIGNATURE_ADD_KEYSTORE_FILE_OPEN,</span>
-<span class="fc" id="L77">    SIGNATURE_ADD_KEYSTORE_LOAD,</span>
-<span class="fc" id="L78">    SIGNATURE_ADD_KEYSTORE_FILE_CLOSE,</span>
-<span class="fc" id="L79">    SIGNATURE_ADD_KEYSTORE_ALIASES,</span>
-<span class="fc" id="L80">    SIGNATURE_ADD_KEYSTORE_EMPTY,</span>
-<span class="fc" id="L81">    SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,</span>
-<span class="fc" id="L82">    SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION,</span>
-<span class="fc" id="L83">    SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY,</span>
-<span class="fc" id="L84">    SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION,</span>
-<span class="fc" id="L85">    SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
-<span class="fc" id="L86">    SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN,</span>
-<span class="fc" id="L87">    SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,</span>
-<span class="fc" id="L88">    SIGNATURE_ADD_FAIL,</span>
-<span class="fc" id="L89">    SIGNATURE_ADD_TSA_UNTRUSTED,</span>
-<span class="fc" id="L90">    SIGNATURE_ADD_TSA_UNAUTHORIZED,</span>
-<span class="fc" id="L91">    SIGNATURE_ADD_TSA_LOGIN_FAIL,</span>
-<span class="fc" id="L92">    SIGNATURE_ADD_TSA_UNREACHABLE,</span>
-<span class="fc" id="L93">    SIGNATURE_ADD_TSA_BAD_CERTIFICATE,</span>
-<span class="fc" id="L94">    SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE,</span>
-<span class="fc" id="L95">    SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION,</span>
-<span class="fc" id="L96">    SIGNATURE_ADD_TSA_SSL_FATAL_ALERT,</span>
-<span class="fc" id="L97">    SIGNATURE_ADD_TSA_INVALID_URL,</span>
-<span class="fc" id="L98">    SIGNATURE_ADD_SIGNATURE_EXCEPTION,</span>
-<span class="fc" id="L99">    ATTACH_FAIL,</span>
-<span class="fc" id="L100">    ATTACH_ATTACHMENT_EQUALS_OUTPUT,</span>
-<span class="fc" id="L101">    SSL_TRUSTSTORE_NOT_FOUND,</span>
-<span class="fc" id="L102">    SSL_TRUSTSTORE_INCORRECT_TYPE,</span>
-<span class="fc" id="L103">    SSL_TRUSTSTORE_EMPTY,</span>
-<span class="fc" id="L104">    SSL_KEYSTORE_NOT_FOUND;</span>
+<span class="fc" id="L64">    PARSER_EXPECTED_ONE_ARGUMENT,</span>
+<span class="fc" id="L65">    INPUT_NOT_VALID_PDF,</span>
+<span class="fc" id="L66">    INPUT_NOT_FOUND,</span>
+<span class="fc" id="L67">    INPUT_CLOSE,</span>
+<span class="fc" id="L68">    OUTPUT_NOT_SPECIFIED,</span>
+<span class="fc" id="L69">    OUTPUT_EXISTS_FORCE_NOT_SET,</span>
+<span class="fc" id="L70">    OUTPUT_OPEN,</span>
+<span class="fc" id="L71">    OUTPUT_STAMPER_OPEN,</span>
+<span class="fc" id="L72">    OUTPUT_STAMPER_CLOSE,</span>
+<span class="fc" id="L73">    OUTPUT_CLOSE,</span>
+<span class="fc" id="L74">    OUTPUT_WRITE,</span>
+<span class="fc" id="L75">    SIGNATURE_ADD_KEYSTORE_TYPE_UNSUPPORTED,</span>
+<span class="fc" id="L76">    SIGNATURE_ADD_KEYSTORE_FILE_NOT_SPECIFIED,</span>
+<span class="fc" id="L77">    SIGNATURE_ADD_KEYSTORE_FILE_OPEN,</span>
+<span class="fc" id="L78">    SIGNATURE_ADD_KEYSTORE_LOAD,</span>
+<span class="fc" id="L79">    SIGNATURE_ADD_KEYSTORE_FILE_CLOSE,</span>
+<span class="fc" id="L80">    SIGNATURE_ADD_KEYSTORE_ALIASES,</span>
+<span class="fc" id="L81">    SIGNATURE_ADD_KEYSTORE_EMPTY,</span>
+<span class="fc" id="L82">    SIGNATURE_ADD_KEYSTORE_ALIAS_MISSING,</span>
+<span class="fc" id="L83">    SIGNATURE_ADD_KEYSTORE_ALIAS_EXCEPTION,</span>
+<span class="fc" id="L84">    SIGNATURE_ADD_KEYSTORE_ALIAS_NOT_KEY,</span>
+<span class="fc" id="L85">    SIGNATURE_ADD_KEYSTORE_ALIAS_KEY_EXCEPTION,</span>
+<span class="fc" id="L86">    SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
+<span class="fc" id="L87">    SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN,</span>
+<span class="fc" id="L88">    SIGNATURE_ADD_UNSUPPORTED_DIGEST_ALGORITHM,</span>
+<span class="fc" id="L89">    SIGNATURE_ADD_FAIL,</span>
+<span class="fc" id="L90">    SIGNATURE_ADD_TSA_UNTRUSTED,</span>
+<span class="fc" id="L91">    SIGNATURE_ADD_TSA_UNAUTHORIZED,</span>
+<span class="fc" id="L92">    SIGNATURE_ADD_TSA_LOGIN_FAIL,</span>
+<span class="fc" id="L93">    SIGNATURE_ADD_TSA_UNREACHABLE,</span>
+<span class="fc" id="L94">    SIGNATURE_ADD_TSA_BAD_CERTIFICATE,</span>
+<span class="fc" id="L95">    SIGNATURE_ADD_TSA_HANDSHAKE_FAILURE,</span>
+<span class="fc" id="L96">    SIGNATURE_ADD_TSA_SSL_HANDSHAKE_EXCEPTION,</span>
+<span class="fc" id="L97">    SIGNATURE_ADD_TSA_SSL_FATAL_ALERT,</span>
+<span class="fc" id="L98">    SIGNATURE_ADD_TSA_INVALID_URL,</span>
+<span class="fc" id="L99">    SIGNATURE_ADD_SIGNATURE_EXCEPTION,</span>
+<span class="fc" id="L100">    ATTACH_FAIL,</span>
+<span class="fc" id="L101">    ATTACH_ATTACHMENT_EQUALS_OUTPUT,</span>
+<span class="fc" id="L102">    SSL_TRUSTSTORE_NOT_FOUND,</span>
+<span class="fc" id="L103">    SSL_TRUSTSTORE_INCORRECT_TYPE,</span>
+<span class="fc" id="L104">    SSL_TRUSTSTORE_EMPTY,</span>
+<span class="fc" id="L105">    SSL_KEYSTORE_NOT_FOUND;</span>
 
     /**
      * The default error code. It is used for error types that have no code
@@ -133,25 +134,25 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      */
     public static final String MESSAGES_RESOURCE_BUNDLE_BASE_NAME = &quot;cz.hobrasoft.pdfmu.error.ErrorMessages&quot;;
 
-<span class="fc" id="L136">    private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());</span>
+<span class="fc" id="L137">    private static final Logger LOGGER = Logger.getLogger(ErrorType.class.getName());</span>
 
-<span class="fc" id="L138">    private static final IntProperties CODES = new IntProperties(DEFAULT_ERROR_CODE);</span>
-<span class="fc" id="L139">    private static ResourceBundle messages = null;</span>
+<span class="fc" id="L139">    private static final IntProperties CODES = new IntProperties(DEFAULT_ERROR_CODE);</span>
+<span class="fc" id="L140">    private static ResourceBundle messages = null;</span>
 
     /**
      * @return true iff each of the constants of this enum is a key in both
      * {@link #CODES} and {@link #messages}.
      */
     private static boolean codesAndMessagesAvailable() {
-<span class="fc" id="L146">        ErrorType[] enumKeyArray = ErrorType.values();</span>
-<span class="fc" id="L147">        List&lt;ErrorType&gt; enumKeyList = Arrays.asList(enumKeyArray);</span>
-<span class="fc" id="L148">        Collection&lt;String&gt; enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());</span>
+<span class="fc" id="L147">        ErrorType[] enumKeyArray = ErrorType.values();</span>
+<span class="fc" id="L148">        List&lt;ErrorType&gt; enumKeyList = Arrays.asList(enumKeyArray);</span>
+<span class="fc" id="L149">        Collection&lt;String&gt; enumKeyStrings = CollectionUtils.collect(enumKeyList, StringValueTransformer.stringValueTransformer());</span>
 
-<span class="fc" id="L150">        Set&lt;String&gt; codeKeySet = CODES.stringPropertyNames();</span>
-<span class="pc bpc" id="L151" title="2 of 4 branches missed.">        assert messages != null;</span>
-<span class="fc" id="L152">        Set&lt;String&gt; messageKeySet = messages.keySet();</span>
+<span class="fc" id="L151">        Set&lt;String&gt; codeKeySet = CODES.stringPropertyNames();</span>
+<span class="pc bpc" id="L152" title="2 of 4 branches missed.">        assert messages != null;</span>
+<span class="fc" id="L153">        Set&lt;String&gt; messageKeySet = messages.keySet();</span>
 
-<span class="pc bpc" id="L154" title="2 of 4 branches missed.">        return codeKeySet.containsAll(enumKeyStrings) &amp;&amp; messageKeySet.containsAll(enumKeyStrings);</span>
+<span class="pc bpc" id="L155" title="2 of 4 branches missed.">        return codeKeySet.containsAll(enumKeyStrings) &amp;&amp; messageKeySet.containsAll(enumKeyStrings);</span>
     }
 
     /**
@@ -159,10 +160,10 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      * different.
      */
     private static boolean codesUnique() {
-<span class="fc" id="L162">        Collection&lt;Integer&gt; codes = CODES.intPropertyValues();</span>
-<span class="fc" id="L163">        Set&lt;Integer&gt; codesUnique = new HashSet&lt;&gt;(codes);</span>
-<span class="pc bpc" id="L164" title="2 of 4 branches missed.">        assert codes.size() &gt;= codesUnique.size();</span>
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        return codes.size() == codesUnique.size();</span>
+<span class="fc" id="L163">        Collection&lt;Integer&gt; codes = CODES.intPropertyValues();</span>
+<span class="fc" id="L164">        Set&lt;Integer&gt; codesUnique = new HashSet&lt;&gt;(codes);</span>
+<span class="pc bpc" id="L165" title="2 of 4 branches missed.">        assert codes.size() &gt;= codesUnique.size();</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        return codes.size() == codesUnique.size();</span>
     }
 
     /**
@@ -170,23 +171,23 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      * {@link #CODES_RESOURCE_NAME} and stores them in {@link #CODES}.
      */
     private static void loadErrorCodes() {
-<span class="fc" id="L173">        ClassLoader classLoader = ErrorType.class.getClassLoader();</span>
-<span class="fc" id="L174">        InputStream in = classLoader.getResourceAsStream(CODES_RESOURCE_NAME);</span>
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (in != null) {</span>
+<span class="fc" id="L174">        ClassLoader classLoader = ErrorType.class.getClassLoader();</span>
+<span class="fc" id="L175">        InputStream in = classLoader.getResourceAsStream(CODES_RESOURCE_NAME);</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">        if (in != null) {</span>
             try {
-<span class="fc" id="L177">                CODES.load(in);</span>
-<span class="nc" id="L178">            } catch (IOException ex) {</span>
-<span class="nc" id="L179">                LOGGER.severe(String.format(&quot;Could not load the error codes properties file: %s&quot;, ex));</span>
-<span class="fc" id="L180">            }</span>
+<span class="fc" id="L178">                CODES.load(in);</span>
+<span class="nc" id="L179">            } catch (IOException ex) {</span>
+<span class="nc" id="L180">                LOGGER.severe(String.format(&quot;Could not load the error codes properties file: %s&quot;, ex));</span>
+<span class="fc" id="L181">            }</span>
             try {
-<span class="fc" id="L182">                in.close();</span>
-<span class="nc" id="L183">            } catch (IOException ex) {</span>
-<span class="nc" id="L184">                LOGGER.severe(String.format(&quot;Could not close the error codes properties file: %s&quot;, ex));</span>
-<span class="pc" id="L185">            }</span>
+<span class="fc" id="L183">                in.close();</span>
+<span class="nc" id="L184">            } catch (IOException ex) {</span>
+<span class="nc" id="L185">                LOGGER.severe(String.format(&quot;Could not close the error codes properties file: %s&quot;, ex));</span>
+<span class="pc" id="L186">            }</span>
         } else {
-<span class="nc" id="L187">            LOGGER.severe(&quot;Could not open the error codes properties file.&quot;);</span>
+<span class="nc" id="L188">            LOGGER.severe(&quot;Could not open the error codes properties file.&quot;);</span>
         }
-<span class="fc" id="L189">    }</span>
+<span class="fc" id="L190">    }</span>
 
     /**
      * Loads error messages from the resource bundle
@@ -195,24 +196,24 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      */
     private static void loadErrorMessages() {
         try {
-<span class="fc" id="L198">            messages = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME);</span>
-<span class="nc" id="L199">        } catch (MissingResourceException ex) {</span>
-<span class="nc" id="L200">            LOGGER.severe(String.format(&quot;Could not load the error messages resource bundle: %s&quot;, ex));</span>
-<span class="fc" id="L201">        }</span>
-<span class="fc" id="L202">    }</span>
+<span class="fc" id="L199">            messages = ResourceBundle.getBundle(MESSAGES_RESOURCE_BUNDLE_BASE_NAME);</span>
+<span class="nc" id="L200">        } catch (MissingResourceException ex) {</span>
+<span class="nc" id="L201">            LOGGER.severe(String.format(&quot;Could not load the error messages resource bundle: %s&quot;, ex));</span>
+<span class="fc" id="L202">        }</span>
+<span class="fc" id="L203">    }</span>
 
     static {
         // Load error codes and messages before OperationException is instantiated
-<span class="fc" id="L206">        loadErrorCodes();</span>
-<span class="fc" id="L207">        loadErrorMessages();</span>
-<span class="pc bpc" id="L208" title="2 of 4 branches missed.">        assert messages != null;</span>
+<span class="fc" id="L207">        loadErrorCodes();</span>
+<span class="fc" id="L208">        loadErrorMessages();</span>
+<span class="pc bpc" id="L209" title="2 of 4 branches missed.">        assert messages != null;</span>
 
         // Assert that a code and a message is available for every enum constant
-<span class="pc bpc" id="L211" title="2 of 4 branches missed.">        assert codesAndMessagesAvailable();</span>
+<span class="pc bpc" id="L212" title="2 of 4 branches missed.">        assert codesAndMessagesAvailable();</span>
 
         // Assert that the codes are pairwise different
-<span class="pc bpc" id="L214" title="2 of 4 branches missed.">        assert codesUnique();</span>
-<span class="fc" id="L215">    }</span>
+<span class="pc bpc" id="L215" title="2 of 4 branches missed.">        assert codesUnique();</span>
+<span class="fc" id="L216">    }</span>
 
     /**
      * Returns the error code associated with this error type. The code should
@@ -225,7 +226,7 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      * {@value #DEFAULT_ERROR_CODE} if none is associated
      */
     public int getCode() {
-<span class="fc" id="L228">        return CODES.getIntProperty(toString());</span>
+<span class="fc" id="L229">        return CODES.getIntProperty(toString());</span>
     }
 
     /**
@@ -238,12 +239,12 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
      * none is associated
      */
     public String getMessagePattern() {
-<span class="fc" id="L241">        String key = toString();</span>
-<span class="pc bpc" id="L242" title="2 of 4 branches missed.">        assert messages != null;</span>
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (messages.containsKey(key)) {</span>
-<span class="fc" id="L244">            return messages.getString(key);</span>
+<span class="fc" id="L242">        String key = toString();</span>
+<span class="pc bpc" id="L243" title="2 of 4 branches missed.">        assert messages != null;</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        if (messages.containsKey(key)) {</span>
+<span class="fc" id="L245">            return messages.getString(key);</span>
         } else {
-<span class="nc" id="L246">            return null;</span>
+<span class="nc" id="L247">            return null;</span>
         }
     }
 }

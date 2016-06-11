@@ -17,6 +17,7 @@
 package cz.hobrasoft.pdfmu;
 
 import static cz.hobrasoft.pdfmu.error.ErrorType.INPUT_NOT_FOUND;
+import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_EXPECTED_ONE_ARGUMENT;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_INVALID_CHOICE;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_TOO_FEW_ARGUMENTS;
 import static cz.hobrasoft.pdfmu.error.ErrorType.PARSER_UNKNOWN;
@@ -57,14 +58,14 @@ import org.apache.commons.io.IOUtils;
  *
  * @author &lt;a href=&quot;mailto:filip.bartek@hobrasoft.cz&quot;&gt;Filip Bartek&lt;/a&gt;
  */
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">public class Main {</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">public class Main {</span>
 
     private static void disableLoggers() {
         // http://stackoverflow.com/a/3363747
-<span class="nc" id="L64">        LogManager.getLogManager().reset(); // Remove the handlers</span>
-<span class="nc" id="L65">    }</span>
+<span class="fc" id="L65">        LogManager.getLogManager().reset(); // Remove the handlers</span>
+<span class="fc" id="L66">    }</span>
 
-<span class="fc" id="L67">    private static final Logger logger = Logger.getLogger(Main.class.getName());</span>
+<span class="fc" id="L68">    private static final Logger logger = Logger.getLogger(Main.class.getName());</span>
 
     static {
         // Configure log message format
@@ -72,94 +73,94 @@ import org.apache.commons.io.IOUtils;
         // http://docs.oracle.com/javase/7/docs/api/java/util/logging/SimpleFormatter.html#format%28java.util.logging.LogRecord%29
         // %4$s: level
         // %5$s: message
-<span class="fc" id="L75">        System.setProperty(&quot;java.util.logging.SimpleFormatter.format&quot;, &quot;%4$s: %5$s%n&quot;);</span>
+<span class="fc" id="L76">        System.setProperty(&quot;java.util.logging.SimpleFormatter.format&quot;, &quot;%4$s: %5$s%n&quot;);</span>
     }
 
     private static ArgumentParser createBasicParser() {
         // Create a command line argument parser
-<span class="fc" id="L80">        ArgumentParser parser = ArgumentParsers.newArgumentParser(&quot;pdfmu&quot;)</span>
-<span class="fc" id="L81">                .description(&quot;PDF Manipulation Utility&quot;)</span>
-<span class="fc" id="L82">                .defaultHelp(true);</span>
+<span class="fc" id="L81">        ArgumentParser parser = ArgumentParsers.newArgumentParser(&quot;pdfmu&quot;)</span>
+<span class="fc" id="L82">                .description(&quot;PDF Manipulation Utility&quot;)</span>
+<span class="fc" id="L83">                .defaultHelp(true);</span>
 
-<span class="fc" id="L84">        parser.version(getProjectVersion());</span>
-<span class="fc" id="L85">        parser.addArgument(&quot;-v&quot;, &quot;--version&quot;)</span>
-<span class="fc" id="L86">                .help(&quot;show version and exit&quot;)</span>
-<span class="fc" id="L87">                .action(Arguments.version());</span>
+<span class="fc" id="L85">        parser.version(getProjectVersion());</span>
+<span class="fc" id="L86">        parser.addArgument(&quot;-v&quot;, &quot;--version&quot;)</span>
+<span class="fc" id="L87">                .help(&quot;show version and exit&quot;)</span>
+<span class="fc" id="L88">                .action(Arguments.version());</span>
 
-<span class="fc" id="L89">        parser.addArgument(&quot;--legal-notice&quot;)</span>
-<span class="fc" id="L90">                .help(&quot;show legal notice and exit&quot;)</span>
-<span class="fc" id="L91">                .action(new PrintAndExitAction(getLegalNotice()));</span>
+<span class="fc" id="L90">        parser.addArgument(&quot;--legal-notice&quot;)</span>
+<span class="fc" id="L91">                .help(&quot;show legal notice and exit&quot;)</span>
+<span class="fc" id="L92">                .action(new PrintAndExitAction(getLegalNotice()));</span>
 
         // TODO: Use an enum
-<span class="fc" id="L94">        parser.addArgument(&quot;--output-format&quot;)</span>
-<span class="fc" id="L95">                .choices(&quot;text&quot;, &quot;json&quot;)</span>
-<span class="fc" id="L96">                .setDefault(&quot;text&quot;)</span>
-<span class="fc" id="L97">                .type(String.class)</span>
-<span class="fc" id="L98">                .help(&quot;format of stderr output&quot;);</span>
+<span class="fc" id="L95">        parser.addArgument(&quot;--output-format&quot;)</span>
+<span class="fc" id="L96">                .choices(&quot;text&quot;, &quot;json&quot;)</span>
+<span class="fc" id="L97">                .setDefault(&quot;text&quot;)</span>
+<span class="fc" id="L98">                .type(String.class)</span>
+<span class="fc" id="L99">                .help(&quot;format of stderr output&quot;);</span>
 
-<span class="fc" id="L100">        return parser;</span>
+<span class="fc" id="L101">        return parser;</span>
     }
 
     private static final String POM_PROPERTIES_RESOURCE_NAME = &quot;pom.properties&quot;;
-<span class="fc" id="L104">    private static final Properties POM_PROPERTIES = new Properties();</span>
+<span class="fc" id="L105">    private static final Properties POM_PROPERTIES = new Properties();</span>
 
     private static void loadPomProperties() {
-<span class="fc" id="L107">        ClassLoader classLoader = Main.class.getClassLoader();</span>
-<span class="fc" id="L108">        InputStream in = classLoader.getResourceAsStream(POM_PROPERTIES_RESOURCE_NAME);</span>
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (in != null) {</span>
+<span class="fc" id="L108">        ClassLoader classLoader = Main.class.getClassLoader();</span>
+<span class="fc" id="L109">        InputStream in = classLoader.getResourceAsStream(POM_PROPERTIES_RESOURCE_NAME);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (in != null) {</span>
             try {
-<span class="fc" id="L111">                POM_PROPERTIES.load(in);</span>
-<span class="nc" id="L112">            } catch (IOException ex) {</span>
-<span class="nc" id="L113">                logger.severe(String.format(&quot;Could not load the POM properties file: %s&quot;, ex));</span>
-<span class="fc" id="L114">            }</span>
+<span class="fc" id="L112">                POM_PROPERTIES.load(in);</span>
+<span class="nc" id="L113">            } catch (IOException ex) {</span>
+<span class="nc" id="L114">                logger.severe(String.format(&quot;Could not load the POM properties file: %s&quot;, ex));</span>
+<span class="fc" id="L115">            }</span>
             try {
-<span class="fc" id="L116">                in.close();</span>
-<span class="nc" id="L117">            } catch (IOException ex) {</span>
-<span class="nc" id="L118">                logger.severe(String.format(&quot;Could not close the POM properties file: %s&quot;, ex));</span>
-<span class="pc" id="L119">            }</span>
+<span class="fc" id="L117">                in.close();</span>
+<span class="nc" id="L118">            } catch (IOException ex) {</span>
+<span class="nc" id="L119">                logger.severe(String.format(&quot;Could not close the POM properties file: %s&quot;, ex));</span>
+<span class="pc" id="L120">            }</span>
         } else {
-<span class="nc" id="L121">            logger.severe(&quot;Could not open the POM properties file.&quot;);</span>
+<span class="nc" id="L122">            logger.severe(&quot;Could not open the POM properties file.&quot;);</span>
         }
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L124">    }</span>
 
     private static final String LEGAL_NOTICE_RESOURCE_NAME = &quot;cz/hobrasoft/pdfmu/legalNotice.txt&quot;;
     private static String legalNotice;
 
     private static void loadLegalNotice() {
-<span class="fc" id="L129">        ClassLoader classLoader = Main.class.getClassLoader();</span>
-<span class="fc" id="L130">        InputStream in = classLoader.getResourceAsStream(LEGAL_NOTICE_RESOURCE_NAME);</span>
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (in != null) {</span>
+<span class="fc" id="L130">        ClassLoader classLoader = Main.class.getClassLoader();</span>
+<span class="fc" id="L131">        InputStream in = classLoader.getResourceAsStream(LEGAL_NOTICE_RESOURCE_NAME);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (in != null) {</span>
             try {
-<span class="fc" id="L133">                legalNotice = IOUtils.toString(in, US_ASCII);</span>
-<span class="nc" id="L134">            } catch (IOException ex) {</span>
-<span class="nc" id="L135">                logger.severe(String.format(&quot;Could not load the legal notice file: %s&quot;, ex));</span>
-<span class="fc" id="L136">            }</span>
+<span class="fc" id="L134">                legalNotice = IOUtils.toString(in, US_ASCII);</span>
+<span class="nc" id="L135">            } catch (IOException ex) {</span>
+<span class="nc" id="L136">                logger.severe(String.format(&quot;Could not load the legal notice file: %s&quot;, ex));</span>
+<span class="fc" id="L137">            }</span>
             try {
-<span class="fc" id="L138">                in.close();</span>
-<span class="nc" id="L139">            } catch (IOException ex) {</span>
-<span class="nc" id="L140">                logger.severe(String.format(&quot;Could not close the legal notice file: %s&quot;, ex));</span>
-<span class="pc" id="L141">            }</span>
+<span class="fc" id="L139">                in.close();</span>
+<span class="nc" id="L140">            } catch (IOException ex) {</span>
+<span class="nc" id="L141">                logger.severe(String.format(&quot;Could not close the legal notice file: %s&quot;, ex));</span>
+<span class="pc" id="L142">            }</span>
         } else {
-<span class="nc" id="L143">            logger.severe(&quot;Could not open the legal notice file.&quot;);</span>
+<span class="nc" id="L144">            logger.severe(&quot;Could not open the legal notice file.&quot;);</span>
         }
-<span class="fc" id="L145">    }</span>
+<span class="fc" id="L146">    }</span>
 
     static {
-<span class="fc" id="L148">        loadPomProperties();</span>
-<span class="fc" id="L149">        loadLegalNotice();</span>
-<span class="pc bpc" id="L150" title="2 of 4 branches missed.">        assert legalNotice != null;</span>
-<span class="fc" id="L151">    }</span>
+<span class="fc" id="L149">        loadPomProperties();</span>
+<span class="fc" id="L150">        loadLegalNotice();</span>
+<span class="pc bpc" id="L151" title="2 of 4 branches missed.">        assert legalNotice != null;</span>
+<span class="fc" id="L152">    }</span>
 
     public static String getProjectVersion() {
-<span class="fc" id="L154">        return POM_PROPERTIES.getProperty(&quot;projectVersion&quot;);</span>
+<span class="fc" id="L155">        return POM_PROPERTIES.getProperty(&quot;projectVersion&quot;);</span>
     }
 
     public static String getProjectCopyright() {
-<span class="fc" id="L158">        return POM_PROPERTIES.getProperty(&quot;copyright&quot;);</span>
+<span class="fc" id="L159">        return POM_PROPERTIES.getProperty(&quot;copyright&quot;);</span>
     }
 
     public static String getLegalNotice() {
-<span class="fc" id="L162">        return String.format(&quot;%1$s\n\n%2$s&quot;, getProjectCopyright(), legalNotice);</span>
+<span class="fc" id="L163">        return String.format(&quot;%1$s\n\n%2$s&quot;, getProjectCopyright(), legalNotice);</span>
     }
 
     /**
@@ -171,67 +172,71 @@ import org.apache.commons.io.IOUtils;
      */
     private static ArgumentParser createFullParser(Map&lt;String, Operation&gt; operations) {
         // Create a command line argument parser
-<span class="fc" id="L174">        ArgumentParser parser = createBasicParser();</span>
+<span class="fc" id="L175">        ArgumentParser parser = createBasicParser();</span>
 
         // Create a Subparsers instance for operation subparsers
-<span class="fc" id="L177">        Subparsers subparsers = parser.addSubparsers()</span>
-<span class="fc" id="L178">                .title(&quot;operations&quot;)</span>
-<span class="fc" id="L179">                .metavar(&quot;OPERATION&quot;)</span>
-<span class="fc" id="L180">                .help(&quot;operation to execute&quot;)</span>
-<span class="fc" id="L181">                .dest(&quot;operation&quot;);</span>
+<span class="fc" id="L178">        Subparsers subparsers = parser.addSubparsers()</span>
+<span class="fc" id="L179">                .title(&quot;operations&quot;)</span>
+<span class="fc" id="L180">                .metavar(&quot;OPERATION&quot;)</span>
+<span class="fc" id="L181">                .help(&quot;operation to execute&quot;)</span>
+<span class="fc" id="L182">                .dest(&quot;operation&quot;);</span>
 
         // Configure operation subparsers
-<span class="fc bfc" id="L184" title="All 2 branches covered.">        for (Map.Entry&lt;String, Operation&gt; e : operations.entrySet()) {</span>
-<span class="fc" id="L185">            String name = e.getKey();</span>
-<span class="fc" id="L186">            Operation operation = e.getValue();</span>
-<span class="fc" id="L187">            operation.configureSubparser(subparsers.addParser(name));</span>
-<span class="fc" id="L188">        }</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        for (Map.Entry&lt;String, Operation&gt; e : operations.entrySet()) {</span>
+<span class="fc" id="L186">            String name = e.getKey();</span>
+<span class="fc" id="L187">            Operation operation = e.getValue();</span>
+<span class="fc" id="L188">            operation.configureSubparser(subparsers.addParser(name));</span>
+<span class="fc" id="L189">        }</span>
 
-<span class="fc" id="L190">        return parser;</span>
+<span class="fc" id="L191">        return parser;</span>
     }
 
     private static OperationException apeToOe(ArgumentParserException e) {
-<span class="fc" id="L194">        Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L195">        Set&lt;ExceptionMessagePattern&gt; patterns = new HashSet&lt;&gt;();</span>
 
-<span class="fc" id="L196">        patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,</span>
+<span class="fc" id="L197">        patterns.add(new ExceptionMessagePattern(INPUT_NOT_FOUND,</span>
                 &quot;argument (?&lt;argument&gt;.*): Insufficient permissions to read file: \'(?&lt;file&gt;.*)\'&quot;,
-<span class="fc" id="L198">                Arrays.asList(new String[]{&quot;argument&quot;, &quot;file&quot;})));</span>
+<span class="fc" id="L199">                Arrays.asList(new String[]{&quot;argument&quot;, &quot;file&quot;})));</span>
 
         // UnrecognizedArgumentException
-<span class="fc" id="L201">        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENT,</span>
+<span class="fc" id="L202">        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_ARGUMENT,</span>
                 &quot;unrecognized arguments: '(?&lt;argument&gt;.*)'&quot;,
-<span class="fc" id="L203">                Arrays.asList(new String[]{&quot;argument&quot;})));</span>
+<span class="fc" id="L204">                Arrays.asList(new String[]{&quot;argument&quot;})));</span>
 
         // ArgumentParserException
-<span class="fc" id="L206">        patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,</span>
+<span class="fc" id="L207">        patterns.add(new ExceptionMessagePattern(PARSER_INVALID_CHOICE,</span>
                 &quot;argument (?&lt;argument&gt;.*): invalid choice: '(?&lt;choice&gt;.*)' \\(choose from \\{(?&lt;validChoices&gt;.*)\\}\\)&quot;,
-<span class="fc" id="L208">                Arrays.asList(new String[]{&quot;argument&quot;, &quot;choice&quot;, &quot;validChoices&quot;})));</span>
+<span class="fc" id="L209">                Arrays.asList(new String[]{&quot;argument&quot;, &quot;choice&quot;, &quot;validChoices&quot;})));</span>
 
         // UnrecognizedCommandException
-<span class="fc" id="L211">        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_COMMAND,</span>
+<span class="fc" id="L212">        patterns.add(new ExceptionMessagePattern(PARSER_UNRECOGNIZED_COMMAND,</span>
                 &quot;invalid choice: '(?&lt;command&gt;.*)' \\(choose from (?&lt;validCommands&gt;.*)\\)&quot;,
-<span class="fc" id="L213">                Arrays.asList(new String[]{&quot;command&quot;, &quot;validCommands&quot;})));</span>
+<span class="fc" id="L214">                Arrays.asList(new String[]{&quot;command&quot;, &quot;validCommands&quot;})));</span>
 
         // ArgumentParserException
-<span class="fc" id="L216">        patterns.add(new ExceptionMessagePattern(PARSER_TOO_FEW_ARGUMENTS,</span>
+<span class="fc" id="L217">        patterns.add(new ExceptionMessagePattern(PARSER_TOO_FEW_ARGUMENTS,</span>
                 &quot;too few arguments&quot;,
                 new ArrayList&lt;String&gt;()));
 
-<span class="fc" id="L220">        OperationException oe = null;</span>
-<span class="pc bpc" id="L221" title="1 of 2 branches missed.">        for (ExceptionMessagePattern p : patterns) {</span>
-<span class="fc" id="L222">            oe = p.getOperationException(e);</span>
-<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (oe != null) {</span>
-<span class="fc" id="L224">                break;</span>
-            }
-<span class="fc" id="L226">        }</span>
+<span class="fc" id="L221">        patterns.add(new ExceptionMessagePattern(PARSER_EXPECTED_ONE_ARGUMENT,</span>
+                &quot;argument (?&lt;argument&gt;.*): expected one argument&quot;,
+<span class="fc" id="L223">                Arrays.asList(new String[]{&quot;argument&quot;})));</span>
 
-<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if (oe == null) {</span>
+<span class="fc" id="L225">        OperationException oe = null;</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        for (ExceptionMessagePattern p : patterns) {</span>
+<span class="fc" id="L227">            oe = p.getOperationException(e);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">            if (oe != null) {</span>
+<span class="fc" id="L229">                break;</span>
+            }
+<span class="fc" id="L231">        }</span>
+
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        if (oe == null) {</span>
             // Unknown parser exception
-<span class="nc" id="L230">            oe = new OperationException(PARSER_UNKNOWN, e);</span>
+<span class="nc" id="L235">            oe = new OperationException(PARSER_UNKNOWN, e);</span>
         }
 
-<span class="pc bpc" id="L233" title="2 of 4 branches missed.">        assert oe != null;</span>
-<span class="fc" id="L234">        return oe;</span>
+<span class="pc bpc" id="L238" title="2 of 4 branches missed.">        assert oe != null;</span>
+<span class="fc" id="L239">        return oe;</span>
     }
 
     /**
@@ -240,102 +245,102 @@ import org.apache.commons.io.IOUtils;
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-<span class="fc" id="L243">        int exitStatus = 0; // Default: 0 (normal termination)</span>
+<span class="fc" id="L248">        int exitStatus = 0; // Default: 0 (normal termination)</span>
 
         // Create a map of operations
-<span class="fc" id="L246">        Map&lt;String, Operation&gt; operations = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L247">        operations.put(&quot;inspect&quot;, OperationInspect.getInstance());</span>
-<span class="fc" id="L248">        operations.put(&quot;update-version&quot;, OperationVersionSet.getInstance());</span>
-<span class="fc" id="L249">        operations.put(&quot;update-properties&quot;, OperationMetadataSet.getInstance());</span>
-<span class="fc" id="L250">        operations.put(&quot;attach&quot;, OperationAttach.getInstance());</span>
-<span class="fc" id="L251">        operations.put(&quot;sign&quot;, OperationSignatureAdd.getInstance());</span>
+<span class="fc" id="L251">        Map&lt;String, Operation&gt; operations = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L252">        operations.put(&quot;inspect&quot;, OperationInspect.getInstance());</span>
+<span class="fc" id="L253">        operations.put(&quot;update-version&quot;, OperationVersionSet.getInstance());</span>
+<span class="fc" id="L254">        operations.put(&quot;update-properties&quot;, OperationMetadataSet.getInstance());</span>
+<span class="fc" id="L255">        operations.put(&quot;attach&quot;, OperationAttach.getInstance());</span>
+<span class="fc" id="L256">        operations.put(&quot;sign&quot;, OperationSignatureAdd.getInstance());</span>
 
         // Create a command line argument parser
-<span class="fc" id="L254">        ArgumentParser parser = createFullParser(operations);</span>
+<span class="fc" id="L259">        ArgumentParser parser = createFullParser(operations);</span>
 
         // Parse command line arguments
-<span class="fc" id="L257">        Namespace namespace = null;</span>
+<span class="fc" id="L262">        Namespace namespace = null;</span>
         try {
             // If help is requested,
             // `parseArgs` prints help message and throws `ArgumentParserException`
             // (so `namespace` stays null).
             // If insufficient or invalid `args` are given,
             // `parseArgs` throws `ArgumentParserException`.
-<span class="fc" id="L264">            namespace = parser.parseArgs(args);</span>
-<span class="fc" id="L265">        } catch (HelpScreenException e) {</span>
-<span class="fc" id="L266">            parser.handleError(e); // Do nothing</span>
-<span class="nc" id="L267">        } catch (UnrecognizedCommandException e) {</span>
-<span class="nc" id="L268">            exitStatus = PARSER_UNRECOGNIZED_COMMAND.getCode();</span>
-<span class="nc" id="L269">            parser.handleError(e); // Print the error in human-readable format</span>
-<span class="nc" id="L270">        } catch (UnrecognizedArgumentException e) {</span>
-<span class="nc" id="L271">            exitStatus = PARSER_UNRECOGNIZED_ARGUMENT.getCode();</span>
-<span class="nc" id="L272">            parser.handleError(e); // Print the error in human-readable format</span>
-<span class="fc" id="L273">        } catch (ArgumentParserException ape) {</span>
-<span class="fc" id="L274">            OperationException oe = apeToOe(ape);</span>
-<span class="fc" id="L275">            exitStatus = oe.getCode();</span>
+<span class="fc" id="L269">            namespace = parser.parseArgs(args);</span>
+<span class="fc" id="L270">        } catch (HelpScreenException e) {</span>
+<span class="fc" id="L271">            parser.handleError(e); // Do nothing</span>
+<span class="fc" id="L272">        } catch (UnrecognizedCommandException e) {</span>
+<span class="fc" id="L273">            exitStatus = PARSER_UNRECOGNIZED_COMMAND.getCode();</span>
+<span class="fc" id="L274">            parser.handleError(e); // Print the error in human-readable format</span>
+<span class="fc" id="L275">        } catch (UnrecognizedArgumentException e) {</span>
+<span class="fc" id="L276">            exitStatus = PARSER_UNRECOGNIZED_ARGUMENT.getCode();</span>
+<span class="fc" id="L277">            parser.handleError(e); // Print the error in human-readable format</span>
+<span class="fc" id="L278">        } catch (ArgumentParserException ape) {</span>
+<span class="fc" id="L279">            OperationException oe = apeToOe(ape);</span>
+<span class="fc" id="L280">            exitStatus = oe.getCode();</span>
             // We could also write `oe` as a JSON document,
             // but we do not know whether JSON output was requested,
             // so we use the text output (default).
 
-<span class="fc" id="L280">            parser.handleError(ape); // Print the error in human-readable format</span>
-<span class="pc" id="L281">        }</span>
+<span class="fc" id="L285">            parser.handleError(ape); // Print the error in human-readable format</span>
+<span class="fc" id="L286">        }</span>
 
-<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (namespace == null) {</span>
-<span class="nc" id="L284">            System.exit(exitStatus);</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">        if (namespace == null) {</span>
+<span class="nc" id="L289">            System.exit(exitStatus);</span>
         }
 
-<span class="pc bpc" id="L287" title="2 of 4 branches missed.">        assert exitStatus == 0;</span>
+<span class="pc bpc" id="L292" title="2 of 4 branches missed.">        assert exitStatus == 0;</span>
 
         // Handle command line arguments
-<span class="fc" id="L290">        WritingMapper wm = null;</span>
+<span class="fc" id="L295">        WritingMapper wm = null;</span>
 
         // Extract operation name
-<span class="fc" id="L293">        String operationName = namespace.getString(&quot;operation&quot;);</span>
-<span class="pc bpc" id="L294" title="2 of 4 branches missed.">        assert operationName != null; // The argument &quot;operation&quot; is a sub-command, thus it is required</span>
+<span class="fc" id="L298">        String operationName = namespace.getString(&quot;operation&quot;);</span>
+<span class="pc bpc" id="L299" title="2 of 4 branches missed.">        assert operationName != null; // The argument &quot;operation&quot; is a sub-command, thus it is required</span>
 
         // Select the operation from `operations`
-<span class="pc bpc" id="L297" title="2 of 4 branches missed.">        assert operations.containsKey(operationName); // Only supported operation names are allowed</span>
-<span class="fc" id="L298">        Operation operation = operations.get(operationName);</span>
-<span class="pc bpc" id="L299" title="2 of 4 branches missed.">        assert operation != null;</span>
+<span class="pc bpc" id="L302" title="2 of 4 branches missed.">        assert operations.containsKey(operationName); // Only supported operation names are allowed</span>
+<span class="fc" id="L303">        Operation operation = operations.get(operationName);</span>
+<span class="pc bpc" id="L304" title="2 of 4 branches missed.">        assert operation != null;</span>
 
         // Choose the output format
-<span class="fc" id="L302">        String outputFormat = namespace.getString(&quot;output_format&quot;);</span>
-<span class="pc bpc" id="L303" title="7 of 10 branches missed.">        switch (outputFormat) {</span>
+<span class="fc" id="L307">        String outputFormat = namespace.getString(&quot;output_format&quot;);</span>
+<span class="pc bpc" id="L308" title="4 of 10 branches missed.">        switch (outputFormat) {</span>
             case &quot;json&quot;:
                 // Disable loggers
-<span class="nc" id="L306">                disableLoggers();</span>
+<span class="fc" id="L311">                disableLoggers();</span>
                 // Initialize the JSON serializer
-<span class="nc" id="L308">                wm = new WritingMapper();</span>
-<span class="nc" id="L309">                operation.setWritingMapper(wm); // Configure the operation</span>
-<span class="nc" id="L310">                break;</span>
+<span class="fc" id="L313">                wm = new WritingMapper();</span>
+<span class="fc" id="L314">                operation.setWritingMapper(wm); // Configure the operation</span>
+<span class="fc" id="L315">                break;</span>
             case &quot;text&quot;:
                 // Initialize the text output
-<span class="fc" id="L313">                TextOutput to = new TextOutput(System.err); // Bind to `System.err`</span>
-<span class="fc" id="L314">                operation.setTextOutput(to); // Configure the operation</span>
-<span class="fc" id="L315">                break;</span>
+<span class="fc" id="L318">                TextOutput to = new TextOutput(System.err); // Bind to `System.err`</span>
+<span class="fc" id="L319">                operation.setTextOutput(to); // Configure the operation</span>
+<span class="fc" id="L320">                break;</span>
             default:
-<span class="nc bnc" id="L317" title="All 2 branches missed.">                assert false; // The option has limited choices</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                assert false; // The option has limited choices</span>
         }
 
         // Execute the operation
         try {
-<span class="fc" id="L322">            operation.execute(namespace);</span>
-<span class="fc" id="L323">        } catch (OperationException ex) {</span>
-<span class="fc" id="L324">            exitStatus = ex.getCode();</span>
+<span class="fc" id="L327">            operation.execute(namespace);</span>
+<span class="fc" id="L328">        } catch (OperationException ex) {</span>
+<span class="fc" id="L329">            exitStatus = ex.getCode();</span>
 
             // Log the exception
-<span class="fc" id="L327">            logger.severe(ex.getLocalizedMessage());</span>
-<span class="fc" id="L328">            Throwable cause = ex.getCause();</span>
-<span class="pc bpc" id="L329" title="3 of 4 branches missed.">            if (cause != null &amp;&amp; cause.getMessage() != null) {</span>
-<span class="nc" id="L330">                logger.severe(cause.getLocalizedMessage());</span>
+<span class="fc" id="L332">            logger.severe(ex.getLocalizedMessage());</span>
+<span class="fc" id="L333">            Throwable cause = ex.getCause();</span>
+<span class="pc bpc" id="L334" title="1 of 4 branches missed.">            if (cause != null &amp;&amp; cause.getMessage() != null) {</span>
+<span class="fc" id="L335">                logger.severe(cause.getLocalizedMessage());</span>
             }
 
-<span class="pc bpc" id="L333" title="1 of 2 branches missed.">            if (wm != null) {</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">            if (wm != null) {</span>
                 // JSON output is enabled
-<span class="nc" id="L335">                ex.writeInWritingMapper(wm);</span>
+<span class="fc" id="L340">                ex.writeInWritingMapper(wm);</span>
             }
-<span class="fc" id="L337">        }</span>
-<span class="nc" id="L338">        System.exit(exitStatus);</span>
-<span class="nc" id="L339">    }</span>
+<span class="fc" id="L342">        }</span>
+<span class="nc" id="L343">        System.exit(exitStatus);</span>
+<span class="nc" id="L344">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

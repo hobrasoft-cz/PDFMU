@@ -102,10 +102,10 @@ import org.apache.commons.validator.routines.UrlValidator;
     public void setFromNamespace(Namespace namespace) throws OperationException {
 <span class="fc" id="L103">        url = namespace.get(&quot;tsa_url&quot;);</span>
 
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (url != null) {</span>
-<span class="nc" id="L106">            UrlValidator urlValidator = new UrlValidator();</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">            if (!urlValidator.isValid(url)) {</span>
-<span class="nc" id="L108">                throw new OperationException(SIGNATURE_ADD_TSA_INVALID_URL);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (url != null) {</span>
+<span class="fc" id="L106">            UrlValidator urlValidator = new UrlValidator();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (!urlValidator.isValid(url)) {</span>
+<span class="fc" id="L108">                throw new OperationException(SIGNATURE_ADD_TSA_INVALID_URL);</span>
             }
         }
 
@@ -114,9 +114,9 @@ import org.apache.commons.validator.routines.UrlValidator;
 <span class="fc" id="L114">        passwordArgs.setFromNamespace(namespace);</span>
 
 <span class="fc" id="L116">        sslKeystore.setFromNamespace(namespace);</span>
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (sslKeystore.file != null) {</span>
-<span class="nc" id="L118">            String password = sslKeystore.getPassword();</span>
-<span class="nc bnc" id="L119" title="All 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (sslKeystore.file != null) {</span>
+<span class="fc" id="L118">            String password = sslKeystore.getPassword();</span>
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
 <span class="nc" id="L120">                LOGGER.warning(&quot;SSL KeyStore: Location has been set but password has not. Only KeyStores protected by a non-empty password are supported.&quot;);</span>
             }
         }
@@ -132,23 +132,23 @@ import org.apache.commons.validator.routines.UrlValidator;
      * @return null if the timestamp authority has not been configured
      */
     public TSAClient getTSAClient() {
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (url == null) {</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (url == null) {</span>
 <span class="fc" id="L136">            return null;</span>
         }
-<span class="nc" id="L138">        LOGGER.info(&quot;TSA URL has been set. Will attempt to attach a timestamp to the signature.&quot;);</span>
-<span class="nc" id="L139">        String password = getPassword();</span>
-<span class="nc bnc" id="L140" title="All 4 branches missed.">        if (username != null &amp;&amp; password == null) {</span>
-<span class="nc" id="L141">            LOGGER.warning(&quot;TSA username has been set but password has not.&quot;);</span>
+<span class="fc" id="L138">        LOGGER.info(&quot;TSA URL has been set. Will attempt to attach a timestamp to the signature.&quot;);</span>
+<span class="fc" id="L139">        String password = getPassword();</span>
+<span class="fc bfc" id="L140" title="All 4 branches covered.">        if (username != null &amp;&amp; password == null) {</span>
+<span class="fc" id="L141">            LOGGER.warning(&quot;TSA username has been set but password has not.&quot;);</span>
         }
-<span class="nc bnc" id="L143" title="All 4 branches missed.">        if (password != null &amp;&amp; username == null) {</span>
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">        if (password != null &amp;&amp; username == null) {</span>
 <span class="nc" id="L144">            LOGGER.warning(&quot;TSA password has been set but username has not.&quot;);</span>
         }
-<span class="nc" id="L146">        return new TSAClientBouncyCastle(url, username, password);</span>
+<span class="fc" id="L146">        return new TSAClientBouncyCastle(url, username, password);</span>
     }
 
     private String getPassword() {
-<span class="nc bnc" id="L150" title="All 4 branches missed.">        assert passwordArgs != null;</span>
-<span class="nc" id="L151">        return passwordArgs.getPassword();</span>
+<span class="pc bpc" id="L150" title="2 of 4 branches missed.">        assert passwordArgs != null;</span>
+<span class="fc" id="L151">        return passwordArgs.getPassword();</span>
     }
 
 }

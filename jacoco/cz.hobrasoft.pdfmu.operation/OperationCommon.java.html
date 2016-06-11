@@ -31,18 +31,18 @@ import java.util.logging.Logger;
 
     @Override
     public void setWritingMapper(WritingMapper wm) {
-<span class="nc" id="L34">        this.wm = wm;</span>
-<span class="nc" id="L35">    }</span>
+<span class="fc" id="L34">        this.wm = wm;</span>
+<span class="fc" id="L35">    }</span>
 
     protected void writeResult(Result result) {
         // Discard value if mapper was not set
-<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (wm != null) {</span>
-<span class="nc" id="L40">            RpcResponse response = new RpcResponse(result);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (wm != null) {</span>
+<span class="fc" id="L40">            RpcResponse response = new RpcResponse(result);</span>
             try {
-<span class="nc" id="L42">                wm.writeValue(response);</span>
+<span class="fc" id="L42">                wm.writeValue(response);</span>
 <span class="nc" id="L43">            } catch (IOException ex) {</span>
 <span class="nc" id="L44">                logger.severe(String.format(&quot;Cannot write JSON document: %s&quot;, ex));</span>
-<span class="nc" id="L45">            }</span>
+<span class="fc" id="L45">            }</span>
         }
 <span class="fc" id="L47">    }</span>
 

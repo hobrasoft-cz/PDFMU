@@ -90,29 +90,7 @@
 <span class="sourceLineNo">082</span>        }<a name="line.82"></a>
 <span class="sourceLineNo">083</span>        return result;<a name="line.83"></a>
 <span class="sourceLineNo">084</span>    }<a name="line.84"></a>
-<span class="sourceLineNo">085</span><a name="line.85"></a>
-<span class="sourceLineNo">086</span>    public static int countMatches(String regex, String message) {<a name="line.86"></a>
-<span class="sourceLineNo">087</span>        Pattern p = Pattern.compile(regex);<a name="line.87"></a>
-<span class="sourceLineNo">088</span>        Matcher m = p.matcher(message);<a name="line.88"></a>
-<span class="sourceLineNo">089</span>        int count = 0;<a name="line.89"></a>
-<span class="sourceLineNo">090</span>        while (m.find()) {<a name="line.90"></a>
-<span class="sourceLineNo">091</span>            count++;<a name="line.91"></a>
-<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
-<span class="sourceLineNo">093</span>        return count;<a name="line.93"></a>
-<span class="sourceLineNo">094</span>    }<a name="line.94"></a>
-<span class="sourceLineNo">095</span><a name="line.95"></a>
-<span class="sourceLineNo">096</span>    public static byte[] objectToBytes(Object obj) throws IOException {<a name="line.96"></a>
-<span class="sourceLineNo">097</span>        ByteArrayOutputStream bo = new ByteArrayOutputStream();<a name="line.97"></a>
-<span class="sourceLineNo">098</span>        ObjectOutputStream so = new ObjectOutputStream(bo);<a name="line.98"></a>
-<span class="sourceLineNo">099</span>        so.writeObject(obj);<a name="line.99"></a>
-<span class="sourceLineNo">100</span>        so.flush();<a name="line.100"></a>
-<span class="sourceLineNo">101</span>        return bo.toByteArray();<a name="line.101"></a>
-<span class="sourceLineNo">102</span>    }<a name="line.102"></a>
-<span class="sourceLineNo">103</span><a name="line.103"></a>
-<span class="sourceLineNo">104</span>    public static String encodeHexString(Object obj) throws IOException {<a name="line.104"></a>
-<span class="sourceLineNo">105</span>        return Hex.encodeHexString(objectToBytes(obj));<a name="line.105"></a>
-<span class="sourceLineNo">106</span>    }<a name="line.106"></a>
-<span class="sourceLineNo">107</span>}<a name="line.107"></a>
+<span class="sourceLineNo">085</span>}<a name="line.85"></a>
 
 
 

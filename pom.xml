@@ -468,17 +468,20 @@
     <reporting>
         <!-- http://www.javaworld.com/article/2071733/java-app-dev/get-the-most-out-of-maven-2-site-generation.html -->
         <plugins>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.8.1</version>
             </plugin>
+            
             <!-- Generate the JavaDoc API documentation. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${javadocPluginVersion}</version>
             </plugin>
+            
             <plugin>
                 <!-- http://maven.apache.org/plugins/maven-changes-plugin/ -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -493,6 +496,7 @@
                     </reportSet>
                 </reportSets>
             </plugin>
+            
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
@@ -562,11 +566,13 @@
                     </tagListOptions>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.19.1</version>
             </plugin>
+            
         </plugins>
     </reporting>
 </project>

@@ -159,12 +159,26 @@ class KeyParameters implements ArgsConfiguration {
         }
     }
 
-    public void fixPassword(KeyStore ks) {
+    public void fixPassword(KeyStore ks, String ksPassword) {
         switch (ks.getType()) {
             case "Windows-MY":
                 if (password != null) {
                     logger.info("The keystore Windows-MY does not accept key password.");
                     password = null;
+                }
+                break;
+            case "pkcs12":
+                if (ksPassword != null) {
+                    if (password != null && password != ksPassword.toCharArray()) {
+                        logger.warning("In PKCS12 keystores, key password should not differ from the keystore password.");
+                    }
+                    if (password == null) {
+                        logger.info("Key password not set. Using the keystore password.");
+                        password = ksPassword.toCharArray();
+                    }
+                } else if (password == null) {
+                    logger.info("Key password not set. Using an empty password.");
+                    password = "".toCharArray();
                 }
                 break;
             default:
@@ -176,9 +190,9 @@ class KeyParameters implements ArgsConfiguration {
         }
     }
 
-    public void fix(KeyStore ks) throws OperationException {
+    public void fix(KeyStore ks, String ksPassword) throws OperationException {
         fixAlias(ks);
-        fixPassword(ks);
+        fixPassword(ks, ksPassword);
     }
 
     public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {

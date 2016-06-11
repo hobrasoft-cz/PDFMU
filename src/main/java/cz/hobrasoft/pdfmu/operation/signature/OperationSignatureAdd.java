@@ -166,6 +166,9 @@ public class OperationSignatureAdd extends OperationCommon {
         // Initialize and load keystore
         KeyStore ks = keystoreParameters.loadKeystore();
 
+        // Fix the values, especially if they were not set at all
+        keyParameters.fix(ks, keystoreParameters.getPassword());
+
         return sign(stp, signatureAppearanceParameters, ks, keyParameters, digestAlgorithm, tsaClient, sigtype);
     }
 
@@ -192,8 +195,6 @@ public class OperationSignatureAdd extends OperationCommon {
             TSAClient tsaClient,
             MakeSignature.CryptoStandard sigtype) throws OperationException {
         assert keyParameters != null;
-        // Fix the values, especially if they were not set at all
-        keyParameters.fix(ks);
         String alias = keyParameters.alias;
         SignatureAdd sa = new SignatureAdd(alias);
 

@@ -8,6 +8,12 @@
         <author email="filip.bartek@hobrasoft.cz">Filip Bártek</author>
     </properties>
     <body>
+        <release version="1.1.3" date="2016-07-08" description="Warns if key alias is duplicit in keystore">
+            <action dev="filip.bartek" type="add" date="2016-07-08">
+                If the key alias appears multiple times in the keystore,
+                PDFMU prints a warning.
+            </action>
+        </release>
         <release version="1.1.2" date="2016-06-11" description="Minor bug fixes">
             <action dev="filip.bartek" type="fix" date="2016-06-11">
                 If keystore type is set to "pkcs12", keystore password is given

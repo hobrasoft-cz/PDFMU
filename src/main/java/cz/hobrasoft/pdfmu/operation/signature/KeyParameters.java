@@ -195,10 +195,33 @@ class KeyParameters implements ArgsConfiguration {
         fixPassword(ks, ksPassword);
     }
 
+    private int countAliasOccurrences(KeyStore ks, String alias) throws KeyStoreException {
+        if (!ks.containsAlias(alias)) {
+            return 0;
+        }
+        Enumeration<String> aliases = ks.aliases();
+        int count = 0;
+        while (aliases.hasMoreElements()) {
+            if (alias.equals(aliases.nextElement())) {
+                ++count;
+            }
+        }
+        assert (count > 0);
+        return count;
+    }
+
+    private boolean isAliasDuplicit(KeyStore ks, String alias) throws KeyStoreException {
+        return countAliasOccurrences(ks, alias) > 1;
+    }
+
     public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {
         // Get private key from keystore
         PrivateKey pk;
         try {
+            if (isAliasDuplicit(ks, alias)) {
+                logger.warning(String.format("The key alias \"%1$s\" occurs multiple times in the keystore.", alias));
+            }
+
             pk = (PrivateKey) ks.getKey(alias, password);
         } catch (KeyStoreException ex) {
             throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,

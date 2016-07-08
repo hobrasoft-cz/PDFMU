@@ -195,39 +195,62 @@ import net.sourceforge.argparse4j.inf.Namespace;
 <span class="fc" id="L195">        fixPassword(ks, ksPassword);</span>
 <span class="fc" id="L196">    }</span>
 
+    private int countAliasOccurrences(KeyStore ks, String alias) throws KeyStoreException {
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (!ks.containsAlias(alias)) {</span>
+<span class="nc" id="L200">            return 0;</span>
+        }
+<span class="fc" id="L202">        Enumeration&lt;String&gt; aliases = ks.aliases();</span>
+<span class="fc" id="L203">        int count = 0;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        while (aliases.hasMoreElements()) {</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">            if (alias.equals(aliases.nextElement())) {</span>
+<span class="fc" id="L206">                ++count;</span>
+            }
+        }
+<span class="pc bpc" id="L209" title="2 of 4 branches missed.">        assert (count &gt; 0);</span>
+<span class="fc" id="L210">        return count;</span>
+    }
+
+    private boolean isAliasDuplicit(KeyStore ks, String alias) throws KeyStoreException {
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        return countAliasOccurrences(ks, alias) &gt; 1;</span>
+    }
+
     public PrivateKey getPrivateKey(KeyStore ks) throws OperationException {
         // Get private key from keystore
         PrivateKey pk;
         try {
-<span class="fc" id="L202">            pk = (PrivateKey) ks.getKey(alias, password);</span>
-<span class="nc" id="L203">        } catch (KeyStoreException ex) {</span>
-<span class="nc" id="L204">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">            if (isAliasDuplicit(ks, alias)) {</span>
+<span class="nc" id="L222">                logger.warning(String.format(&quot;The key alias \&quot;%1$s\&quot; occurs multiple times in the keystore.&quot;, alias));</span>
+            }
+
+<span class="fc" id="L225">            pk = (PrivateKey) ks.getKey(alias, password);</span>
+<span class="nc" id="L226">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L227">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="nc" id="L206">        } catch (NoSuchAlgorithmException ex) {</span>
-<span class="nc" id="L207">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="nc" id="L229">        } catch (NoSuchAlgorithmException ex) {</span>
+<span class="nc" id="L230">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="nc" id="L209">        } catch (UnrecoverableKeyException ex) {</span>
+<span class="nc" id="L232">        } catch (UnrecoverableKeyException ex) {</span>
             // Incorrect key password? Incorrect keystore type?
-<span class="nc" id="L211">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
+<span class="nc" id="L234">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="fc" id="L213">        }</span>
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (pk == null) {</span>
+<span class="fc" id="L236">        }</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (pk == null) {</span>
             // Incorrect alias?
-<span class="nc" id="L216">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
+<span class="nc" id="L239">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_PRIVATE_KEY,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
         }
-<span class="fc" id="L219">        return pk;</span>
+<span class="fc" id="L242">        return pk;</span>
     }
 
     public Certificate[] getCertificateChain(KeyStore ks) throws OperationException {
         Certificate[] chain;
         try {
-<span class="fc" id="L225">            chain = ks.getCertificateChain(alias);</span>
-<span class="nc" id="L226">        } catch (KeyStoreException ex) {</span>
-<span class="nc" id="L227">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,</span>
+<span class="fc" id="L248">            chain = ks.getCertificateChain(alias);</span>
+<span class="nc" id="L249">        } catch (KeyStoreException ex) {</span>
+<span class="nc" id="L250">            throw new OperationException(SIGNATURE_ADD_KEYSTORE_CERTIFICATE_CHAIN, ex,</span>
                     new SimpleEntry&lt;String, Object&gt;(&quot;alias&quot;, alias));
-<span class="fc" id="L229">        }</span>
-<span class="fc" id="L230">        return chain;</span>
+<span class="fc" id="L252">        }</span>
+<span class="fc" id="L253">        return chain;</span>
     }
 
 }

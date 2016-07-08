@@ -28,7 +28,10 @@
             <answer>
                 <p>
                     Generate an up-to-date local copy of the site
-                    by executing the Maven goal <tt>site</tt> (calling <tt>mvn site</tt>).
+                    by executing the Maven goals <tt>verify</tt> and <tt>site</tt>
+                    (calling <tt>mvn verify site</tt>).
+                    It is necessary to run the goal <tt>verify</tt> to generate
+                    the code coverage (JaCoCo) report.
                     The site is generated in the directory <tt>target/site</tt>.
                     Push the content of that directory to the branch <tt>gh-pages</tt>
                     of the GitHub repository.

@@ -53,6 +53,12 @@ The resulting file is "target/exe/pdfmu.exe".
 
 The resulting file is "target/exe/pdfmu.exe".
 
+#### Skip tests
+
+Maven automatically executes the tests during the build.
+If you would prefer to omit executing the tests,
+run `mvn package -Dmaven.test.skip=true`.
+
 ### Build a self-contained JAR using Maven
 
 1. Go to "." in command line

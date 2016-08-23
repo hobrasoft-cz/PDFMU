@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
@@ -156,7 +157,7 @@ public class MainSignTest extends MainTest {
         assert expectedCreationDate != null;
         Assert.assertEquals(expectedCreationDate, properties.get("CreationDate"));
         Assert.assertTrue(properties.containsKey("ModDate"));
-        DateFormat dateFormat = new SimpleDateFormat("'D:'yyyyMMddHHmmssX'''00'''");
+        DateFormat dateFormat = new SimpleDateFormat("'D:'yyyyMMddHHmmssX'''00'''", Locale.ROOT);
         Date actualModDate = dateFormat.parse(properties.get("ModDate"));
         assertDateBetween(actualModDate, modDateBegin, modDateEnd);
     }
@@ -207,7 +208,7 @@ public class MainSignTest extends MainTest {
                         Assert.assertEquals("", metadata.reason);
                         Assert.assertEquals("", metadata.location);
                         Assert.assertNotNull(metadata.date);
-                        DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+                        DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ROOT);
                         // Example: "Wed Jun 01 11:22:38 CEST 2016"
                         Date actualDate = dateFormat.parse(metadata.date);
                         assertDateBetween(actualDate, modDateBegin, modDateEnd);

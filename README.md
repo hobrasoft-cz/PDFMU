@@ -38,14 +38,6 @@ Go to "target/exe" and run `pdfmu --help` to see the available operations.
 
 All the paths mentioned below are relative to the repository root.
 
-### Build for Windows using NetBeans
-
-1. Run NetBeans
-2. File > Open Project > "."
-3. Run > Build Project (pdfmu)
-
-The resulting file is "target/exe/pdfmu.exe".
-
 ### Build for Windows using Maven
 
 1. Go to "." in command line

@@ -31,8 +31,8 @@ Go to "target/exe" and run `pdfmu --help` to see the available operations.
 ## Software dependencies
 
 * [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+* [Maven](http://maven.apache.org/download.cgi) 3.3.3 (included in NetBeans)
 * [NetBeans 8.1](https://netbeans.org/downloads/) (optional)
-* [Maven](http://maven.apache.org/download.cgi) 3.3.3 (part of NetBeans)
 
 ## Actions
 

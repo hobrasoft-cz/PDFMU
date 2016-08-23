@@ -75,6 +75,13 @@ The resulting file is "target/pdfmu-${version}-jar-with-dependencies.jar".
 
 To inspect the resulting documentation open "target/site/apidocs/index.html".
 
+### Generate the site
+
+1. Go to "." in command line
+2. `mvn verify site`
+
+The site is generated in "target/site".
+
 ## Options
 
 ### SSL

@@ -49,7 +49,9 @@ The resulting file is "target/exe/pdfmu.exe".
 
 Maven automatically executes the tests during the build.
 If you would prefer to omit executing the tests,
-run `mvn package -Dmaven.test.skip=true`.
+run `mvn package -DskipTests=true`.
+If you wish to omit building the tests as well,
+run `mvn package -Dmaven.test.skip=true` instead.
 
 ### Build a self-contained JAR using Maven
 

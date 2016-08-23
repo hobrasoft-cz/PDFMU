@@ -44,6 +44,8 @@ All the paths mentioned below are relative to the repository root.
 2. `mvn package`
 
 The resulting file is "target/exe/pdfmu.exe".
+The executable depends on all the other files in "target/exe".
+The whole directory is expected to be distributed.
 
 #### Skip tests
 

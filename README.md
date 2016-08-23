@@ -72,7 +72,7 @@ The resulting file is "target/pdfmu-${version}-jar-with-dependencies.jar".
 2. Go to "target" in command line
 3. `java -jar pdfmu-${version}-jar-with-dependencies.jar`
 
-### Generate documentation using Maven and javadoc
+### Generate the documentation using Maven and javadoc
 
 1. Go to "." in command line
 2. `mvn javadoc:javadoc`

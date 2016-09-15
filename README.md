@@ -17,6 +17,8 @@ Source code: [https://github.com/hobrasoft-cz/PDFMU](https://github.com/hobrasof
 
 Email: [pdfmu@hobrasoft.cz](mailto:pdfmu@hobrasoft.cz)
 
+PDFMU is used in [GeoSign](http://geosign.hobrasoft.cz/).
+
 ## Quick start in Windows
 
 1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)

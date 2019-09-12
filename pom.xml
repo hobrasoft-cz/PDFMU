@@ -170,6 +170,11 @@
                         <quiet>true</quiet>
                         <locale>en_US</locale>
                         <linksource>true</linksource>
+                        <!--
+                        Setting source is required when building docs with JDK 11.
+                        See https://bugs.openjdk.java.net/browse/JDK-8212233
+                        -->
+                        <source>1.7</source>
                     </configuration>
                 </plugin>
                 

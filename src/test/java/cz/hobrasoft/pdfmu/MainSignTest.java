@@ -151,7 +151,7 @@ public class MainSignTest extends MainTest {
         Assert.assertNotNull(properties);
         Assert.assertEquals(3, properties.size());
         Assert.assertTrue(properties.containsKey("Producer"));
-        String expectedProducer = "iText® 5.5.6 ©2000-2015 iText Group NV (AGPL-version); modified using iText® 5.5.6 ©2000-2015 iText Group NV (AGPL-version)";
+        String expectedProducer = "iText® 5.5.6 ©2000-2015 iText Group NV (AGPL-version); modified using iText® 5.5.13.1 ©2000-2019 iText Group NV (AGPL-version)";
         Assert.assertEquals(expectedProducer, properties.get("Producer"));
         Assert.assertTrue(properties.containsKey("CreationDate"));
         assert expectedCreationDate != null;

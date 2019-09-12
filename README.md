@@ -21,8 +21,8 @@ PDFMU is used in [GeoSign](http://geosign.hobrasoft.cz/).
 
 ## Quick start in Windows
 
-1. Download and install [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
-2. Download and install [NetBeans 8.1](https://netbeans.org/downloads/)
+1. Download and install [JDK 11.0.4](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
+2. Download and install [NetBeans 11.0](https://netbeans.apache.org/download/)
 3. Run NetBeans
 4. File > Open Project > "." (the root directory of this repository)
 5. Run > Build Project (PDF Manipulation Utility)
@@ -32,9 +32,9 @@ Go to "target/exe" and run `pdfmu --help` to see the available operations.
 
 ## Software dependencies
 
-* [JDK 7u80](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+* [JDK 11.0.4](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 * [Maven](http://maven.apache.org/download.cgi) 3.3.3 (included in NetBeans)
-* [NetBeans 8.1](https://netbeans.org/downloads/) (optional)
+* [NetBeans 11.0](https://netbeans.apache.org/download/) (optional)
 
 ## Actions
 

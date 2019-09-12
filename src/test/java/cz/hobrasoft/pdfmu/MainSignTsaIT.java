@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
 import org.junit.experimental.categories.Category;
@@ -298,6 +299,7 @@ public class MainSignTsaIT extends MainTest {
         assert false;
     }
 
+    @Ignore("Filip Bartek: As of 2019-09-12, the test is failing due to SSL altert \"certificate_expired\" emitted by `com.itextpdf.text.pdf.security.MakeSignature.signDetached()`. I assume that e-Szigno has stopped supporting the test TSA https://teszt.e-szigno.hu/tsa .")
     @Test
     @Category(Online.class)
     public void testCertificateSuccess() throws IOException {

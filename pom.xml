@@ -209,7 +209,17 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
+                    <!-- JDK requires that source is not greater than target. -->
+                    <!--
+                    Actual source version is at least 1.8
+                    because we use String.join() in MainUpdateVersionTest.
+                    -->
                     <source>1.7</source>
+                    <!--
+                    The `target` parameter specifies the lowest JRE version
+                    compatible with the compiled bytecode.
+                    See https://stackoverflow.com/a/4692743/4054250
+                    -->
                     <target>1.7</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>

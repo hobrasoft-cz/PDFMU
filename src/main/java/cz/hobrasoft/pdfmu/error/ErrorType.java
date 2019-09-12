@@ -49,8 +49,8 @@ import org.apache.commons.collections4.functors.StringValueTransformer;
  * How to add a new error type:
  * <ul>
  * <li>Add an enum constant in {@link ErrorType}
- * <li>Add a corresponding code in <tt>ErrorCodes.properties</tt>
- * <li>Add a corresponding message in <tt>ErrorMessages.properties</tt>
+ * <li>Add a corresponding code in "ErrorCodes.properties"
+ * <li>Add a corresponding message in "ErrorMessages.properties"
  * </ul>
  *
  * @author <a href="mailto:filip.bartek@hobrasoft.cz">Filip Bartek</a>

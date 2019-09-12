@@ -76,5 +76,29 @@
             </answer>
         </faq>
         
+        <faq id="update-dependencies">
+            <question>How do I update the dependencies?</question>
+            <answer>
+                <p>
+                    Call <tt>mvn versions:display-dependency-updates</tt>.
+                    Raise the versions in <tt>pom.xml</tt> based on the output.
+                </p>
+                <p>
+                    Alternatively, call <tt>mvn versions:use-latest-versions</tt>
+                    and then manually downgrade the plugins which were updated to beta versions.
+                </p>
+            </answer>
+        </faq>
+        
+        <faq id="update-mvn-plugins">
+            <question>How do I update the Maven plugins?</question>
+            <answer>
+                <p>
+                    Call <tt>mvn versions:display-plugin-updates</tt>.
+                    Raise the versions in <tt>pom.xml</tt> based on the output.
+                </p>
+            </answer>
+        </faq>
+        
     </part>
 </faqs>
